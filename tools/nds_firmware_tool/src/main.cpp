@@ -80,6 +80,10 @@ char *getType(const u8 type)
 			strcpy(buf, "NDS-Lite");
 		break;
 
+		case 0x35:
+			strcpy(buf, "NDS-Lite (KOR)");
+		break;
+
 		case 0x43:
 			strcpy(buf, "iQueDS");
 		break;
@@ -95,16 +99,22 @@ char *getType(const u8 type)
 	return strdup(buf);
 }
 
-char *getTimeStamp(const u8 tm[])
+void BCDtoTime(u8 BCD[])
+{
+	for (int i = 0; i < 5; i++)
+		BCD[i] = ((BCD[i] >> 4) & 0x0F) * 10 + (BCD[i] & 0x0F);
+}
+
+char *getTimeStamp(u8 tm[])
 {
 	char buf[30] = {0};
-	if ((tm[2]>31)| (tm[3]>12)| (tm[1]>24)| (tm[0]>59))
-	{
+	if ((tm[2] > 0x31) || (tm[3] > 0x12) || (tm[1] > 0x24) || (tm[0] > 0x59))
 		strcpy(buf, "ERROR");
-		INFO("Error in timestamp: %02i/%02i/%02i %02i:%02i\n", tm[2], tm[3], tm[4], tm[1], tm[0]);
-	}
 	else
+	{
+		BCDtoTime(tm);
 		sprintf(buf, "%02i/%02i/%02i %02i:%02i", tm[2], tm[3], tm[4], tm[1], tm[0]);
+	}
 	return strdup(buf);
 }
 
@@ -266,7 +276,7 @@ void refreshWiFiAPDlg(HWND hwnd)
 		strncpy(buf, (char*)(data+ofsMem+0x60), 32);
 		SetDlgItemText(hwnd, IDC_WIFI_AP_SSID2 + ofsID, buf);
 
-		sprintf(buf, "%X", read64(data, ofsMem+0xF0));
+		sprintf(buf, "%llX", read64(data, ofsMem+0xF0));
 		SetDlgItemText(hwnd, IDC_WIFI_AP_USER_ID + ofsID, buf);
 
 		strncpy(buf, (char*)(data+ofsMem+0x80), 16);
@@ -712,14 +722,10 @@ bool refreshUserDlg(HWND hwnd)
 	SendMessage(GetDlgItem(hwnd, IDC_BIRTH_MONTH), CB_SETCURSEL, data[0x03]-1, 0);
 
 	// lang
-	if ((header.console_type == 0x43) || (header.console_type == 0x63))
-	{
-		SendMessage(GetDlgItem(hwnd, IDC_LANGUAGE), CB_SETCURSEL, read16(data,0x75)&0x07, 0);
-	}
+	if ((header.console_type == 0x43) || (header.console_type == 0x63) || (header.console_type == 0x35))
+		SendMessage(GetDlgItem(hwnd, IDC_LANGUAGE), CB_SETCURSEL, read16(data, 0x75) & 0x07, 0);
 	else
-	{
-		SendMessage(GetDlgItem(hwnd, IDC_LANGUAGE), CB_SETCURSEL, read16(data,0x64)&0x07, 0);
-	}
+		SendMessage(GetDlgItem(hwnd, IDC_LANGUAGE), CB_SETCURSEL, read16(data, 0x64) & 0x07, 0);
 
 	SendMessage(GetDlgItem(hwnd, IDC_ALARM_ON), BM_SETCHECK, data[0x56]?BST_CHECKED:BST_UNCHECKED, 0);
 	SendMessage(GetDlgItem(hwnd, IDC_ALARM_HOUR), CB_SETCURSEL, data[0x52], 0);
@@ -823,6 +829,11 @@ BOOL CALLBACK userDlgProc(HWND hdlg,UINT msg, WPARAM wParam,LPARAM lParam)
 			SendMessage(tmp_wnd, CB_ADDSTRING, 0, (LPARAM)"Spanish");
 			if ((header.console_type == 0x43) || (header.console_type == 0x63))
 				SendMessage(tmp_wnd, CB_ADDSTRING, 0, (LPARAM)"Chinese");
+			else if (header.console_type == 0x35)
+			{
+				SendMessage(tmp_wnd, CB_ADDSTRING, 0, (LPARAM)"Chinese");
+				SendMessage(tmp_wnd, CB_ADDSTRING, 0, (LPARAM)"Korean");
+			}
 
 			tmp_wnd = GetDlgItem(hdlg, IDC_GBA_MODE_SCREENS);
 			SendMessage(tmp_wnd, CB_ADDSTRING, 0, (LPARAM)"Upper");
@@ -1131,7 +1142,7 @@ int RegClass(WNDPROC Proc, LPCTSTR szName)
 
 BOOL InitCommonCtrls()
 {
-	INITCOMMONCONTROLSEX	CommCtrl;
+	INITCOMMONCONTROLSEX	CommCtrl{};
 	
 	CommCtrl.dwSize=sizeof INITCOMMONCONTROLSEX;
 	CommCtrl.dwICC=ICC_WIN95_CLASSES|ICC_COOL_CLASSES|ICC_USEREX_CLASSES;
