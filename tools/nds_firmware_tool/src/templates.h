@@ -42,15 +42,15 @@ typedef struct
 #define Y_BUTTONS	500
 
 const TEMPLATE TmainWnd[] = {
-	{"STATIC",	"Firmware path:",				0,					5, 5, 100, 20,								NULL},
+	{"STATIC",	"固件文件路径:",				0,					5, 5, 100, 20,								NULL},
 	{"EDIT",	"",								ES_READONLY,		5, 25, 595, 20,								IDC_BPATH},
-	{"BUTTON",	"Browse...",					WS_TABSTOP | BS_DEFPUSHBUTTON, 610, 25, 80, 20,					IDC_BBROWSE},
+	{"BUTTON",	"浏览...",					WS_TABSTOP | BS_DEFPUSHBUTTON, 610, 25, 80, 20,					IDC_BBROWSE},
 
-	{"BUTTON",	"Header data",					BS_GROUPBOX, 4, Y_HEADER, 340, 180,								NULL},
-	{"STATIC",	"Console type",					0,					15,  Y_HEADER + 30, 300, 20,				NULL},
-	{"STATIC",	"Version",						0,					15,  Y_HEADER + 60, 300, 20,				NULL},
-	{"STATIC",	"Built timestamp (d/m/y h:m)",	0,					15,  Y_HEADER + 90, 300, 20,				NULL},
-	{"STATIC",	"Size of firmware",				0,					15,  Y_HEADER + 120, 300, 20,				NULL},
+	{"BUTTON",	"文件头数据",					BS_GROUPBOX, 4, Y_HEADER, 340, 180,								NULL},
+	{"STATIC",	"机器类型",					0,					15,  Y_HEADER + 30, 300, 20,				NULL},
+	{"STATIC",	"版本",						0,					15,  Y_HEADER + 60, 300, 20,				NULL},
+	{"STATIC",	"编译时间 (d/m/y h:m)",	0,					15,  Y_HEADER + 90, 300, 20,				NULL},
+	{"STATIC",	"固件大小",				0,					15,  Y_HEADER + 120, 300, 20,				NULL},
 	{"STATIC",	"CRC",							0,					15,  Y_HEADER + 150, 300, 20,				NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_HEADER + 30, 100, 20,			IDC_H1_TYPE},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_HEADER + 60, 100, 20,			IDC_H1_VERSION},
@@ -59,51 +59,51 @@ const TEMPLATE TmainWnd[] = {
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_HEADER + 150, 100, 20,			IDC_H1_CRC},
 
 	{"BUTTON",	"ARM9",							BS_GROUPBOX, 4, Y_ARM9, 340, 120,								NULL},
-	{"STATIC",	"ARM9 boot code address",		0,					15, Y_ARM9+30, 300, 20,						NULL},
-	{"STATIC",	"ARM9 boot code RAM address",	0,					15, Y_ARM9+60, 300, 20,						NULL},
-	{"STATIC",	"ARM9 GUI code address",		0,					15, Y_ARM9+90, 300, 20,						NULL},
+	{"STATIC",	"ARM9 boot code 地址",		0,					15, Y_ARM9+30, 300, 20,						NULL},
+	{"STATIC",	"ARM9 boot code RAM 地址",	0,					15, Y_ARM9+60, 300, 20,						NULL},
+	{"STATIC",	"ARM9 GUI code 地址",		0,					15, Y_ARM9+90, 300, 20,						NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM9 + 30, 100, 20,				IDC_H1_ARM9_ROM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM9 + 60, 100, 20,				IDC_H1_ARM9_RAM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM9 + 90, 100, 20,				IDC_H1_ARM9_GUI},
 	
 	{"BUTTON",	"ARM7",							BS_GROUPBOX, 4, Y_ARM7, 340, 120,								NULL},
-	{"STATIC",	"ARM7 boot code address",		0,					15, Y_ARM7+30, 300, 20,						NULL},
-	{"STATIC",	"ARM7 boot code RAM address",	0,					15, Y_ARM7+60, 300, 20,						NULL},
-	{"STATIC",	"ARM7 WiFi code address",		0,					15, Y_ARM7+90, 300, 20,						NULL},
+	{"STATIC",	"ARM7 boot code 地址",		0,					15, Y_ARM7+30, 300, 20,						NULL},
+	{"STATIC",	"ARM7 boot code RAM 地址",	0,					15, Y_ARM7+60, 300, 20,						NULL},
+	{"STATIC",	"ARM7 WiFi code 地址",		0,					15, Y_ARM7+90, 300, 20,						NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM7 + 30, 100, 20,				IDC_H1_ARM7_ROM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM7 + 60, 100, 20,				IDC_H1_ARM7_RAM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, 230,  Y_ARM7 + 90, 100, 20,				IDC_H1_ARM7_WIFI},
 
-	{"BUTTON",	"FlashME: Header data",			BS_GROUPBOX, X_SECOND_FW, Y_HEADER, 340, 120,					NULL},
-	{"STATIC",	"FlashME version",				0,					X_SECOND_FW+11,  Y_HEADER + 30, 300, 20,	NULL},
-	{"STATIC",	"Size of firmware",				0,					X_SECOND_FW+11,  Y_HEADER + 60, 300, 20,	NULL},
+	{"BUTTON",	"FlashME: 文件头数据",			BS_GROUPBOX, X_SECOND_FW, Y_HEADER, 340, 120,					NULL},
+	{"STATIC",	"FlashME 版本",				0,					X_SECOND_FW+11,  Y_HEADER + 30, 300, 20,	NULL},
+	{"STATIC",	"固件大小",				0,					X_SECOND_FW+11,  Y_HEADER + 60, 300, 20,	NULL},
 	{"STATIC",	"CRC",							0,					X_SECOND_FW+11,  Y_HEADER + 90, 300, 20,	NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_HEADER + 30, 100, 20, IDC_H2_VERSION},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_HEADER + 60, 100, 20, IDC_H2_SIZE},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_HEADER + 90, 100, 20, IDC_H2_CRC},
 
 	{"BUTTON",	"FlashME: ARM9",				BS_GROUPBOX, X_SECOND_FW, Y_ARM9, 340, 120,						NULL},
-	{"STATIC",	"ARM9 boot code address",		0,					X_SECOND_FW+11, Y_ARM9+30, 300, 20,			NULL},
-	{"STATIC",	"ARM9 boot code RAM address",	0,					X_SECOND_FW+11, Y_ARM9+60, 300, 20,			NULL},
-	{"STATIC",	"ARM9 GUI code address",		0,					X_SECOND_FW+11, Y_ARM9+90, 300, 20,			NULL},
+	{"STATIC",	"ARM9 boot code 地址",		0,					X_SECOND_FW+11, Y_ARM9+30, 300, 20,			NULL},
+	{"STATIC",	"ARM9 boot code RAM 地址",	0,					X_SECOND_FW+11, Y_ARM9+60, 300, 20,			NULL},
+	{"STATIC",	"ARM9 GUI code 地址",		0,					X_SECOND_FW+11, Y_ARM9+90, 300, 20,			NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM9 + 30, 100, 20,	IDC_H2_ARM9_ROM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM9 + 60, 100, 20,	IDC_H2_ARM9_RAM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM9 + 90, 100, 20,	IDC_H2_ARM9_GUI},
 	
 	{"BUTTON",	"FlashME: ARM7",				BS_GROUPBOX, X_SECOND_FW, Y_ARM7, 340, 120,						NULL},
-	{"STATIC",	"ARM7 boot code address",		0,					X_SECOND_FW+11, Y_ARM7+30, 300, 20,			NULL},
-	{"STATIC",	"ARM7 boot code RAM address",	0,					X_SECOND_FW+11, Y_ARM7+60, 300, 20,			NULL},
-	{"STATIC",	"ARM7 WiFi code address",		0,					X_SECOND_FW+11, Y_ARM7+90, 300, 20,			NULL},
+	{"STATIC",	"ARM7 boot code 地址",		0,					X_SECOND_FW+11, Y_ARM7+30, 300, 20,			NULL},
+	{"STATIC",	"ARM7 boot code RAM 地址",	0,					X_SECOND_FW+11, Y_ARM7+60, 300, 20,			NULL},
+	{"STATIC",	"ARM7 WiFi code 地址",		0,					X_SECOND_FW+11, Y_ARM7+90, 300, 20,			NULL},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM7 + 30, 100, 20,	IDC_H2_ARM7_ROM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM7 + 60, 100, 20,	IDC_H2_ARM7_RAM},
 	{"EDIT",	"",								ES_READONLY | ES_RIGHT, X_SECOND_FW+230,  Y_ARM7 + 90, 100, 20,	IDC_H2_ARM7_WIFI},
 
-	{"BUTTON",	"User",							WS_TABSTOP | WS_DISABLED, 5, Y_BUTTONS, 100, 20,				IDC_BUSER},
+	{"BUTTON",	"用户",							WS_TABSTOP | WS_DISABLED, 5, Y_BUTTONS, 100, 20,				IDC_BUSER},
 	{"BUTTON",	"WiFi",							WS_TABSTOP | WS_DISABLED, 120, Y_BUTTONS, 100, 20,				IDC_BWIFI},
 	{"BUTTON",	"WiFi AP",						WS_TABSTOP | WS_DISABLED, 235, Y_BUTTONS, 100, 20,				IDC_BWIFIAP},
 	{"BUTTON",	"Dump",							WS_TABSTOP | WS_DISABLED, 350, Y_BUTTONS, 100, 20,				NULL},
-	{"BUTTON",	"Extract...",					WS_TABSTOP | WS_DISABLED, 465, Y_BUTTONS, 100, 20,				NULL},
-	{"BUTTON",	"Exit",							WS_TABSTOP,			620, Y_BUTTONS, 70, 20,						IDC_BEXIT}
+	{"BUTTON",	"解压...",					WS_TABSTOP | WS_DISABLED, 465, Y_BUTTONS, 100, 20,				NULL},
+	{"BUTTON",	"退出",							WS_TABSTOP,			620, Y_BUTTONS, 70, 20,						IDC_BEXIT}
 };
 
 #define Y_BIRTH_LANG 105
@@ -113,29 +113,29 @@ const TEMPLATE TmainWnd[] = {
 #define Y_USR_BUTTONS 570
 
 const TEMPLATE TuserDlg1[] = {
-	{"STATIC",		"Nickname:",	0, 5, 5, 100, 17,															NULL},
+	{"STATIC",		"昵称:",	0, 5, 5, 100, 17,															NULL},
 	{"EDIT",		"",				WS_TABSTOP, 5, 25, 160, 17,													IDC_NICKNAME},
-	{"STATIC",		"Message:",		0, 5, 55, 100, 17,															NULL},
+	{"STATIC",		"讯息:",		0, 5, 55, 100, 17,															NULL},
 	{"EDIT",		"",				WS_TABSTOP, 5, 75, 400, 17,													IDC_MESSAGE},
 
-	{"BUTTON",		"Birthday",		BS_GROUPBOX, 4, Y_BIRTH_LANG, 160, 55,										NULL},
+	{"BUTTON",		"生日",		BS_GROUPBOX, 4, Y_BIRTH_LANG, 160, 55,										NULL},
 	{"COMBOBOX",	"Day",			WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 15, Y_BIRTH_LANG+20, 40, 120,		IDC_BIRTH_DAY},
-	{"COMBOBOX",	"Month",		WS_TABSTOP | BS_GROUPBOX, 60, Y_BIRTH_LANG+20, 95, 120,						IDC_BIRTH_MONTH},
+	{"COMBOBOX",	"Month",		WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 60, Y_BIRTH_LANG+20, 95, 120,						IDC_BIRTH_MONTH},
 
-	{"BUTTON",		"Language",		BS_GROUPBOX, 170, Y_BIRTH_LANG, 110, 55,									NULL},
-	{"COMBOBOX",	"Language",		WS_TABSTOP | BS_GROUPBOX, 180, Y_BIRTH_LANG+20, 90, 120,					IDC_LANGUAGE},
+	{"BUTTON",		"语言",		BS_GROUPBOX, 170, Y_BIRTH_LANG, 110, 55,									NULL},
+	{"COMBOBOX",	"Language",		WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 180, Y_BIRTH_LANG+20, 90, 120,					IDC_LANGUAGE},
 
-	{"BUTTON",		"Alarm",		BS_GROUPBOX, 285, Y_BIRTH_LANG, 120, 55,									NULL},
+	{"BUTTON",		"闹钟",		BS_GROUPBOX, 285, Y_BIRTH_LANG, 120, 55,									NULL},
 	{"BUTTON",		"",				WS_TABSTOP | BS_AUTOCHECKBOX, 295, Y_BIRTH_LANG+25, 13, 13,					IDC_ALARM_ON},
 	{"COMBOBOX",	"hour",			WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 315, Y_BIRTH_LANG+20, 40, 120,		IDC_ALARM_HOUR},
 	{"COMBOBOX",	"min",			WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 355, Y_BIRTH_LANG+20, 40, 120,		IDC_ALARM_MIN},
 
-	{"BUTTON",		"Favorite color", BS_GROUPBOX, 4, Y_FAV_COLOR, 400, 115,									NULL}
+	{"BUTTON",		"最喜欢的颜色", BS_GROUPBOX, 4, Y_FAV_COLOR, 400, 115,									NULL}
 };
 
 
 const TEMPLATE TuserDlg2[] = {
-	{"BUTTON",	"Touch-screen calibraion (HEX)",BS_GROUPBOX, 4, Y_TCALIB, 400, 95,								NULL},
+	{"BUTTON",	"触摸屏校准数据 (HEX)",BS_GROUPBOX, 4, Y_TCALIB, 400, 95,								NULL},
 	
 	{"BUTTON",	"ADC",						BS_GROUPBOX, 14, Y_TCALIB+15, 190, 75,								NULL},
 	{"STATIC",	"X1",						0, 25, Y_TCALIB+35, 100, 17,										NULL},
@@ -157,25 +157,25 @@ const TEMPLATE TuserDlg2[] = {
 	{"STATIC",	"Y2",						0, 310, Y_TCALIB+60, 40, 17,										NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 330, Y_TCALIB+60, 50, 17,					IDC_TSCR_Y2},
 
-	{"BUTTON",	"Misc",						BS_GROUPBOX, 4, Y_USR_MISC, 400, 180,								NULL},
-	{"STATIC",	"GBA mode screen selection",0, 15, Y_USR_MISC+20, 180, 17,										NULL},
+	{"BUTTON",	"其他",						BS_GROUPBOX, 4, Y_USR_MISC, 400, 180,								NULL},
+	{"STATIC",	"GBA 模式屏幕选择",0, 15, Y_USR_MISC+20, 180, 17,										NULL},
 	{"COMBOBOX","GBA",						WS_TABSTOP | BS_GROUPBOX, 215, Y_USR_MISC+20, 180, 120,				IDC_GBA_MODE_SCREENS},
-	{"STATIC",	"Backlight level",			0, 15, Y_USR_MISC+50, 130, 17,										NULL},
+	{"STATIC",	"亮度等级",			0, 15, Y_USR_MISC+50, 130, 17,										NULL},
 	{"COMBOBOX","Backlight",				WS_TABSTOP | BS_GROUPBOX, 215, Y_USR_MISC+50, 180, 120,				IDC_BRIGHTLIGHT_LEVEL},
-	{"STATIC",	"Boot menu",				0, 15, Y_USR_MISC+80, 100, 17,										NULL},
+	{"STATIC",	"启动引导模式",				0, 15, Y_USR_MISC+80, 100, 17,										NULL},
 	{"COMBOBOX","boot",						WS_TABSTOP | BS_GROUPBOX, 215, Y_USR_MISC+80, 180, 120,				IDC_BOOTMENU},
-	{"STATIC",	"RTC offset",				0, 15, Y_USR_MISC+120, 100, 17,										NULL},
+	{"STATIC",	"RTC 偏移",				0, 15, Y_USR_MISC+120, 100, 17,										NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 100, Y_USR_MISC+120, 90, 17,					IDC_RTC_OFFSET},
-	{"STATIC",	"First boot (year)",		0, 220, Y_USR_MISC+120, 120, 17,									NULL},
+	{"STATIC",	"首次开机 (年)",		0, 220, Y_USR_MISC+120, 120, 17,									NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 345, Y_USR_MISC+120, 50, 17,					IDC_YEAR_BOOT},
 	{"STATIC",	"Update counter",			ES_READONLY, 15, Y_USR_MISC+150, 120, 17,							NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 140, Y_USR_MISC+150, 50, 17,					IDC_UPDATE_COUNTER},
 	{"STATIC",	"CRC16 (HEX)",				ES_READONLY, 220, Y_USR_MISC+150, 90, 17,							NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 345, Y_USR_MISC+150, 50, 17,					IDC_USER_CRC16},
-	{"BUTTON",	"Backup",					WS_TABSTOP | WS_DISABLED, 15, Y_USR_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Restore",					WS_TABSTOP | WS_DISABLED, 90, Y_USR_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Update",					WS_TABSTOP | WS_DISABLED, 245, Y_USR_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Cancel",					WS_TABSTOP | BS_DEFPUSHBUTTON, 320, Y_USR_BUTTONS, 70, 17,			IDCANCEL}
+	{"BUTTON",	"备份",					WS_TABSTOP | WS_DISABLED, 15, Y_USR_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"恢复",					WS_TABSTOP | WS_DISABLED, 90, Y_USR_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"更新",					WS_TABSTOP | WS_DISABLED, 245, Y_USR_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"取消",					WS_TABSTOP | BS_DEFPUSHBUTTON, 320, Y_USR_BUTTONS, 70, 17,			IDCANCEL}
 };
 
 #define Y_WIFI_GENERAL	5
@@ -187,18 +187,18 @@ const TEMPLATE TuserDlg2[] = {
 #define Y_WIFI_BUTTONS	575
 const TEMPLATE TwifiDlg1[] = {
 
-	{"BUTTON",	"General",					BS_GROUPBOX, 4, Y_WIFI_GENERAL, 485, 50,							NULL},
+	{"BUTTON",	"常规",					BS_GROUPBOX, 4, Y_WIFI_GENERAL, 485, 50,							NULL},
 
 	{"STATIC",	"CRC16",					0, 15, Y_WIFI_GENERAL+20, 45, 17,									NULL},
 	{"EDIT",	"",							ES_RIGHT | ES_READONLY, 65, Y_WIFI_GENERAL+20, 55, 17,				IDC_WIFI_CRC16},
-	{"STATIC",	"Version",					0, 125, Y_WIFI_GENERAL+20, 55, 17,									NULL},
+	{"STATIC",	"版本",					0, 125, Y_WIFI_GENERAL+20, 55, 17,									NULL},
 	{"EDIT",	"",							ES_RIGHT | ES_READONLY, 180, Y_WIFI_GENERAL+20, 25, 17,				IDC_WIFI_VERSION},
 	{"STATIC",	"MAC ID",					0, 215, Y_WIFI_GENERAL+20, 55, 17,									NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_RIGHT, 265, Y_WIFI_GENERAL+20, 110, 17,				IDC_WIFI_MACID},
-	{"STATIC",	"RF type",					0, 385, Y_WIFI_GENERAL+20, 55, 17,									NULL},
+	{"STATIC",	"RF 类型",					0, 385, Y_WIFI_GENERAL+20, 55, 17,									NULL},
 	{"EDIT",	"",							ES_READONLY| ES_RIGHT, 440, Y_WIFI_GENERAL+20, 35, 17,				IDC_WIFI_RFTYPE},
 
-	{"BUTTON",	"Enabled channels",			BS_GROUPBOX, X_WIFI_CHANNELS + 4, Y_WIFI_CHANNELS, 230, 50,			NULL},
+	{"BUTTON",	"可用通道",			BS_GROUPBOX, X_WIFI_CHANNELS + 4, Y_WIFI_CHANNELS, 230, 50,			NULL},
 
 	{"BUTTON",	"ch01",						WS_TABSTOP | BS_AUTOCHECKBOX, X_WIFI_CHANNELS + 15, Y_WIFI_CHANNELS+25, 13, 13,		IDC_WIFI_ECHANNEL_01},
 	{"BUTTON",	"ch02",						WS_TABSTOP | BS_AUTOCHECKBOX, X_WIFI_CHANNELS + 30, Y_WIFI_CHANNELS+25, 13, 13,		IDC_WIFI_ECHANNEL_02},
@@ -259,21 +259,21 @@ const TEMPLATE TwifiDlg1[] = {
 };
 
 const TEMPLATE TwifiDlg2[] = {
-	{"BUTTON",	"Backup",					WS_TABSTOP | WS_DISABLED, 15, Y_WIFI_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Restore",					WS_TABSTOP | WS_DISABLED, 90, Y_WIFI_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Update",					WS_TABSTOP | WS_DISABLED, 570, Y_WIFI_BUTTONS, 70, 17,				NULL},
-	{"BUTTON",	"Cancel",					WS_TABSTOP | BS_DEFPUSHBUTTON, 645, Y_WIFI_BUTTONS, 70, 17,			IDCANCEL}
+	{"BUTTON",	"备份",					WS_TABSTOP | WS_DISABLED, 15, Y_WIFI_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"恢复",					WS_TABSTOP | WS_DISABLED, 90, Y_WIFI_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"更新",					WS_TABSTOP | WS_DISABLED, 570, Y_WIFI_BUTTONS, 70, 17,				NULL},
+	{"BUTTON",	"取消",					WS_TABSTOP | BS_DEFPUSHBUTTON, 645, Y_WIFI_BUTTONS, 70, 17,			IDCANCEL}
 };
 
 #define Y_WIFI_AP_BUTTONS	670
 const TEMPLATE TwifiAPDlg1[] = {
-	{"BUTTON",	"Connection Data",			BS_GROUPBOX, 4, 15, 720, 215,										NULL},
+	{"BUTTON",	"连接点信息",			BS_GROUPBOX, 4, 15, 720, 215,										NULL},
 	{"STATIC",	"SSID",						0, 15, 35, 75, 17,													NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_LEFT, 50, 35, 150, 17,								IDC_WIFI_AP_SSID},
 	{"STATIC",	"SSID (WEP)",				0, 220, 35, 125, 17,												NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_LEFT, 300, 35, 150, 17,								IDC_WIFI_AP_SSID2},
 
-	{"STATIC",	"User ID",					0, 470, 35, 95, 17,													NULL},
+	{"STATIC",	"用户 ID",					0, 470, 35, 95, 17,													NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 525, 35, 185, 17,							IDC_WIFI_AP_USER_ID},
 
 	{"BUTTON",	"WEP",						BS_GROUPBOX, 14, 55, 700, 80,										NULL},
@@ -287,7 +287,7 @@ const TEMPLATE TwifiAPDlg1[] = {
 	{"STATIC",	"Key4",						0, 225, 105, 75, 17,												NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_LEFT, 265, 100, 150, 17,							IDC_WIFI_AP_KEY4},
 
-	{"STATIC",	"WEP mode",					0, 445, 75, 75, 17,													NULL},
+	{"STATIC",	"WEP 模式",					0, 445, 75, 75, 17,													NULL},
 	{"COMBOBOX","WEPsize",					WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 535, 75, 80, 120,			IDC_WIFI_AP_WEP_SIZE},
 	{"COMBOBOX","WEPmethod",				WS_TABSTOP | WS_VSCROLL | BS_GROUPBOX, 620, 75, 80, 120,			IDC_WIFI_AP_WEP_EMETHOD},
 
@@ -295,19 +295,19 @@ const TEMPLATE TwifiAPDlg1[] = {
 
 	{"STATIC",	"IP",						0, 25, 155, 95, 17,													NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 165, 155, 150, 17,							IDC_WIFI_AP_IP},
-	{"STATIC",	"Subnet mask",				0, 25, 175, 95, 17,													NULL},
+	{"STATIC",	"子网掩码",				0, 25, 175, 95, 17,													NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 165, 175, 150, 17,							IDC_WIFI_AP_IPMASK},
-	{"STATIC",	"Gateway",					0, 25, 195, 95, 17,													NULL},
+	{"STATIC",	"网关",					0, 25, 195, 95, 17,													NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 165, 195, 150, 17,							IDC_WIFI_AP_GATEWAY},
 
 	{"BUTTON",	"DNS",						BS_GROUPBOX, 370, 140, 345, 60,										NULL},
 	
-	{"STATIC",	"Primary",					0, 385, 155, 95, 17,												NULL},
+	{"STATIC",	"首选",					0, 385, 155, 95, 17,												NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 525, 155, 150, 17,							IDC_WIFI_AP_DNS1},
-	{"STATIC",	"Secondary",				0, 385, 175, 95, 17,												NULL},
+	{"STATIC",	"备选",				0, 385, 175, 95, 17,												NULL},
 	{"EDIT",	"",							WS_TABSTOP | ES_CENTER, 525, 175, 150, 17,							IDC_WIFI_AP_DNS2},
 
-	{"STATIC",	"Status",					0, 375, 205, 95, 17,												NULL},
+	{"STATIC",	"状态",					0, 375, 205, 95, 17,												NULL},
 	{"EDIT",	"",							ES_CENTER | ES_READONLY, 425, 205, 150, 17,							IDC_WIFI_AP_STATUS},
 
 	{"STATIC",	"CRC16",					0, 595, 205, 95, 17,												NULL},
@@ -316,9 +316,9 @@ const TEMPLATE TwifiAPDlg1[] = {
 
 const TEMPLATE TwifiAPDlg2[] = {
 
-	{"BUTTON",	"Backup",					WS_TABSTOP | WS_DISABLED, 15, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
-	{"BUTTON",	"Restore",					WS_TABSTOP | WS_DISABLED, 90, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
-	{"BUTTON",	"Update",					WS_TABSTOP | WS_DISABLED, 570, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
-	{"BUTTON",	"Cancel",					WS_TABSTOP | BS_DEFPUSHBUTTON, 645, Y_WIFI_AP_BUTTONS, 70, 20,			IDCANCEL}
+	{"BUTTON",	"备份",					WS_TABSTOP | WS_DISABLED, 15, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
+	{"BUTTON",	"恢复",					WS_TABSTOP | WS_DISABLED, 90, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
+	{"BUTTON",	"更新",					WS_TABSTOP | WS_DISABLED, 570, Y_WIFI_AP_BUTTONS, 70, 20,				NULL},
+	{"BUTTON",	"取消",					WS_TABSTOP | BS_DEFPUSHBUTTON, 645, Y_WIFI_AP_BUTTONS, 70, 20,			IDCANCEL}
 };
 #endif
