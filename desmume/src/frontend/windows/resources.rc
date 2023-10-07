@@ -13,7 +13,552 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+// 中文(简体，中国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+MENU_PRINCIPAL MENU
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "打开 ROM(&O)",                  IDM_OPEN
+        MENUITEM "最近使用的 ROM(&R)",               ID_FILE_RECENTROM
+        MENUITEM "ROM 信息(&I)",                  IDM_GAME_INFO
+        MENUITEM "暂停(&P)",                      IDM_PAUSE
+        MENUITEM "静音",                          IDM_SHUT_UP
+        MENUITEM SEPARATOR
+        MENUITEM "保存即时存档为...",                  IDM_STATE_SAVE
+        MENUITEM "读取即时存档从...",                  IDM_STATE_LOAD
+        POPUP "快速存档"
+        BEGIN
+            MENUITEM "1",                           IDM_STATE_SAVE_F1
+            MENUITEM "2",                           IDM_STATE_SAVE_F2
+            MENUITEM "3",                           IDM_STATE_SAVE_F3
+            MENUITEM "4",                           IDM_STATE_SAVE_F4
+            MENUITEM "5",                           IDM_STATE_SAVE_F5
+            MENUITEM "6",                           IDM_STATE_SAVE_F6
+            MENUITEM "7",                           IDM_STATE_SAVE_F7
+            MENUITEM "8",                           IDM_STATE_SAVE_F8
+            MENUITEM "9",                           IDM_STATE_SAVE_F9
+            MENUITEM "0",                           IDM_STATE_SAVE_F10
+        END
+        POPUP "快速读档"
+        BEGIN
+            MENUITEM "1",                           IDM_STATE_LOAD_F1
+            MENUITEM "2",                           IDM_STATE_LOAD_F2
+            MENUITEM "3",                           IDM_STATE_LOAD_F3
+            MENUITEM "4",                           IDM_STATE_LOAD_F4
+            MENUITEM "5",                           IDM_STATE_LOAD_F5
+            MENUITEM "6",                           IDM_STATE_LOAD_F6
+            MENUITEM "7",                           IDM_STATE_LOAD_F7
+            MENUITEM "8",                           IDM_STATE_LOAD_F8
+            MENUITEM "9",                           IDM_STATE_LOAD_F9
+            MENUITEM "0",                           IDM_STATE_LOAD_F10
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "导入电池存档...",                   IDM_IMPORTBACKUPMEMORY
+        MENUITEM "导出电池存档...",                   IDM_EXPORTBACKUPMEMORY
+        MENUITEM SEPARATOR
+        MENUITEM "导入 ADVANsCEne 数据库...",        IDM_FILE_IMPORT_DB
+        MENUITEM SEPARATOR
+        MENUITEM "保存截屏为(&A)...",                IDM_PRINTSCREEN
+        MENUITEM "快速截屏(&Q)",                    IDM_QUICK_PRINTSCREEN
+        MENUITEM SEPARATOR
+        MENUITEM "录制 WAV",                      IDM_FILE_RECORDWAV
+        MENUITEM "录制用户 SPU WAV",                IDM_FILE_RECORDUSERSPUWAV
+        MENUITEM "录制 AVI",                      IDM_FILE_RECORDAVI
+        MENUITEM SEPARATOR
+        MENUITEM "播放视频(&P)...",                 IDM_PLAY_MOVIE
+        MENUITEM "录制视频(&R)...",                 IDM_RECORD_MOVIE
+        MENUITEM "停止录制/播放视频(&S)",               IDM_STOPMOVIE
+        MENUITEM SEPARATOR
+        MENUITEM "重置(&R)",                      IDM_RESET
+        MENUITEM "关闭 ROM",                      IDM_CLOSEROM
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&Q)\tAlt F4",              IDM_QUIT
+    END
+    POPUP "查看(&V)"
+    BEGIN
+        POPUP "屏幕布局(&L)"
+        BEGIN
+            MENUITEM "竖屏",                          ID_LCDS_VERTICAL
+            MENUITEM "横屏",                          ID_LCDS_HORIZONTAL
+            MENUITEM "单屏幕",                         ID_LCDS_ONE
+            MENUITEM SEPARATOR
+            MENUITEM "上屏优先 (默认)",                   ID_LCDS_NOSWAP
+            MENUITEM "下屏优先",                        ID_LCDS_SWAP
+            MENUITEM "主屏幕优先",                       ID_LCDS_MAINGPU
+            MENUITEM "副屏幕优先",                       ID_LCDS_SUBGPU
+        END
+        POPUP "旋转(&R)"
+        BEGIN
+            MENUITEM "  0",                         IDC_ROTATE0
+            MENUITEM " 90",                         IDC_ROTATE90
+            MENUITEM "180",                         IDC_ROTATE180
+            MENUITEM "270",                         IDC_ROTATE270
+        END
+        POPUP "窗口大小(&W)"
+        BEGIN
+            MENUITEM "&1x",                         IDC_WINDOW1X
+            MENUITEM "1.5x",                        IDC_WINDOW1_5X
+            MENUITEM "&2x",                         IDC_WINDOW2X
+            MENUITEM "2.5x",                        IDC_WINDOW2_5X
+            MENUITEM "&3x",                         IDC_WINDOW3X
+            MENUITEM "&4x",                         IDC_WINDOW4X
+            MENUITEM "&5x",                         IDC_WINDOW5X
+            MENUITEM SEPARATOR
+            MENUITEM "窗口置顶(&A)",                    IDM_ALWAYS_ON_TOP
+            MENUITEM "锁定(&L)",                      IDM_LOCKDOWN
+        END
+        POPUP "屏幕大小比例 (左:右)"
+        BEGIN
+            MENUITEM "1.0 : 1.0",                   IDC_SCR_RATIO_1p0
+            MENUITEM "1.1 : 0.9",                   IDC_SCR_RATIO_1p1
+            MENUITEM "1.2 : 0.8",                   IDC_SCR_RATIO_1p2
+            MENUITEM "1.3 : 0.7",                   IDC_SCR_RATIO_1p3
+            MENUITEM "1.4 : 0.6",                   IDC_SCR_RATIO_1p4
+            MENUITEM "1.5 : 0.5",                   IDC_SCR_RATIO_1p5
+            MENUITEM SEPARATOR
+            MENUITEM "垂直居中",                        IDC_SCR_VCENTER
+        END
+        POPUP "屏幕间距(&G)"
+        BEGIN
+            MENUITEM "无(&N)\t(0 px)",               IDM_SCREENSEP_NONE
+            MENUITEM "窄边框(&B)\t(5 px)",             IDM_SCREENSEP_BORDER
+            MENUITEM "DS 小间距(&S)\t(64 px)",         IDM_SCREENSEP_NDSGAP
+            MENUITEM "DS 大间距(&L)\t(90 px)",         IDM_SCREENSEP_NDSGAP2
+            MENUITEM SEPARATOR
+            MENUITEM "通过拖拽边框编辑(&E)",                IDM_SCREENSEP_DRAGEDIT
+            MENUITEM SEPARATOR
+            MENUITEM "白色(&W)",                      IDM_SCREENSEP_COLORWHITE
+            MENUITEM "灰色(&G)",                      IDM_SCREENSEP_COLORGRAY
+            MENUITEM "黑色(&B)",                      IDM_SCREENSEP_COLORBLACK
+        END
+        POPUP "全屏选项"
+        BEGIN
+            MENUITEM "强制无边框窗口化",                    IDM_FS_WINDOW
+            MENUITEM "显示菜单",                        IDM_FS_MENU
+            MENUITEM "自动隐藏指针",                      IDM_FS_HIDE_CURSOR
+        END
+        POPUP "滤镜(&F)"
+        BEGIN
+            MENUITEM "常规",                          IDM_RENDER_NORMAL
+            MENUITEM "LQ2x",                        IDM_RENDER_LQ2X
+            MENUITEM "LQ2xS",                       IDM_RENDER_LQ2XS
+            MENUITEM "HQ2x",                        IDM_RENDER_HQ2X
+            MENUITEM "HQ4x",                        IDM_RENDER_HQ4X
+            MENUITEM "HQ2xS",                       IDM_RENDER_HQ2XS
+            MENUITEM "2XSaI",                       IDM_RENDER_2XSAI
+            MENUITEM "Super2XSaI",                  IDM_RENDER_SUPER2XSAI
+            MENUITEM "SuperEagle",                  IDM_RENDER_SUPEREAGLE
+            MENUITEM "Scanline",                    IDM_RENDER_SCANLINE
+            MENUITEM "Bilinear",                    IDM_RENDER_BILINEAR
+            MENUITEM "Nearest 2X",                  IDM_RENDER_NEAREST2X
+            MENUITEM "Nearest 1.5X",                IDM_RENDER_NEAREST1POINT5
+            MENUITEM "Nearest+ 1.5X",               IDM_RENDER_NEARESTPLUS1POINT5
+            MENUITEM "EPX",                         IDM_RENDER_EPX
+            MENUITEM "EPX+",                        IDM_RENDER_EPXPLUS
+            MENUITEM "EPX 1.5X",                    IDM_RENDER_EPX1POINT5
+            MENUITEM "EPX+ 1.5X",                   IDM_RENDER_EPXPLUS1POINT5
+            MENUITEM "2xBRZ",                       IDM_RENDER_2XBRZ
+            MENUITEM "3xBRZ",                       IDM_RENDER_3XBRZ
+            MENUITEM "4xBRZ",                       IDM_RENDER_4XBRZ
+            MENUITEM "5xBRZ",                       IDM_RENDER_5XBRZ
+        END
+        MENUITEM "保持纵横比(&M)",                   IDC_FORCERATIO
+        MENUITEM "&填充到整数(P)",                   IDC_VIEW_PADTOINTEGER
+        MENUITEM SEPARATOR
+        MENUITEM "显示工具栏(&T)",                   IDM_SHOWTOOLBAR
+        MENUITEM SEPARATOR
+        POPUP "&HUD"
+        BEGIN
+            MENUITEM "显示 FPS(&F)",                  ID_VIEW_DISPLAYFPS
+            MENUITEM "显示输入(&I)",                    ID_VIEW_DISPLAYINPUT
+            MENUITEM "显示图形化输入(&G)",                 ID_VIEW_DISPLAYGRAPHICALINPUT
+            MENUITEM "显示帧计数(&C)",                   ID_VIEW_FRAMECOUNTER
+            MENUITEM "显示 Lag 计数(&L)",               ID_VIEW_DISPLAYLAG
+            MENUITEM "显示实时时钟(&R)",                  ID_VIEW_DISPLAYRTC
+            MENUITEM "显示麦克风(&M)",                   ID_VIEW_DISPLAYMICROPHONE
+            MENUITEM "HUD 编辑模式(&E)",                ID_VIEW_HUDEDITOR
+            MENUITEM "设置字体(&S)",                    IDD_FONTCONFIG
+        END
+    END
+    POPUP "配置(&C)"
+    BEGIN
+        POPUP "跳帧(&F)"
+        BEGIN
+            MENUITEM "限制帧率(&L)",                    IDC_FRAMELIMIT
+            MENUITEM SEPARATOR
+            MENUITEM "自动最小跳帧(&A)",                  IDC_FRAMESKIPAUTO
+            MENUITEM SEPARATOR
+            MENUITEM "&0 (不跳帧)",                    IDC_FRAMESKIP0
+            MENUITEM "&1",                          IDC_FRAMESKIP1
+            MENUITEM "&2",                          IDC_FRAMESKIP2
+            MENUITEM "&3",                          IDC_FRAMESKIP3
+            MENUITEM "&4",                          IDC_FRAMESKIP4
+            MENUITEM "&5",                          IDC_FRAMESKIP5
+            MENUITEM "&6",                          IDC_FRAMESKIP6
+            MENUITEM "&7",                          IDC_FRAMESKIP7
+            MENUITEM "&8",                          IDC_FRAMESKIP8
+            MENUITEM "&9",                          IDC_FRAMESKIP9
+        END
+        MENUITEM "模拟设置(&E)",                    IDM_EMULATIONSETTINGS
+        MENUITEM "&3D设置",                       IDM_3DCONFIG
+        MENUITEM "音频设置(&S)",                    IDM_SOUNDSETTINGS
+        MENUITEM "固件设置(&F)",                    IDM_FIRMSETTINGS
+        MENUITEM "麦克风设置(&M)",                   IDM_MICROPHONESETTINGS
+        MENUITEM "Slot &1",                     IDM_SLOT1
+        MENUITEM "Slot &2 (GBA插槽)",             IDM_GBASLOT
+        POPUP "自动检测存档类型(&A)"
+        BEGIN
+            MENUITEM "内置",                          IDM_AUTODETECTSAVETYPE_INTERNAL
+            MENUITEM "从数据库",                        IDM_AUTODETECTSAVETYPE_FROMDATABASE
+        END
+        POPUP "ROM 加载方式(&R)"
+        BEGIN
+            MENUITEM "完整读取到内存 (启动慢, 内存占用高)",        ID_LOADTORAM
+            MENUITEM "来自硬盘的数据流 (类似于 ISO, 瞬时启动, 无内存开销)", ID_STREAMFROMDISK
+        END
+        MENUITEM "控制器设置(&C)",                   IDM_CONFIG
+        MENUITEM "热键设置(&H)",                    IDM_HOTKEY_CONFIG
+        MENUITEM "Wifi 设置(&W)",                 IDM_WIFISETTINGS
+        MENUITEM "路径设置(&P)",                    IDM_PATHSETTINGS
+        MENUITEM "后台暂停",                        IDC_BACKGROUNDPAUSE
+        MENUITEM "后台输入",                        IDC_BACKGROUNDINPUT
+        POPUP "显示模式(&M)"
+        BEGIN
+            MENUITEM "DirectDraw &HW",              ID_DISPLAYMETHOD_DIRECTDRAWHW
+            MENUITEM "DirectDraw &SW",              ID_DISPLAYMETHOD_DIRECTDRAWSW
+            MENUITEM SEPARATOR
+            MENUITEM "&OpenGL",                     ID_DISPLAYMETHOD_OPENGL
+            MENUITEM "滤镜(&F)",                      ID_DISPLAYMETHOD_FILTER
+            MENUITEM SEPARATOR
+            MENUITEM "垂直同步(&V)",                    ID_DISPLAYMETHOD_VSYNC
+        END
+    END
+    POPUP "工具(&T)"
+    BEGIN
+        MENUITEM "反汇编器(&D)",                    IDM_DISASSEMBLER
+        MENUITEM "查看内存(&M)",                    IDM_MEMORY
+        MENUITEM "查看寄存器(&R)",                   IDM_IOREG
+        MENUITEM "查看调色板(&P)",                   IDM_PAL
+        MENUITEM "查看图块(&T)",                    IDM_TILE
+        MENUITEM "查看 Maps(&M)",                 IDM_MAP
+        MENUITEM "查看 OAM(&O)",                  IDM_OAM
+        MENUITEM "查看矩阵",                        IDM_MATRIX_VIEWER
+        MENUITEM "查看光源",                        IDM_LIGHT_VIEWER
+        MENUITEM "查看音频状态(&S)",                  IDM_SOUND_VIEW
+        MENUITEM "查看 NitroFS(&F)",              ID_TOOLS_VIEWFSNITRO
+        MENUITEM SEPARATOR
+        POPUP "金手指(&C)"
+        BEGIN
+            MENUITEM "列表(&L)",                      IDM_CHEATS_LIST, INACTIVE
+            MENUITEM "搜索(&S)",                      IDM_CHEATS_SEARCH, INACTIVE
+            MENUITEM SEPARATOR
+            MENUITEM "禁用",                          IDM_CHEATS_DISABLE
+        END
+        MENUITEM "内存监视...",                     ID_RAM_WATCH
+        MENUITEM "内存搜索...",                     ID_RAM_SEARCH
+        MENUITEM SEPARATOR
+        POPUP "查看图层(&V)"
+        BEGIN
+            MENUITEM "Main GPU",                    IDM_MGPU, CHECKED
+            MENUITEM "Main BG 0",                   IDM_MBG0, CHECKED
+            MENUITEM "Main BG 1",                   IDM_MBG1, CHECKED
+            MENUITEM "Main BG 2",                   IDM_MBG2, CHECKED
+            MENUITEM "Main BG 3",                   IDM_MBG3, CHECKED
+            MENUITEM "Main OBJ",                    IDM_MOBJ, CHECKED
+            MENUITEM SEPARATOR
+            MENUITEM "Sub GPU",                     IDM_SGPU, CHECKED
+            MENUITEM "Sub BG 0",                    IDM_SBG0, CHECKED
+            MENUITEM "Sub BG 1",                    IDM_SBG1, CHECKED
+            MENUITEM "Sub BG 2",                    IDM_SBG2, CHECKED
+            MENUITEM "Sub BG 3",                    IDM_SBG3, CHECKED
+            MENUITEM "Sub OBJ",                     IDM_SOBJ, CHECKED
+        END
+        POPUP "控制台"
+        BEGIN
+            MENUITEM "启用",                          IDM_CONSOLE_SHOWHIDE
+            MENUITEM "置于顶层",                        IDM_CONSOLE_ALWAYS_ON_TOP
+        END
+        MENUITEM SEPARATOR
+        POPUP "Lua 脚本"
+        BEGIN
+            MENUITEM "新建 Lua 脚本窗口...",              IDC_NEW_LUA_SCRIPT
+            MENUITEM "关闭所有脚本窗口",                    IDC_CLOSE_LUA_SCRIPTS
+        END
+    END
+    POPUP "帮助(&H)"
+    BEGIN
+        MENUITEM "网站(&W)",                      IDM_WEBSITE
+        MENUITEM "论坛(&F)",                      IDM_FORUM
+        MENUITEM "W&iki",                       IDM_WIKI
+        MENUITEM "&FAQ",                        IDM_FAQ
+        MENUITEM SEPARATOR
+        MENUITEM "提交问题反馈(&S)",                  IDM_SUBMITBUGREPORT
+        MENUITEM "关于(&A)",                      IDM_ABOUT
+    END
+END
+
+RAMWATCH_MENU MENU
+BEGIN
+    POPUP "文件"
+    BEGIN
+        MENUITEM "新建列表(&N)\tCtrl N",            RAMMENU_FILE_NEW
+        MENUITEM "打开(&O)\tCtrl O",              RAMMENU_FILE_OPEN
+        MENUITEM "保存(&S)\tCtrl S",              RAMMENU_FILE_SAVE
+        MENUITEM "另存为(&V)\tCtrl Shift S",       RAMMENU_FILE_SAVEAS
+        MENUITEM "添加文件(&A)",                    RAMMENU_FILE_APPEND
+        MENUITEM "最近使用文件",                      RAMMENU_FILE_RECENT
+        MENUITEM SEPARATOR
+        MENUITEM "自动载入(&l)",                    RAMMENU_FILE_AUTOLOAD
+        MENUITEM "记住窗口位置",                      RAMMENU_FILE_SAVEWINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "关闭(&C)\tAlt F4",              IDCANCEL
+    END
+    POPUP "监视"
+    BEGIN
+        MENUITEM "新建监视点(&N)\tN",                IDC_C_WATCH
+        MENUITEM "编辑监视点(&E)\tE",                IDC_C_WATCH_EDIT
+        MENUITEM "移除监视点(&R)\tR",                IDC_C_WATCH_REMOVE
+        MENUITEM "复制监视点\tA",                    IDC_C_WATCH_DUPLICATE
+        MENUITEM SEPARATOR
+        MENUITEM "上移\tU",                       IDC_C_WATCH_UP
+        MENUITEM "下移\tD",                       IDC_C_WATCH_DOWN
+    END
+END
+
+RECENTROMS MENU
+BEGIN
+    POPUP "最近使用的 ROM"
+    BEGIN
+        MENUITEM "无",                           65501, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "清空最近使用 ROM 列表",               65500, GRAYED
+    END
+END
+
+MENU_FSNITRO MENU
+BEGIN
+    POPUP "FSNITRO"
+    BEGIN
+        MENUITEM "查看(&V)",                      ID_FSNITRO_VIEW
+        MENUITEM "解压文件(&F)",                    ID_EXTRACTFILE
+        MENUITEM "解压全部(&A)",                    ID_EXTRACTALL
+        MENUITEM SEPARATOR
+        MENUITEM "关闭(&C)",                      IDCANCEL
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_ACCELERATOR1 ACCELERATORS
+BEGIN
+    "N",            RAMMENU_FILE_NEW,       VIRTKEY, CONTROL
+    "O",            RAMMENU_FILE_OPEN,      VIRTKEY, CONTROL
+    "S",            RAMMENU_FILE_SAVE,      VIRTKEY, CONTROL
+    "S",            RAMMENU_FILE_SAVEAS,    VIRTKEY, SHIFT, CONTROL
+    "A",            IDC_C_WATCH_DUPLICATE,  VIRTKEY 
+    "E",            IDC_C_WATCH_EDIT,       VIRTKEY 
+    "D",            IDC_C_WATCH_DOWN,       VIRTKEY 
+    "U",            IDC_C_WATCH_UP,         VIRTKEY 
+    "N",            IDC_C_WATCH,            VIRTKEY 
+    "R",            IDC_C_WATCH_REMOVE,     VIRTKEY 
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_FRAMEADVANCE        BITMAP                  "bitmaps\\IDB_FRAMEADVANCE.bmp"
+
+IDB_OPEN                BITMAP                  "bitmaps\\IDB_OPEN.bmp"
+
+IDB_PAUSE               BITMAP                  "bitmaps\\IDB_PAUSE.bmp"
+
+IDB_PLAY                BITMAP                  "bitmaps\\IDB_PLAY.bmp"
+
+IDB_RESET               BITMAP                  "bitmaps\\IDB_RESET.bmp"
+
+IDB_STOP                BITMAP                  "bitmaps\\IDB_STOP.bmp"
+
+IDB_ROTATECCW           BITMAP                  "bitmaps\\IDB_ROTATECCW.bmp"
+
+IDB_ROTATECW            BITMAP                  "bitmaps\\IDB_ROTATECW.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+ICONDESMUME             ICON                    "DeSmuME.ico"
+
+IDI_FOLDER_OPEN         ICON                    "bitmaps\\FolderClosed.ico"
+
+IDI_FOLDER_CLOSED       ICON                    "bitmaps\\FolderOpen.ico"
+
+IDI_FILE_BINARY         ICON                    "bitmaps\\FileBinary.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_STOPAVI        "停止录制/播放 AVI"
+    IDM_FILE_STOPWAV        "停止录制/播放 WAV"
+    IDM_FILE_RECORDAVI      "录制 AVI"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_RECORDWAV      "录制 WAV"
+END
+
+STRINGTABLE
+BEGIN
+    ID_HOTKEYS_TITLE        "热键设置"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK1            "打开 ROM"
+    ID_LABEL_HK2            "重置"
+    ID_LABEL_HK3            "暂停"
+    ID_LABEL_HK4            "帧步进"
+    ID_LABEL_HK5            "快进"
+    ID_LABEL_HK6            "切换快进"
+    ID_LABEL_HK7            "增大速度"
+    ID_LABEL_HK8            "减小速度"
+    ID_LABEL_HK9            "麦克风"
+    ID_LABEL_HK10           "自动保持"
+    ID_LABEL_HK11           "清除自动保持"
+    ID_LABEL_HK12           "切换光栅处理器"
+    ID_LABEL_HK13           "保存截屏为"
+    ID_LABEL_HK14           "录制 WAV"
+    ID_LABEL_HK15           "录制 AVI"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK3b           "CPU 模式"
+    ID_LABEL_HK3c           "增大 JIT block 大小"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK3d           "减小 JIT block 大小"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK8b           "切换帧率限制"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK48           "连发 A"
+    ID_LABEL_HK49           "连发 Y"
+    ID_LABEL_HK50           "连发 X"
+    ID_LABEL_HK51           "连发 R"
+    ID_LABEL_HK52           "连发 L"
+    ID_LABEL_HK53           "重载 ROM"
+    ID_LABEL_HK13b          "快速截屏"
+    ID_LABEL_HK54           "搜索金手指"
+    ID_LABEL_HK55           "增大压力"
+    ID_LABEL_HK56           "减小压力"
+    ID_LABEL_HK57           "旋转 0"
+    ID_LABEL_HK58           "旋转 90"
+    ID_LABEL_HK59           "旋转 180"
+    ID_LABEL_HK60           "旋转 270"
+    ID_LABEL_HK61           "切换触摸笔抖动"
+    ID_LABEL_HK62           "切换光标"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK16           "切换帧显示"
+    ID_LABEL_HK17           "切换 FPS 显示"
+    ID_LABEL_HK18           "切换输入显示"
+    ID_LABEL_HK19           "切换 Lag 显示"
+    ID_LABEL_HK20           "重置 Lag 计数"
+    ID_LABEL_HK21           "播放视频"
+    ID_LABEL_HK22           "录制视频"
+    ID_LABEL_HK23           "停止录制/播放视频"
+    ID_LABEL_HK24           "切换只读"
+    ID_LABEL_HK25           "倒带"
+    ID_LABEL_HK26           "新建 Lua 窗口"
+    ID_LABEL_HK27           "关闭 Lua 窗口"
+    ID_LABEL_HK28           "最常使用的 Lua 脚本"
+    ID_LABEL_HK29           "触摸笔自动保持"
+    ID_LABEL_HK30           "屏幕布局模式"
+    ID_LABEL_HK31           "屏幕交替"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK32           "增大音量"
+    ID_LABEL_HK33           "减小音量"
+    ID_LABEL_HK34           "保存到存档位 "
+    ID_LABEL_HK35           "读取存档位 "
+    ID_LABEL_HK36           "选择存档位 "
+    ID_LABEL_HK37           "快速存档"
+    ID_LABEL_HK38           "快速读档"
+    ID_LABEL_HK39           "下一个存档位"
+    ID_LABEL_HK40           "上一个存档位"
+    ID_LABEL_HK41           "连发 Right"
+    ID_LABEL_HK42           "连发 Left"
+    ID_LABEL_HK43           "连发 Down"
+    ID_LABEL_HK44           "连发 Up"
+    ID_LABEL_HK45           "连发 Select"
+    ID_LABEL_HK46           "连发 Start"
+    ID_LABEL_HK47           "连发 B"
+END
+
+STRINGTABLE
+BEGIN
+    ID_LABEL_HK63           "金手指列表"
+    ID_LABEL_HK64           "切换金手指"
+    ID_LABEL_HK65           "切换 Main GPU"
+    ID_LABEL_HK66           "切换 Main BG 0 显示层"
+    ID_LABEL_HK67           "切换 Main BG 1 显示层"
+    ID_LABEL_HK68           "切换 Main BG 2 显示层"
+    ID_LABEL_HK69           "切换 Main BG 3 显示层"
+    ID_LABEL_HK70           "切换 Main OBJ 显示层"
+    ID_LABEL_HK71           "切换 Sub GPU"
+    ID_LABEL_HK72           "切换 Sub BG 0 显示层"
+    ID_LABEL_HK73           "切换 Sub BG 1 显示层"
+    ID_LABEL_HK74           "切换 Sub BG 2 显示层"
+    ID_LABEL_HK75           "切换 Sub BG 3 显示层"
+    ID_LABEL_HK76           "切换 Sub OBJ 显示层"
+    ID_LABEL_HK77           "上一个麦克风样本"
+    ID_LABEL_HK78           "下一个麦克风样本"
+END
+
+#endif    // 中文(简体，中国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 英语(美国) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -1605,345 +2150,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Menu
-//
-
-MENU_PRINCIPAL MENU
-BEGIN
-    POPUP "&File"
-    BEGIN
-        MENUITEM "&Open ROM...",                IDM_OPEN
-        MENUITEM "&Recent ROM",                 ID_FILE_RECENTROM
-        MENUITEM "ROM &Info",                   IDM_GAME_INFO
-        MENUITEM "&Pause",                      IDM_PAUSE
-        MENUITEM "Shut Up",                     IDM_SHUT_UP
-        MENUITEM SEPARATOR
-        MENUITEM "Save State As...",            IDM_STATE_SAVE
-        MENUITEM "Load State From...",          IDM_STATE_LOAD
-        POPUP "Save State"
-        BEGIN
-            MENUITEM "1",                           IDM_STATE_SAVE_F1
-            MENUITEM "2",                           IDM_STATE_SAVE_F2
-            MENUITEM "3",                           IDM_STATE_SAVE_F3
-            MENUITEM "4",                           IDM_STATE_SAVE_F4
-            MENUITEM "5",                           IDM_STATE_SAVE_F5
-            MENUITEM "6",                           IDM_STATE_SAVE_F6
-            MENUITEM "7",                           IDM_STATE_SAVE_F7
-            MENUITEM "8",                           IDM_STATE_SAVE_F8
-            MENUITEM "9",                           IDM_STATE_SAVE_F9
-            MENUITEM "0",                           IDM_STATE_SAVE_F10
-        END
-        POPUP "Load State"
-        BEGIN
-            MENUITEM "1",                           IDM_STATE_LOAD_F1
-            MENUITEM "2",                           IDM_STATE_LOAD_F2
-            MENUITEM "3",                           IDM_STATE_LOAD_F3
-            MENUITEM "4",                           IDM_STATE_LOAD_F4
-            MENUITEM "5",                           IDM_STATE_LOAD_F5
-            MENUITEM "6",                           IDM_STATE_LOAD_F6
-            MENUITEM "7",                           IDM_STATE_LOAD_F7
-            MENUITEM "8",                           IDM_STATE_LOAD_F8
-            MENUITEM "9",                           IDM_STATE_LOAD_F9
-            MENUITEM "0",                           IDM_STATE_LOAD_F10
-        END
-        MENUITEM SEPARATOR
-        MENUITEM "Import Backup Memory...",     IDM_IMPORTBACKUPMEMORY
-        MENUITEM "Export Backup Memory...",     IDM_EXPORTBACKUPMEMORY
-        MENUITEM SEPARATOR
-        MENUITEM "Import ADVANsCEne DB...",     IDM_FILE_IMPORT_DB
-        MENUITEM SEPARATOR
-        MENUITEM "Save Screenshot &As...",      IDM_PRINTSCREEN
-        MENUITEM "&Quick Screenshot",           IDM_QUICK_PRINTSCREEN
-        MENUITEM SEPARATOR
-        MENUITEM "Record WAV",                  IDM_FILE_RECORDWAV
-        MENUITEM "Record User SPU WAV",         IDM_FILE_RECORDUSERSPUWAV
-        MENUITEM "Record AVI",                  IDM_FILE_RECORDAVI
-        MENUITEM SEPARATOR
-        MENUITEM "&Play Movie...",              IDM_PLAY_MOVIE
-        MENUITEM "&Record Movie...",            IDM_RECORD_MOVIE
-        MENUITEM "&Stop Movie",                 IDM_STOPMOVIE
-        MENUITEM SEPARATOR
-        MENUITEM "&Reset",                      IDM_RESET
-        MENUITEM "Close ROM",                   IDM_CLOSEROM
-        MENUITEM SEPARATOR
-        MENUITEM "&Quit\tAlt F4",               IDM_QUIT
-    END
-    POPUP "&View"
-    BEGIN
-        POPUP "LCDs &Layout"
-        BEGIN
-            MENUITEM "Vertical",                    ID_LCDS_VERTICAL
-            MENUITEM "Horizontal",                  ID_LCDS_HORIZONTAL
-            MENUITEM "One LCD",                     ID_LCDS_ONE
-            MENUITEM SEPARATOR
-            MENUITEM "Top first (default)",         ID_LCDS_NOSWAP
-            MENUITEM "Bottom first",                ID_LCDS_SWAP
-            MENUITEM "Main screen first",           ID_LCDS_MAINGPU
-            MENUITEM "Sub screen first",            ID_LCDS_SUBGPU
-        END
-        POPUP "&Rotation"
-        BEGIN
-            MENUITEM "  0",                         IDC_ROTATE0
-            MENUITEM " 90",                         IDC_ROTATE90
-            MENUITEM "180",                         IDC_ROTATE180
-            MENUITEM "270",                         IDC_ROTATE270
-        END
-        POPUP "&Window Size"
-        BEGIN
-            MENUITEM "&1x",                         IDC_WINDOW1X
-            MENUITEM "1.5x",                        IDC_WINDOW1_5X
-            MENUITEM "&2x",                         IDC_WINDOW2X
-            MENUITEM "2.5x",                        IDC_WINDOW2_5X
-            MENUITEM "&3x",                         IDC_WINDOW3X
-            MENUITEM "&4x",                         IDC_WINDOW4X
-            MENUITEM "&5x",                         IDC_WINDOW5X
-            MENUITEM SEPARATOR
-            MENUITEM "&Always On Top",              IDM_ALWAYS_ON_TOP
-            MENUITEM "&Lockdown",                   IDM_LOCKDOWN
-        END
-        POPUP "Screen Size Ratio (L:R)"
-        BEGIN
-            MENUITEM "1.0 : 1.0",                   IDC_SCR_RATIO_1p0
-            MENUITEM "1.1 : 0.9",                   IDC_SCR_RATIO_1p1
-            MENUITEM "1.2 : 0.8",                   IDC_SCR_RATIO_1p2
-            MENUITEM "1.3 : 0.7",                   IDC_SCR_RATIO_1p3
-            MENUITEM "1.4 : 0.6",                   IDC_SCR_RATIO_1p4
-            MENUITEM "1.5 : 0.5",                   IDC_SCR_RATIO_1p5
-            MENUITEM SEPARATOR
-            MENUITEM "Center Vertically",           IDC_SCR_VCENTER
-        END
-        POPUP "Screen &Gap"
-        BEGIN
-            MENUITEM "&None\t(0 px)",               IDM_SCREENSEP_NONE
-            MENUITEM "Narrow &Border\t(5 px)",      IDM_SCREENSEP_BORDER
-            MENUITEM "DS (&Small)\t(64 px)",        IDM_SCREENSEP_NDSGAP
-            MENUITEM "DS (&Large)\t(90 px)",        IDM_SCREENSEP_NDSGAP2
-            MENUITEM SEPARATOR
-            MENUITEM "&Editable Via Border Dragging", IDM_SCREENSEP_DRAGEDIT
-            MENUITEM SEPARATOR
-            MENUITEM "&White",                      IDM_SCREENSEP_COLORWHITE
-            MENUITEM "&Gray",                       IDM_SCREENSEP_COLORGRAY
-            MENUITEM "&Black",                      IDM_SCREENSEP_COLORBLACK
-        END
-        POPUP "Fullscreen Options"
-        BEGIN
-            MENUITEM "Force Windowed Fullscreen",   IDM_FS_WINDOW
-            MENUITEM "Show Menu",                   IDM_FS_MENU
-            MENUITEM "Auto-Hide Cursor",            IDM_FS_HIDE_CURSOR
-        END
-        POPUP "Magnification &Filter"
-        BEGIN
-            MENUITEM "Normal",                      IDM_RENDER_NORMAL
-            MENUITEM "LQ2x",                        IDM_RENDER_LQ2X
-            MENUITEM "LQ2xS",                       IDM_RENDER_LQ2XS
-            MENUITEM "HQ2x",                        IDM_RENDER_HQ2X
-            MENUITEM "HQ4x",                        IDM_RENDER_HQ4X
-            MENUITEM "HQ2xS",                       IDM_RENDER_HQ2XS
-            MENUITEM "2XSaI",                       IDM_RENDER_2XSAI
-            MENUITEM "Super2XSaI",                  IDM_RENDER_SUPER2XSAI
-            MENUITEM "SuperEagle",                  IDM_RENDER_SUPEREAGLE
-            MENUITEM "Scanline",                    IDM_RENDER_SCANLINE
-            MENUITEM "Bilinear",                    IDM_RENDER_BILINEAR
-            MENUITEM "Nearest 2X",                  IDM_RENDER_NEAREST2X
-            MENUITEM "Nearest 1.5X",                IDM_RENDER_NEAREST1POINT5
-            MENUITEM "Nearest+ 1.5X",               IDM_RENDER_NEARESTPLUS1POINT5
-            MENUITEM "EPX",                         IDM_RENDER_EPX
-            MENUITEM "EPX+",                        IDM_RENDER_EPXPLUS
-            MENUITEM "EPX 1.5X",                    IDM_RENDER_EPX1POINT5
-            MENUITEM "EPX+ 1.5X",                   IDM_RENDER_EPXPLUS1POINT5
-            MENUITEM "2xBRZ",                       IDM_RENDER_2XBRZ
-            MENUITEM "3xBRZ",                       IDM_RENDER_3XBRZ
-            MENUITEM "4xBRZ",                       IDM_RENDER_4XBRZ
-            MENUITEM "5xBRZ",                       IDM_RENDER_5XBRZ
-        END
-        MENUITEM "&Maintain Aspect Ratio",      IDC_FORCERATIO
-        MENUITEM "&Pad To Integer",             IDC_VIEW_PADTOINTEGER
-        MENUITEM SEPARATOR
-        MENUITEM "Show &Toolbar",               IDM_SHOWTOOLBAR
-        MENUITEM SEPARATOR
-        POPUP "&HUD"
-        BEGIN
-            MENUITEM "Display &FPS",                ID_VIEW_DISPLAYFPS
-            MENUITEM "Display &Input",              ID_VIEW_DISPLAYINPUT
-            MENUITEM "Display &Graphical Input",    ID_VIEW_DISPLAYGRAPHICALINPUT
-            MENUITEM "Display Frame &Counter",      ID_VIEW_FRAMECOUNTER
-            MENUITEM "Display &Lag Counter",        ID_VIEW_DISPLAYLAG
-            MENUITEM "Display &RTC",                ID_VIEW_DISPLAYRTC
-            MENUITEM "Display &Microphone",         ID_VIEW_DISPLAYMICROPHONE
-            MENUITEM "HUD &Editing Mode",           ID_VIEW_HUDEDITOR
-            MENUITEM "&Set Font",                   IDD_FONTCONFIG
-        END
-    END
-    POPUP "&Config"
-    BEGIN
-        POPUP "&Frame Skip"
-        BEGIN
-            MENUITEM "&Limit framerate",            IDC_FRAMELIMIT
-            MENUITEM SEPARATOR
-            MENUITEM "&Auto-minimize skipping",     IDC_FRAMESKIPAUTO
-            MENUITEM SEPARATOR
-            MENUITEM "&0 (never skip)",             IDC_FRAMESKIP0
-            MENUITEM "&1",                          IDC_FRAMESKIP1
-            MENUITEM "&2",                          IDC_FRAMESKIP2
-            MENUITEM "&3",                          IDC_FRAMESKIP3
-            MENUITEM "&4",                          IDC_FRAMESKIP4
-            MENUITEM "&5",                          IDC_FRAMESKIP5
-            MENUITEM "&6",                          IDC_FRAMESKIP6
-            MENUITEM "&7",                          IDC_FRAMESKIP7
-            MENUITEM "&8",                          IDC_FRAMESKIP8
-            MENUITEM "&9",                          IDC_FRAMESKIP9
-        END
-        MENUITEM "&Emulation Settings",         IDM_EMULATIONSETTINGS
-        MENUITEM "&3D Settings",                IDM_3DCONFIG
-        MENUITEM "&Sound Settings",             IDM_SOUNDSETTINGS
-        MENUITEM "&Firmware Settings",          IDM_FIRMSETTINGS
-        MENUITEM "&Microphone Settings",        IDM_MICROPHONESETTINGS
-        MENUITEM "Slot &1",                     IDM_SLOT1
-        MENUITEM "Slot &2 (GBA slot)",          IDM_GBASLOT
-        POPUP "&Autodetect Save Type"
-        BEGIN
-            MENUITEM "Internal",                    IDM_AUTODETECTSAVETYPE_INTERNAL
-            MENUITEM "From database",               IDM_AUTODETECTSAVETYPE_FROMDATABASE
-        END
-        POPUP "&ROM Loading"
-        BEGIN
-            MENUITEM "&Load entirely to RAM (long start-up time, high RAM usage)", ID_LOADTORAM
-            MENUITEM "&Stream from Disk (like an ISO, instant start-up, no RAM usage)", ID_STREAMFROMDISK
-        END
-        MENUITEM "&Control Config",             IDM_CONFIG
-        MENUITEM "&Hotkey Config",              IDM_HOTKEY_CONFIG
-        MENUITEM "&Wifi Settings",              IDM_WIFISETTINGS
-        MENUITEM "&Path Settings",              IDM_PATHSETTINGS
-        MENUITEM "Background Pause",            IDC_BACKGROUNDPAUSE
-        MENUITEM "Background Input",            IDC_BACKGROUNDINPUT
-        POPUP "Display &Method"
-        BEGIN
-            MENUITEM "DirectDraw &HW",              ID_DISPLAYMETHOD_DIRECTDRAWHW
-            MENUITEM "DirectDraw &SW",              ID_DISPLAYMETHOD_DIRECTDRAWSW
-            MENUITEM SEPARATOR
-            MENUITEM "&OpenGL",                     ID_DISPLAYMETHOD_OPENGL
-            MENUITEM "&Filter",                     ID_DISPLAYMETHOD_FILTER
-            MENUITEM SEPARATOR
-            MENUITEM "&VSync",                      ID_DISPLAYMETHOD_VSYNC
-        END
-    END
-    POPUP "&Tools"
-    BEGIN
-        MENUITEM "&Disassembler",               IDM_DISASSEMBLER
-        MENUITEM "View &Memory",                IDM_MEMORY
-        MENUITEM "View &Registers",             IDM_IOREG
-        MENUITEM "View &Palette",               IDM_PAL
-        MENUITEM "View &Tiles",                 IDM_TILE
-        MENUITEM "View M&aps",                  IDM_MAP
-        MENUITEM "View &OAM",                   IDM_OAM
-        MENUITEM "View Matrices",               IDM_MATRIX_VIEWER
-        MENUITEM "View Lights",                 IDM_LIGHT_VIEWER
-        MENUITEM "View &Sound State",           IDM_SOUND_VIEW
-        MENUITEM "View Nitro&FS",               ID_TOOLS_VIEWFSNITRO
-        MENUITEM SEPARATOR
-        POPUP "&Cheats"
-        BEGIN
-            MENUITEM "&List",                       IDM_CHEATS_LIST, INACTIVE
-            MENUITEM "&Search",                     IDM_CHEATS_SEARCH, INACTIVE
-            MENUITEM SEPARATOR
-            MENUITEM "Disable",                     IDM_CHEATS_DISABLE
-        END
-        MENUITEM "RAM Watch...",                ID_RAM_WATCH
-        MENUITEM "RAM Search...",               ID_RAM_SEARCH
-        MENUITEM SEPARATOR
-        POPUP "&View Layers"
-        BEGIN
-            MENUITEM "Main GPU",                    IDM_MGPU, CHECKED
-            MENUITEM "Main BG 0",                   IDM_MBG0, CHECKED
-            MENUITEM "Main BG 1",                   IDM_MBG1, CHECKED
-            MENUITEM "Main BG 2",                   IDM_MBG2, CHECKED
-            MENUITEM "Main BG 3",                   IDM_MBG3, CHECKED
-            MENUITEM "Main OBJ",                    IDM_MOBJ, CHECKED
-            MENUITEM SEPARATOR
-            MENUITEM "Sub GPU",                     IDM_SGPU, CHECKED
-            MENUITEM "Sub BG 0",                    IDM_SBG0, CHECKED
-            MENUITEM "Sub BG 1",                    IDM_SBG1, CHECKED
-            MENUITEM "Sub BG 2",                    IDM_SBG2, CHECKED
-            MENUITEM "Sub BG 3",                    IDM_SBG3, CHECKED
-            MENUITEM "Sub OBJ",                     IDM_SOBJ, CHECKED
-        END
-        POPUP "Console"
-        BEGIN
-            MENUITEM "Enabled",                     IDM_CONSOLE_SHOWHIDE
-            MENUITEM "Always On Top",               IDM_CONSOLE_ALWAYS_ON_TOP
-        END
-        MENUITEM SEPARATOR
-        POPUP "Lua Scripting"
-        BEGIN
-            MENUITEM "New Lua Script Window...",    IDC_NEW_LUA_SCRIPT
-            MENUITEM "Close All Script Windows",    IDC_CLOSE_LUA_SCRIPTS
-        END
-    END
-    POPUP "&Help"
-    BEGIN
-        MENUITEM "&Website",                    IDM_WEBSITE
-        MENUITEM "&Forums",                     IDM_FORUM
-        MENUITEM "W&iki",                       IDM_WIKI
-        MENUITEM "&FAQ",                        IDM_FAQ
-        MENUITEM SEPARATOR
-        MENUITEM "&Submit a bug report",        IDM_SUBMITBUGREPORT
-        MENUITEM "&About",                      IDM_ABOUT
-    END
-END
-
-RAMWATCH_MENU MENU
-BEGIN
-    POPUP "File"
-    BEGIN
-        MENUITEM "&New list\tCtrl N",           RAMMENU_FILE_NEW
-        MENUITEM "&Open...\tCtrl O",            RAMMENU_FILE_OPEN
-        MENUITEM "&Save\tCtrl S",               RAMMENU_FILE_SAVE
-        MENUITEM "Sa&ve As...\tCtrl Shift S",   RAMMENU_FILE_SAVEAS
-        MENUITEM "&Append file...",             RAMMENU_FILE_APPEND
-        MENUITEM "Recent",                      RAMMENU_FILE_RECENT
-        MENUITEM SEPARATOR
-        MENUITEM "Auto-&load",                  RAMMENU_FILE_AUTOLOAD
-        MENUITEM "Save Window Position",        RAMMENU_FILE_SAVEWINDOW
-        MENUITEM SEPARATOR
-        MENUITEM "&Close\tAlt F4",              IDCANCEL
-    END
-    POPUP "Watches"
-    BEGIN
-        MENUITEM "&New Watch\tN",               IDC_C_WATCH
-        MENUITEM "&Edit Watch\tE",              IDC_C_WATCH_EDIT
-        MENUITEM "&Remove Watch\tR",            IDC_C_WATCH_REMOVE
-        MENUITEM "Duplicate Watch\tA",          IDC_C_WATCH_DUPLICATE
-        MENUITEM SEPARATOR
-        MENUITEM "Move Up\tU",                  IDC_C_WATCH_UP
-        MENUITEM "Move Down\tD",                IDC_C_WATCH_DOWN
-    END
-END
-
-RECENTROMS MENU
-BEGIN
-    POPUP "Recent ROMs"
-    BEGIN
-        MENUITEM "None",                        65501, GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "Clear recent ROMs list",      65500, GRAYED
-    END
-END
-
-MENU_FSNITRO MENU
-BEGIN
-    POPUP "FSNITRO"
-    BEGIN
-        MENUITEM "&View",                       ID_FSNITRO_VIEW
-        MENUITEM "Extract &File...",            ID_EXTRACTFILE
-        MENUITEM "Extract &All...",             ID_EXTRACTALL
-        MENUITEM SEPARATOR
-        MENUITEM "&Close",                      IDCANCEL
-    END
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // DESIGNINFO
 //
 
@@ -2083,26 +2289,6 @@ END
 #endif    // APSTUDIO_INVOKED
 
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
-
-IDR_ACCELERATOR1 ACCELERATORS
-BEGIN
-    "N",            RAMMENU_FILE_NEW,       VIRTKEY, CONTROL
-    "O",            RAMMENU_FILE_OPEN,      VIRTKEY, CONTROL
-    "S",            RAMMENU_FILE_SAVE,      VIRTKEY, CONTROL
-    "S",            RAMMENU_FILE_SAVEAS,    VIRTKEY, SHIFT, CONTROL
-    "A",            IDC_C_WATCH_DUPLICATE,  VIRTKEY 
-    "E",            IDC_C_WATCH_EDIT,       VIRTKEY 
-    "D",            IDC_C_WATCH_DOWN,       VIRTKEY 
-    "U",            IDC_C_WATCH_UP,         VIRTKEY 
-    "N",            IDC_C_WATCH,            VIRTKEY 
-    "R",            IDC_C_WATCH_REMOVE,     VIRTKEY 
-END
-
-
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2166,181 +2352,7 @@ BEGIN
     0
 END
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_FRAMEADVANCE        BITMAP                  "bitmaps\\IDB_FRAMEADVANCE.bmp"
-
-IDB_OPEN                BITMAP                  "bitmaps\\IDB_OPEN.bmp"
-
-IDB_PAUSE               BITMAP                  "bitmaps\\IDB_PAUSE.bmp"
-
-IDB_PLAY                BITMAP                  "bitmaps\\IDB_PLAY.bmp"
-
-IDB_RESET               BITMAP                  "bitmaps\\IDB_RESET.bmp"
-
-IDB_STOP                BITMAP                  "bitmaps\\IDB_STOP.bmp"
-
-IDB_ROTATECCW           BITMAP                  "bitmaps\\IDB_ROTATECCW.bmp"
-
-IDB_ROTATECW            BITMAP                  "bitmaps\\IDB_ROTATECW.bmp"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-ICONDESMUME             ICON                    "DeSmuME.ico"
-
-IDI_FOLDER_OPEN         ICON                    "bitmaps\\FolderClosed.ico"
-
-IDI_FOLDER_CLOSED       ICON                    "bitmaps\\FolderOpen.ico"
-
-IDI_FILE_BINARY         ICON                    "bitmaps\\FileBinary.ico"
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
-STRINGTABLE
-BEGIN
-    IDM_FILE_STOPAVI        "Stop AVI"
-    IDM_FILE_STOPWAV        "Stop WAV"
-    IDM_FILE_RECORDAVI      "Record AVI"
-END
-
-STRINGTABLE
-BEGIN
-    IDM_FILE_RECORDWAV      "Record WAV"
-END
-
-STRINGTABLE
-BEGIN
-    ID_HOTKEYS_TITLE        "Hotkey Configuration"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK1            "Open ROM"
-    ID_LABEL_HK2            "Reset"
-    ID_LABEL_HK3            "Pause"
-    ID_LABEL_HK4            "Frame Advance"
-    ID_LABEL_HK5            "Fast Forward"
-    ID_LABEL_HK6            "Fast Forward Toggle"
-    ID_LABEL_HK7            "Increase Speed"
-    ID_LABEL_HK8            "Decrease Speed"
-    ID_LABEL_HK9            "Microphone"
-    ID_LABEL_HK10           "Auto-Hold"
-    ID_LABEL_HK11           "Auto-Hold Clear"
-    ID_LABEL_HK12           "Toggle Rasterizer"
-    ID_LABEL_HK13           "Save Screenshot as"
-    ID_LABEL_HK14           "Record WAV"
-    ID_LABEL_HK15           "Record AVI"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK3b           "CPU mode"
-    ID_LABEL_HK3c           "Increase JIT block size"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK3d           "Decrease JIT block size"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK8b           "Limit Framerate Toggle"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK48           "Turbo A"
-    ID_LABEL_HK49           "Turbo Y"
-    ID_LABEL_HK50           "Turbo X"
-    ID_LABEL_HK51           "Turbo R"
-    ID_LABEL_HK52           "Turbo L"
-    ID_LABEL_HK53           "Reload ROM"
-    ID_LABEL_HK13b          "Quick Screenshot"
-    ID_LABEL_HK54           "Search Cheats"
-    ID_LABEL_HK55           "Increase Pressure"
-    ID_LABEL_HK56           "Decrease Pressure"
-    ID_LABEL_HK57           "Rotation 0"
-    ID_LABEL_HK58           "Rotation 90"
-    ID_LABEL_HK59           "Rotation 180"
-    ID_LABEL_HK60           "Rotation 270"
-    ID_LABEL_HK61           "Toggle Stylus Jitter"
-    ID_LABEL_HK62           "Toggle Cursor"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK16           "Toggle Frame Display"
-    ID_LABEL_HK17           "Toggle FPS Display"
-    ID_LABEL_HK18           "Toggle Input Display"
-    ID_LABEL_HK19           "Toggle Lag Display"
-    ID_LABEL_HK20           "Reset Lag Counter"
-    ID_LABEL_HK21           "Play Movie"
-    ID_LABEL_HK22           "Record Movie"
-    ID_LABEL_HK23           "Stop Movie"
-    ID_LABEL_HK24           "Toggle Read Only"
-    ID_LABEL_HK25           "Rewind"
-    ID_LABEL_HK26           "New Lua Window"
-    ID_LABEL_HK27           "Close Lua Windows"
-    ID_LABEL_HK28           "Most Recent Lua Script"
-    ID_LABEL_HK29           "Stylus Auto-Hold"
-    ID_LABEL_HK30           "LCDs layout mode"
-    ID_LABEL_HK31           "LCDs swap"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK32           "Increase Volume"
-    ID_LABEL_HK33           "Decrease Volume"
-    ID_LABEL_HK34           "Save to Slot "
-    ID_LABEL_HK35           "Load from Slot "
-    ID_LABEL_HK36           "Select Save Slot "
-    ID_LABEL_HK37           "Quick Save"
-    ID_LABEL_HK38           "Quick Load"
-    ID_LABEL_HK39           "Next Save Slot"
-    ID_LABEL_HK40           "Previous Save Slot"
-    ID_LABEL_HK41           "Turbo Right"
-    ID_LABEL_HK42           "Turbo Left"
-    ID_LABEL_HK43           "Turbo Down"
-    ID_LABEL_HK44           "Turbo Up"
-    ID_LABEL_HK45           "Turbo Select"
-    ID_LABEL_HK46           "Turbo Start"
-    ID_LABEL_HK47           "Turbo B"
-END
-
-STRINGTABLE
-BEGIN
-    ID_LABEL_HK63           "List Cheats"
-    ID_LABEL_HK64           "Toggle Cheats"
-    ID_LABEL_HK65           "Toggle Main GPU"
-    ID_LABEL_HK66           "Toggle Main BG 0 Layer"
-    ID_LABEL_HK67           "Toggle Main BG 1 Layer"
-    ID_LABEL_HK68           "Toggle Main BG 2 Layer"
-    ID_LABEL_HK69           "Toggle Main BG 3 Layer"
-    ID_LABEL_HK70           "Toggle Main OBJ Layer"
-    ID_LABEL_HK71           "Toggle Sub GPU"
-    ID_LABEL_HK72           "Toggle Sub BG 0 Layer"
-    ID_LABEL_HK73           "Toggle Sub BG 1 Layer"
-    ID_LABEL_HK74           "Toggle Sub BG 2 Layer"
-    ID_LABEL_HK75           "Toggle Sub BG 3 Layer"
-    ID_LABEL_HK76           "Toggle Sub OBJ Layer"
-END
-
-#endif    // English (United States) resources
+#endif    // 英语(美国) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

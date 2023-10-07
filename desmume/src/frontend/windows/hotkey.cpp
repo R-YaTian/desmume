@@ -719,13 +719,13 @@ void InitCustomKeys (SCustomKeys *keys)
 
 	keys->PrevSample.handleKeyDown = HK_PrevSampleKeyDown;
 	keys->PrevSample.code = "Mic Prev Sample";
-	keys->PrevSample.name = L"Mic Prev Sample";
+	keys->PrevSample.name = STRW(ID_LABEL_HK77);
 	keys->PrevSample.page = HOTKEY_PAGE_MAIN;
 	keys->PrevSample.key = NULL;
 
 	keys->NextSample.handleKeyDown = HK_NextSampleKeyDown;
 	keys->NextSample.code = "Mic Next Sample";
-	keys->NextSample.name = L"Mic Next Sample";
+	keys->NextSample.name = STRW(ID_LABEL_HK78);
 	keys->NextSample.page = HOTKEY_PAGE_MAIN;
 	keys->NextSample.key = NULL;
 

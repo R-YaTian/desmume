@@ -76,6 +76,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Fastbuild|Win32'">
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Fastbuild|Win32'">
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Fastbuild|x64'">
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\addons\slot1comp_mc.cpp" />
     <ClCompile Include="..\..\addons\slot1comp_protocol.cpp" />
