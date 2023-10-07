@@ -140,8 +140,9 @@ void OpenConsole()
 	}
 	else
 	{
-		SetConsoleCP(GetACP());
-		SetConsoleOutputCP(GetACP());
+		UINT consoleCP = GetACP();
+		SetConsoleCP(consoleCP == 936 ? 65001 : consoleCP);
+		SetConsoleOutputCP(consoleCP == 936 ? 65001 : consoleCP);
 	}
 
 	//newer and improved console title:

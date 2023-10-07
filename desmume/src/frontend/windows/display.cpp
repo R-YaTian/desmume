@@ -62,7 +62,7 @@ Color::Fuchsia
 };*/
 
 RECT FullScreenRect, MainScreenRect, SubScreenRect, GapRect;
-RECT MainScreenSrcRect, SubScreenSrcRect;
+RECT MainScreenSrcRect, SubScreenSrcRect, ClientRect;
 
 bool ForceRatio = true;
 bool PadToInteger = false;
@@ -106,6 +106,8 @@ int scanline_filter_a = 0;
 int scanline_filter_b = 2;
 int scanline_filter_c = 2;
 int scanline_filter_d = 4;
+
+int tbheight;
 
 #pragma pack(push,1)
 struct pix24
@@ -151,7 +153,7 @@ struct DisplayLayoutInfo
 //performs aspect ratio letterboxing correction and integer clamping
 DisplayLayoutInfo CalculateDisplayLayout(RECT rcClient, bool maintainAspect, bool maintainInteger, int targetWidth, int targetHeight)
 {
-	DisplayLayoutInfo ret;
+	DisplayLayoutInfo ret{};
 
 	//do maths on the viewport and the native resolution and the user settings to get a display rectangle
 	SIZE sz = { rcClient.right - rcClient.left, rcClient.bottom - rcClient.top };
@@ -276,6 +278,7 @@ template<typename T> static void doRotate(void* dst)
 	break;
 	}
 }
+#ifdef _DEBUG
 static void DD_FillRect(LPDIRECTDRAWSURFACE7 surf, int left, int top, int right, int bottom, DWORD color)
 {
 	RECT r;
@@ -287,11 +290,18 @@ static void DD_FillRect(LPDIRECTDRAWSURFACE7 surf, int left, int top, int right,
 	fx.dwFillColor = 0; //color is just for debug
 	surf->Blt(&r, NULL, NULL, DDBLT_COLORFILL | DDBLT_WAIT, &fx);
 }
+#endif
+static void DD_FillRect_Alt(HDC dc, int left, int top, int right, int bottom, HBRUSH brush)
+{
+	RECT r;
+	SetRect(&r, left, top, right, bottom);
+	FillRect(dc, &r, brush);
+}
 
 static void OGL_DrawTexture(RECT* srcRects, RECT* dstRects)
 {
 	//don't change the original rects
-	RECT sRects[2];
+	RECT sRects[2]{};
 	sRects[0] = RECT(srcRects[0]);
 	sRects[1] = RECT(srcRects[1]);
 
@@ -408,7 +418,7 @@ static void OGL_DoDisplay()
 	dr[2].bottom = height - dr[2].bottom;
 	dr[2].top = height - dr[2].top;
 
-	RECT srcRects[2];
+	RECT srcRects[2]{};
 	const bool isMainGPUFirst = (GPU->GetDisplayInfo().engineID[NDSDisplayID_Main] == GPUEngineID_Main);
 
 	if (video.swap == 0)
@@ -489,7 +499,7 @@ static void DD_DoDisplay()
 	if (!ddraw.unlock()) return;
 
 	RECT* dstRects[2] = { &MainScreenRect, &SubScreenRect };
-	RECT* srcRects[2];
+	RECT* srcRects[2]{};
 	const bool isMainGPUFirst = (GPU->GetDisplayInfo().engineID[NDSDisplayID_Main] == GPUEngineID_Main);
 
 	if (video.swap == 0)
@@ -518,33 +528,41 @@ static void DD_DoDisplay()
 	}
 
 	//this code fills in all the undrawn areas
-	//it is probably a waste of time to keep black-filling all this, but we need to do it to be safe.
+	//it is probably a waste of time to keep filling all this, but we need to do it to be safe.
 	{
 		RECT wr;
 		GetWindowRect(MainWindow->getHWnd(), &wr);
-		RECT r;
-		GetNdsScreenRect(&r);
-		int left = r.left;
-		int top = r.top;
-		int right = r.right;
-		int bottom = r.bottom;
-		//printf("%d %d %d %d / %d %d %d %d\n",fullScreen.left,fullScreen.top,fullScreen.right,fullScreen.bottom,left,top,right,bottom);
-		//printf("%d %d %d %d / %d %d %d %d\n",MainScreenRect.left,MainScreenRect.top,MainScreenRect.right,MainScreenRect.bottom,SubScreenRect.left,SubScreenRect.top,SubScreenRect.right,SubScreenRect.bottom);
+		int left = ClientRect.left;
+		int top = ClientRect.top;
+		int right = ClientRect.right;
+		int bottom = ClientRect.bottom;
+
 		if (ddraw.OK())
 		{
-			DD_FillRect(ddraw.surface.primary, 0, 0, left, top, RGB(255, 0, 0)); //topleft
-			DD_FillRect(ddraw.surface.primary, left, 0, right, top, RGB(128, 0, 0)); //topcenter
-			DD_FillRect(ddraw.surface.primary, right, 0, wr.right, top, RGB(0, 255, 0)); //topright
-			DD_FillRect(ddraw.surface.primary, 0, top, left, bottom, RGB(0, 128, 0));  //left
-			DD_FillRect(ddraw.surface.primary, right, top, wr.right, bottom, RGB(0, 0, 255)); //right
-			DD_FillRect(ddraw.surface.primary, 0, bottom, left, wr.bottom, RGB(0, 0, 128)); //bottomleft
-			DD_FillRect(ddraw.surface.primary, left, bottom, right, wr.bottom, RGB(255, 0, 255)); //bottomcenter
-			DD_FillRect(ddraw.surface.primary, right, bottom, wr.right, wr.bottom, RGB(0, 255, 255)); //bottomright
-			if (video.layout == 1)
-			{
-				DD_FillRect(ddraw.surface.primary, SubScreenRect.left, wr.top, wr.right, SubScreenRect.top, RGB(0, 0, 0)); //Top gap left when centering the resized screen
-				DD_FillRect(ddraw.surface.primary, SubScreenRect.left, SubScreenRect.bottom, wr.right, wr.bottom, RGB(0, 0, 0)); //Bottom gap left when centering the resized screen
+			u32 color_rev = (u32)ScreenGapColor;
+			HDC dc;
+			HBRUSH brush;
+			dc = GetDC(MainWindow->getHWnd());
+			brush = CreateSolidBrush(color_rev);
+			if (video.layout == 1) {
+				int x_main = left + MainScreenRect.right - MainScreenRect.left;
+				int x_sub = x_main + SubScreenRect.right - SubScreenRect.left;
+				int y_top = top + SubScreenRect.top - MainScreenRect.top;
+				int y_bottom = y_top + SubScreenRect.bottom - SubScreenRect.top;
+				DD_FillRect_Alt(dc, 0, tbheight, x_main, tbheight + top, brush); // main top
+				DD_FillRect_Alt(dc, 0, bottom, x_main, wr.bottom, brush); // main bottom
+				DD_FillRect_Alt(dc, 0, tbheight + top, left, bottom, brush); // main left
+				DD_FillRect_Alt(dc, x_main, tbheight, wr.right, tbheight + y_top, brush); // sub top
+				DD_FillRect_Alt(dc, x_main, tbheight + y_bottom, wr.right, wr.bottom, brush); // sub bottom
+				DD_FillRect_Alt(dc, x_sub, tbheight + y_top, wr.right, tbheight + y_bottom, brush); // sub right
+			} else {
+				DD_FillRect_Alt(dc, 0, tbheight, left, wr.bottom, brush); // screen left
+				DD_FillRect_Alt(dc, right, tbheight, wr.right, wr.bottom, brush); // screen right
+				DD_FillRect_Alt(dc, left, tbheight, right, tbheight + top, brush); // screen top
+				DD_FillRect_Alt(dc, left, bottom, right, wr.bottom, brush); // screen bottom
 			}
+			DeleteObject((HGDIOBJ)brush);
+			ReleaseDC(MainWindow->getHWnd(), dc);
 		}
 	}
 
@@ -639,7 +657,7 @@ void Display()
 	if (CommonSettings.single_core())
 	{
 		video.srcBuffer = (u8*)dispInfo.masterCustomBuffer;
-		video.srcBufferSize = dispInfo.customWidth * dispInfo.customHeight * dispInfo.pixelBytes * 2;
+		video.srcBufferSize = static_cast<size_t>(2) * dispInfo.customWidth * dispInfo.customHeight * dispInfo.pixelBytes;
 		DoDisplay();
 	}
 	else
@@ -657,7 +675,7 @@ void Display()
 		else newestDisplayBuffer = (currDisplayBuffer + 2) % 3;
 
 		DisplayBuffer& db = displayBuffers[newestDisplayBuffer];
-		size_t targetSize = dispInfo.customWidth * dispInfo.customHeight * dispInfo.pixelBytes * 2;
+		size_t targetSize = static_cast<size_t>(2) * dispInfo.customWidth * dispInfo.customHeight * dispInfo.pixelBytes;
 		if (db.size != targetSize)
 		{
 			free_aligned(db.buffer);
@@ -688,7 +706,7 @@ void DoDisplay()
 		ColorspaceConvertBuffer888XTo8888Opaque<true, false>((u32*)video.srcBuffer, video.buffer, video.srcBufferSize / 4);
 
 	//some games use the backlight for fading effects
-	const size_t pixCount = video.prefilterWidth * video.prefilterHeight / 2;
+	const size_t pixCount = video.prefilterWidth / static_cast<size_t>(2) * video.prefilterHeight;
 	const NDSDisplayInfo &displayInfo = GPU->GetDisplayInfo();
 	ColorspaceApplyIntensityToBuffer32<false, false>(video.buffer, pixCount, displayInfo.backlightIntensity[NDSDisplayID_Main]);
 	ColorspaceApplyIntensityToBuffer32<false, false>(video.buffer + pixCount, pixCount, displayInfo.backlightIntensity[NDSDisplayID_Touch]);
@@ -741,7 +759,7 @@ void KillDisplay()
 
 void UpdateWndRects(HWND hwnd, RECT* newClientRect)
 {
-	POINT ptClient;
+	POINT ptClient{};
 	RECT rc;
 
 	GapRect = {0,0,0,0};
@@ -754,7 +772,7 @@ void UpdateWndRects(HWND hwnd, RECT* newClientRect)
 		defHeight += video.scaledscreengap();
 	float ratio;
 	int oneScreenHeight, gapHeight;
-	int tbheight;
+	//int tbheight;
 
 	//if we're in the middle of resizing the window, GetClientRect will return the old rect
 	if (newClientRect)
@@ -858,7 +876,7 @@ void UpdateWndRects(HWND hwnd, RECT* newClientRect)
 
 				ratio = ((float)wndHeight / (float)defHeight);
 
-				oneScreenHeight = (int)((video.height / 2) * ratio);
+				oneScreenHeight = (int)((video.height / static_cast<float>(2)) * ratio);
 				gapHeight = (wndHeight - (oneScreenHeight * 2));
 
 				if ((video.rotation == 90) || (video.rotation == 270))
@@ -941,6 +959,7 @@ void UpdateWndRects(HWND hwnd, RECT* newClientRect)
 	SubScreenRect.bottom += tbheight;
 	GapRect.top += tbheight;
 	GapRect.bottom += tbheight;
+	ClientRect = rc;
 }
 
 static void InvokeOnMainThread(void(*function)(DWORD), DWORD argument)
@@ -986,7 +1005,7 @@ void SetLayerMasks(int mainEngineMask, int subEngineMask)
 		const int mask = core == 0 ? mainEngineMask : subEngineMask;
 		for (size_t layer = 0; layer < numLayers; layer++)
 		{
-			const bool newLayerState = (mask >> layer) & 0x01 != 0;
+			const bool newLayerState = ((mask >> layer) & 0x01) != 0;
 			if (newLayerState != CommonSettings.dispLayers[core][layer])
 			{
 				gpu->SetLayerEnableState(layer, newLayerState);
