@@ -210,7 +210,7 @@ BEGIN
             MENUITEM "&9",                          IDC_FRAMESKIP9
         END
         MENUITEM "模拟设置(&E)",                    IDM_EMULATIONSETTINGS
-        MENUITEM "&3D设置",                       IDM_3DCONFIG
+        MENUITEM "&3D 设置",                      IDM_3DCONFIG
         MENUITEM "音频设置(&S)",                    IDM_SOUNDSETTINGS
         MENUITEM "固件设置(&F)",                    IDM_FIRMSETTINGS
         MENUITEM "麦克风设置(&M)",                   IDM_MICROPHONESETTINGS
@@ -414,6 +414,88 @@ IDI_FOLDER_OPEN         ICON                    "bitmaps\\FolderClosed.ico"
 IDI_FOLDER_CLOSED       ICON                    "bitmaps\\FolderOpen.ico"
 
 IDI_FILE_BINARY         ICON                    "bitmaps\\FileBinary.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_3DSETTINGS DIALOGEX 0, 0, 329, 273
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "3D 设置"
+FONT 8, "MS Sans Serif", 400, 0, 0x0
+BEGIN
+    COMBOBOX        IDC_3DCORE,14,20,115,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "高精度色彩插值",IDC_INTERPOLATECOLOR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,56,124,10
+    CONTROL         "启用边缘标记",IDC_3DSETTINGS_EDGEMARK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,90,84,10
+    CONTROL         "启用雾",IDC_3DSETTINGS_FOG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,101,52,10
+    CONTROL         "启用纹理",IDC_3DSETTINGS_TEXTURE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,112,67,10
+    LTEXT           "多重抗锯齿",ID_LABEL_MSAA_SAMPLES,12,145,78,8
+    EDITTEXT        IDC_TEXT_PRESCALEHD,273,17,31,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_NUD_PRESCALEHD,"msctls_updown32",UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,303,17,12,14
+    PUSHBUTTON      "默认",IDC_DEFAULT,135,19,50,15
+    DEFPUSHBUTTON   "确定",IDOK,211,252,50,15
+    PUSHBUTTON      "取消",IDCANCEL,273,252,50,15
+    GROUPBOX        "3D 渲染引擎",IDC_STATIC,7,7,184,34
+    GROUPBOX        "SoftRasterizer 选项",IDC_STATIC,7,44,184,83
+    LTEXT           "修复一些涉及直线的图形错误, 但会导致一些其他问题。并没有多少游戏用到直线。",ID_LABEL_ZELDA_SHADOW_DEPTH_HACK2,12,106,170,18
+    CONTROL         "启用直线修正",IDC_3DSETTINGS_LINEHACK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,96,73,10
+    LTEXT           "解决某些游戏中的文本 Bug (例:世界树迷宫)",ID_LABEL_TXTHACK1,12,77,171,8
+    LTEXT           "可能需要为不同场景切换功能开关",ID_LABEL_TXTHACK2,12,86,167,8
+    CONTROL         "启用文本修正",IDC_TXTHACK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,67,73,10
+    GROUPBOX        "OpenGL 选项",IDC_STATIC,7,131,315,116
+    GROUPBOX        "常规选项",IDC_STATIC,198,7,124,120
+    LTEXT           "GPU 缩放因子",IDC_STATIC,203,20,64,8
+    CONTROL         "Deposterize 纹理",IDC_TEX_DEPOSTERIZE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,79,79,10
+    CONTROL         "平滑纹理",IDC_TEX_SMOOTH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,145,75,10
+    COMBOBOX        IDC_MULTISAMPLE_SIZE,92,143,62,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_GPU_COLOR_DEPTH,273,39,42,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "GPU 色深",ID_LABEL_GPU_COLOR_DEPTH,203,41,60,8
+    LTEXT           "纹理缩放",ID_LABEL_TEXTURE_SCALING,203,61,54,8
+    COMBOBOX        IDC_TEXSCALE,273,59,42,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "启用多边形阴影",IDC_SHADOW_POLYGONS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,173,137,10
+    CONTROL         "启用特殊的 Zero Alpha 混合",IDC_S_0_ALPHA_BLEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,173,137,10
+    CONTROL         "启用 NDS 样式的深度计算",IDC_NDS_DEPTH_CALC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,203,137,10
+    CONTROL         "启用深度 L-Equal 多边形面层",IDC_DEPTH_L_EQUAL_PF,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,203,137,10
+    LTEXT           "禁用该选项可能导致某些阴影消失",ID_LABEL_SHADOW_POLYGONS,17,183,137,16
+    LTEXT           "禁用该选项可能会导致某些多边形渲染不正确甚至完全消失",ID_LABEL_NDS_DEPTH_CALC,17,213,137,24
+    LTEXT           "禁用该选项可能导致某些颜色看起来比正常颜色更暗",ID_LABEL_S_0_ALPHA_BLEND,172,183,137,16
+    LTEXT           "禁用该选项可能会导致某些片段消失。由于性能影响, 默认情况下已禁用",ID_LABEL_DEPTH_L_EQUAL_PF,172,213,137,24
+    GROUPBOX        "渲染精度选项",IDC_STATIC,12,161,305,81,BS_CENTER
+END
+
+IDD_ABOUT_BOX DIALOGEX 0, 0, 268, 198
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION
+CAPTION "关于 DeSmuME..."
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CTEXT           "",IDC_AUTHORS_LIST,3,27,261,140,0,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "关闭",IDC_FERMER,109,181,50,14
+    CTEXT           "DeSmuME",IDC_TXT_VERSION,3,3,261,13
+    RTEXT           "编译于: ",IDC_TXT_COMPILED,3,170,261,8
+    ICON            ICONDESMUME,IDC_STATIC,3,3,20,20
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_3DSETTINGS, DIALOG
+    BEGIN
+        RIGHTMARGIN, 328
+    END
+
+    IDD_ABOUT_BOX, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -660,66 +742,6 @@ BEGIN
     LISTBOX         IDC_LIST1,4,4,173,87,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     DEFPUSHBUTTON   "&OK",IDOK,73,94,50,16
     PUSHBUTTON      "&Cancel",IDCANCEL,127,94,50,16
-END
-
-IDD_3DSETTINGS DIALOGEX 0, 0, 329, 273
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "3D Settings"
-FONT 8, "MS Sans Serif", 400, 0, 0x0
-BEGIN
-    COMBOBOX        IDC_3DCORE,14,20,115,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "High-Precision Color Interpolation",IDC_INTERPOLATECOLOR,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,56,124,10
-    CONTROL         "Enable Edge Marking",IDC_3DSETTINGS_EDGEMARK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,90,84,10
-    CONTROL         "Enable Fog",IDC_3DSETTINGS_FOG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,101,52,10
-    CONTROL         "Enable Textures",IDC_3DSETTINGS_TEXTURE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,112,67,10
-    LTEXT           "Multisample Antialiasing",ID_LABEL_MSAA_SAMPLES,12,145,78,8
-    EDITTEXT        IDC_TEXT_PRESCALEHD,273,17,31,14,ES_AUTOHSCROLL
-    CONTROL         "",IDC_NUD_PRESCALEHD,"msctls_updown32",UDS_SETBUDDYINT | UDS_AUTOBUDDY | UDS_ARROWKEYS,303,17,12,14
-    PUSHBUTTON      "Default",IDC_DEFAULT,135,19,50,15
-    DEFPUSHBUTTON   "OK",IDOK,211,252,50,15
-    PUSHBUTTON      "Cancel",IDCANCEL,273,252,50,15
-    GROUPBOX        "3D Rendering Engine",IDC_STATIC,7,7,184,34
-    GROUPBOX        "SoftRasterizer Options",IDC_STATIC,7,44,184,83
-    LTEXT           "Fixes some graphical bugs involving lines, but causes some other bugs. Not many games use lines.",ID_LABEL_ZELDA_SHADOW_DEPTH_HACK2,12,106,170,18
-    CONTROL         "Enable Line Hack",IDC_3DSETTINGS_LINEHACK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,96,73,10
-    LTEXT           "Fixes text bugs in some games.(e.g. Etrian Odyssey)",ID_LABEL_TXTHACK1,12,77,171,8
-    LTEXT           "May need to be toggled on/off per scene.",ID_LABEL_TXTHACK2,12,86,167,8
-    CONTROL         "Enable TXT Hack",IDC_TXTHACK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,67,73,10
-    GROUPBOX        "OpenGL Options",IDC_STATIC,7,131,315,116
-    GROUPBOX        "General Options",IDC_STATIC,198,7,124,120
-    LTEXT           "GPU Scaling Factor",IDC_STATIC,203,20,64,8
-    CONTROL         "Deposterize Textures",IDC_TEX_DEPOSTERIZE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,203,79,79,10
-    CONTROL         "Smooth Textures",IDC_TEX_SMOOTH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,145,75,10
-    COMBOBOX        IDC_MULTISAMPLE_SIZE,92,143,62,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_GPU_COLOR_DEPTH,273,39,42,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "GPU Color Depth",ID_LABEL_GPU_COLOR_DEPTH,203,41,60,8
-    LTEXT           "Texture Scaling",ID_LABEL_TEXTURE_SCALING,203,61,54,8
-    COMBOBOX        IDC_TEXSCALE,273,59,42,138,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Enable Shadow Polygons",IDC_SHADOW_POLYGONS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,173,137,10
-    CONTROL         "Enable Special Zero Alpha Blending",IDC_S_0_ALPHA_BLEND,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,173,137,10
-    CONTROL         "Enable NDS-Style Depth Calculation",IDC_NDS_DEPTH_CALC,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,203,137,10
-    CONTROL         "Enable Depth L-Equal Polygon Facing",IDC_DEPTH_L_EQUAL_PF,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,172,203,137,10
-    LTEXT           "Disabling this option may cause some shadows to disappear.",ID_LABEL_SHADOW_POLYGONS,17,183,137,16
-    LTEXT           "Disabling this option may cause certain polygons to render incorrectly or disappear completely.",ID_LABEL_NDS_DEPTH_CALC,17,213,137,24
-    LTEXT           "Disabling this option may cause some colors to look darker than normal.",ID_LABEL_S_0_ALPHA_BLEND,172,183,137,16
-    LTEXT           "Disabling this option may cause some fragments to disappear. Disabled by default due to performance impact.",ID_LABEL_DEPTH_L_EQUAL_PF,172,213,137,24
-    GROUPBOX        "Rendering Accuracy Options",IDC_STATIC,12,161,305,81,BS_CENTER
-END
-
-IDD_ABOUT_BOX DIALOGEX 0, 0, 268, 198
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION
-CAPTION "About DeSmuME..."
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    CTEXT           "",IDC_AUTHORS_LIST,3,27,261,140,0,WS_EX_CLIENTEDGE
-    DEFPUSHBUTTON   "Close",IDC_FERMER,109,181,50,14
-    CTEXT           "DeSmuME",IDC_TXT_VERSION,3,3,261,13
-    RTEXT           "compiled: ",IDC_TXT_COMPILED,3,170,261,8
-    ICON            ICONDESMUME,IDC_STATIC,3,3,21,20
 END
 
 IDD_CHEAT_ADD DIALOGEX 0, 0, 121, 209
@@ -2160,11 +2182,6 @@ BEGIN
     BEGIN
         RIGHTMARGIN, 248
         BOTTOMMARGIN, 284
-    END
-
-    IDD_3DSETTINGS, DIALOG
-    BEGIN
-        RIGHTMARGIN, 328
     END
 
     IDD_CHEAT_ADD, DIALOG

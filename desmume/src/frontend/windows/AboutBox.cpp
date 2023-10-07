@@ -34,7 +34,7 @@ const char	*team[] = {
 	"rogerman",
 	"",
 	"Contributors\1",
-	"Bernat Muñoz (shash)",
+	"Bernat MuÃ±oz (shash)",
 	"Allustar",
 	"amponzi",
 	"Anthony Molinaro",
@@ -133,9 +133,12 @@ BOOL CALLBACK AboutBox_Proc (HWND dialog, UINT message,WPARAM wparam,LPARAM lpar
 			memset(&buf[0], 0, sizeof(buf));
 			sprintf(buf, DESMUME_NAME "%s", EMU_DESMUME_VERSION_STRING());
 			SetDlgItemText(dialog, IDC_TXT_VERSION, buf);
-			sprintf(buf, "compiled %s - %s %s", __DATE__, __TIME__, EMU_DESMUME_COMPILER_DETAIL());
+			char buf_tmp[16] = {0};
+			memset(&buf_tmp[0], 0, sizeof(buf_tmp));
+			GetDlgItemText(dialog, IDC_TXT_COMPILED, buf_tmp, 16);
+			sprintf(buf, "%s %s - %s %s", buf_tmp, __DATE__, __TIME__, EMU_DESMUME_COMPILER_DETAIL());
 			SetDlgItemText(dialog, IDC_TXT_COMPILED, buf);
-			
+
 			gList = GetDlgItem(dialog, IDC_AUTHORS_LIST);
 			SetWindowLongPtr(gList, GWLP_WNDPROC, (LONG_PTR)ListProc);
 			GetClientRect(gList, &gRc);
