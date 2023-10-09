@@ -156,6 +156,14 @@ std::wstring STRW(UINT id)
 	return wstr;
 }
 
+std::string STRA(UINT id)
+{
+	static const int BUFSIZE = 32768;
+	static char str[BUFSIZE];
+	LoadStringA(NULL, id, str, BUFSIZE);
+	return str;
+}
+
 bool IsDlgCheckboxChecked(HWND hDlg, int id)
 {
 	return IsDlgButtonChecked(hDlg,id) == BST_CHECKED;

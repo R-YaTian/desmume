@@ -106,7 +106,7 @@ BOOL CALLBACK ListProc(HWND Dlg, UINT msg,WPARAM wparam,LPARAM lparam)
 					{
 						SetTextColor(hdcMem, RGB(255, 0, 0));
 						wchar_t buf_tmp[16];
-						LoadStringW(GetModuleHandle(NULL), ID_ABOUT_TM01 + j++, buf_tmp, 16);
+						LoadStringW(NULL, ID_ABOUT_TM01 + j++, buf_tmp, 16);
 						ExtTextOutW(hdcMem, x, pos, ETO_CLIPPED, &gRc, buf_tmp, wcslen(buf_tmp), NULL);
 					}
 					else

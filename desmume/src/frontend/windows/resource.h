@@ -1048,6 +1048,11 @@
 #define ID_ABOUT_TM01                   44721
 #define ID_ABOUT_TM02                   44722
 #define ID_ABOUT_TM03                   44723
+#define ID_CHEAT_STR01                  44724
+#define ID_CHEAT_STR02                  44725
+#define ID_CHEAT_STR03                  44726
+#define ID_CHEAT_STR04                  44727
+#define ID_CHEAT_STR05                  44728
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002

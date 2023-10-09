@@ -29,6 +29,7 @@
 
 #include "resource.h"
 #include "main.h"
+#include "winutil.h"
 
 extern u8	CheatsR4Type = 0;
 
@@ -410,7 +411,7 @@ INT_PTR CALLBACK CheatsEditProc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lpara
 
 				CheckDlgButton(dialog, IDC_CHECK1, tempCheat.enabled?BST_CHECKED:BST_UNCHECKED);
 				CheckRadioButton(dialog, searchSizeIDDs[0], searchSizeIDDs[ARRAY_SIZE(searchSizeIDDs) - 1], searchSizeIDDs[tempCheat.size]);
-				SetWindowText(GetDlgItem(dialog, IDOK), "Update");
+				SetWindowText(GetDlgItem(dialog, IDOK), STRA(ID_CHEAT_STR01).c_str());
 
 				generateAR(dialog, tempCheat.code[0][0], tempCheat.code[0][1], searchSizeIDDs[tempCheat.size]);
 			}
@@ -534,12 +535,12 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 				if (cheatXXaction == 0)		// add
 				{
 					memset(&tempCheat, 0, sizeof(tempCheat));
-					SetWindowText(dialog, "Add Action Replay code");
+					SetWindowText(dialog, STRA(ID_CHEAT_STR02).c_str());
 					tempCheat.enabled = TRUE;
 				}
 				else						// edit
 				{
-					SetWindowText(dialog, "Edit Action Replay code");
+					SetWindowText(dialog, STRA(ID_CHEAT_STR03).c_str());
 				}
 			}
 			else
@@ -547,12 +548,12 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 				if (cheatXXaction == 0)		// add
 				{
 					memset(&tempCheat, 0, sizeof(tempCheat));
-					SetWindowText(dialog, "Add Codebreaker code");
+					SetWindowText(dialog, STRA(ID_CHEAT_STR04).c_str());
 					tempCheat.enabled = TRUE;
 				}
 				else						// edit
 				{
-					SetWindowText(dialog, "Edit Codebreaker code");
+					SetWindowText(dialog, STRA(ID_CHEAT_STR05).c_str());
 				}
 			}
 
@@ -570,7 +571,7 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 				SetWindowText(GetDlgItem(dialog, IDC_EDIT3), tempCheat.description);
 
 				EnableWindow(GetDlgItem(dialog, IDOK), (strlen(buf) > 16)?TRUE:FALSE);
-				SetWindowText(GetDlgItem(dialog, IDOK), "Update");
+				SetWindowText(GetDlgItem(dialog, IDOK), STRA(ID_CHEAT_STR01).c_str());
 			}
 			CheckDlgButton(dialog, IDC_CHECK1, tempCheat.enabled?BST_CHECKED:BST_UNCHECKED);	
 		}

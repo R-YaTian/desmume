@@ -2,3 +2,9 @@ root = true
 
 [*]
 indent_style = tab
+
+[*.rc]
+charset = utf-8
+
+[resource.h]
+charset = utf-8
