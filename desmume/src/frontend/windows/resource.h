@@ -50,7 +50,6 @@
 #define IDM_SBG2                        126
 #define IDD_SLOT1CONFIG                 126
 #define IDM_SBG3                        127
-#define IDD_DIALOG1                     127
 #define IDM_OAM                         128
 #define IDD_TOOL_FSNITRO                128
 #define IDR_POPUPM_FSNITRO              128
@@ -420,10 +419,8 @@
 #define IDC_CHECKBOX_GAMEHACKS          1028
 #define IDC_TXT_COMPILED                1029
 #define IDC_SNDCTRL_CH1NOMIX            1029
-#define IDC_DTP_DATE2                   1029
 #define IDC_TXT_VERSION                 1030
 #define IDC_SNDCTRL_CH3NOMIX            1030
-#define IDC_DTP_TIME2                   1030
 #define IDC_SOUND_CAPTURE_MUTED         1031
 #define IDC_SOUND_ANALYZE_CAP           1032
 #define IDC_ADDONS_LIST                 1033
@@ -478,7 +475,6 @@
 #define IDC_IMP_AUTO_CURRENT            1052
 #define IDC_USE_STDOUT                  1052
 #define IDC_IMP_AUTO_FILE               1053
-#define IDC_BUTTON1                     1053
 #define IDC_IMP_AUTO_ADVANSCENE         1054
 #define IDC_JIT_BLOCK_SIZE              1054
 #define IDC_SDEVELOPER                  1054
