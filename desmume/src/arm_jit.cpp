@@ -24,6 +24,10 @@
 #error "ERROR: JIT compiler - unsupported target platform"
 #endif
 
+#ifdef HOST_64
+#pragma warning(disable:4312)
+#endif
+
 #ifdef HOST_WINDOWS
 // **** Windows port
 #else

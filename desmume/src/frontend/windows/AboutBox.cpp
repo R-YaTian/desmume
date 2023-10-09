@@ -23,53 +23,53 @@
 #include "resource.h"
 
 #define ABOUT_TIMER_ID 110222
-const char	*team[] = {
-	"Original author\1",
-	"yopyop",
-	"",
-	"Current Team\1",
-	"Guillaume Duhamel",
-	"Normmatt",
-	"zeromus",
-	"rogerman",
-	"",
-	"Contributors\1",
-	"Bernat Muñoz (shash)",
-	"Allustar",
-	"amponzi",
-	"Anthony Molinaro",
-	"ape",
-	"Damien Nozay (damdoum)",
-	"delfare",
-	"Romain Vallet",
-	"snkmad",
-	"Theo Berkau",
-	"thoduv",
-	"Tim Seidel (Mighty Max)",
-	"Pascal Giard (evilynux)",
-	"Ben Jaques (masscat)",
-	"Jeff Bland",
-	"matusz",
-	"nitsuja",
-	"gocha",
-	"pa__",
-	"adelikat",
-	"hi-coder",
-	"WinterMute",
-	"pengvado",
-	"dormito",
-	"ldesnogue",
-	"mtheall",
-	"thelemonman",
-	"nash679",
-	"pokefan999",
-	"dottorleo",
-	"yki",
-	"Luigi__",
-	"CrazyMax",
-	"Riccardo Magliocchetti",
-	"CyberWarriorX",
-	"mic"
+const wchar_t *team[] = {
+	L"Original author\1",
+	L"yopyop",
+	L"",
+	L"Current Team\1",
+	L"Guillaume Duhamel",
+	L"Normmatt",
+	L"zeromus",
+	L"rogerman",
+	L"",
+	L"Contributors\1",
+	L"Bernat Muñoz (shash)",
+	L"Allustar",
+	L"amponzi",
+	L"Anthony Molinaro",
+	L"ape",
+	L"Damien Nozay (damdoum)",
+	L"delfare",
+	L"Romain Vallet",
+	L"snkmad",
+	L"Theo Berkau",
+	L"thoduv",
+	L"Tim Seidel (Mighty Max)",
+	L"Pascal Giard (evilynux)",
+	L"Ben Jaques (masscat)",
+	L"Jeff Bland",
+	L"matusz",
+	L"nitsuja",
+	L"gocha",
+	L"pa__",
+	L"adelikat",
+	L"hi-coder",
+	L"WinterMute",
+	L"pengvado",
+	L"dormito",
+	L"ldesnogue",
+	L"mtheall",
+	L"thelemonman",
+	L"nash679",
+	L"pokefan999",
+	L"dottorleo",
+	L"yki",
+	L"Luigi__",
+	L"CrazyMax",
+	L"Riccardo Magliocchetti",
+	L"CyberWarriorX",
+	L"mic"
 };
 
 static HWND		gList = NULL;
@@ -99,15 +99,15 @@ BOOL CALLBACK ListProc(HWND Dlg, UINT msg,WPARAM wparam,LPARAM lparam)
 				{
 					s32 pos = gPosY+(i*20);
 					if (pos > gRc.bottom) break;
-					if (team[i][strlen(team[i])-1] == 1)
+					if (team[i][wcslen(team[i])-1] == 1)
 					{
 						SetTextColor(hdcMem, RGB(255, 0, 0));
-						ExtTextOut(hdcMem, x, pos, ETO_CLIPPED, &gRc, team[i], strlen(team[i])-1, NULL);
+						ExtTextOutW(hdcMem, x, pos, ETO_CLIPPED, &gRc, team[i], wcslen(team[i])-1, NULL);
 					}
 					else
 					{
 						SetTextColor(hdcMem, RGB(0, 0, 0));
-						ExtTextOut(hdcMem, x, pos, ETO_CLIPPED, &gRc, team[i], strlen(team[i]), NULL);
+						ExtTextOutW(hdcMem, x, pos, ETO_CLIPPED, &gRc, team[i], wcslen(team[i]), NULL);
 					}
 					if ((i == size-1) && (pos < (s32)(gRc.top - 20))) gPosY = gRc.bottom;
 				}
