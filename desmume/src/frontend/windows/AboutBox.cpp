@@ -89,20 +89,25 @@ BOOL CALLBACK ListProc(HWND Dlg, UINT msg,WPARAM wparam,LPARAM lparam)
 				HDC hDC = BeginPaint(Dlg, &ps);
 				HDC hdcMem = CreateCompatibleDC(hDC);
 				HBITMAP hbmMem = CreateCompatibleBitmap(hDC, gRc.right, gRc.bottom);
-				HANDLE hOld   = SelectObject(hdcMem, hbmMem);
+				HANDLE hOld = SelectObject(hdcMem, hbmMem);
+				HFONT hdcFont = CreateFont(0, 0, 0, 0, 0, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY,
+					DEFAULT_PITCH, TEXT("Times New Roman Bold"));
+				SelectObject(hdcMem, hdcFont);
 				SetBkMode(hdcMem, TRANSPARENT);
 				SetTextAlign(hdcMem, TA_CENTER);
 				u32 x = gRc.right / 2;
 				FillRect(hdcMem, &gRc, (HBRUSH)COLOR_WINDOW);
 				SetTextColor(hdcMem, RGB(255, 0, 0));
-				for (u32 i = 0; i < size; i++)
+				for (u32 i = 0, j = 0; i < size; i++)
 				{
 					s32 pos = gPosY+(i*20);
 					if (pos > gRc.bottom) break;
 					if (team[i][wcslen(team[i])-1] == 1)
 					{
 						SetTextColor(hdcMem, RGB(255, 0, 0));
-						ExtTextOutW(hdcMem, x, pos, ETO_CLIPPED, &gRc, team[i], wcslen(team[i])-1, NULL);
+						wchar_t buf_tmp[16];
+						LoadStringW(GetModuleHandle(NULL), ID_ABOUT_TM01 + j++, buf_tmp, 16);
+						ExtTextOutW(hdcMem, x, pos, ETO_CLIPPED, &gRc, buf_tmp, wcslen(buf_tmp), NULL);
 					}
 					else
 					{
@@ -115,6 +120,7 @@ BOOL CALLBACK ListProc(HWND Dlg, UINT msg,WPARAM wparam,LPARAM lparam)
 				BitBlt(hDC, 0, 0, gRc.right, gRc.bottom, hdcMem, 0, 0, SRCCOPY);
 				SelectObject(hdcMem, hOld);
 				DeleteObject(hbmMem);
+				DeleteObject(hdcFont);
 				DeleteDC(hdcMem);
 				EndPaint(Dlg, &ps);
 			}
@@ -123,7 +129,7 @@ BOOL CALLBACK ListProc(HWND Dlg, UINT msg,WPARAM wparam,LPARAM lparam)
 	return FALSE;
 }
 
-BOOL CALLBACK AboutBox_Proc (HWND dialog, UINT message,WPARAM wparam,LPARAM lparam)
+BOOL CALLBACK AboutBox_Proc(HWND dialog, UINT message,WPARAM wparam,LPARAM lparam)
 {
 	switch(message)
 	{
@@ -133,9 +139,9 @@ BOOL CALLBACK AboutBox_Proc (HWND dialog, UINT message,WPARAM wparam,LPARAM lpar
 			memset(&buf[0], 0, sizeof(buf));
 			sprintf(buf, DESMUME_NAME "%s", EMU_DESMUME_VERSION_STRING());
 			SetDlgItemText(dialog, IDC_TXT_VERSION, buf);
-			char buf_tmp[16] = {0};
+			char buf_tmp[32] = {0};
 			memset(&buf_tmp[0], 0, sizeof(buf_tmp));
-			GetDlgItemText(dialog, IDC_TXT_COMPILED, buf_tmp, 16);
+			GetDlgItemText(dialog, IDC_TXT_COMPILED, buf_tmp, 32);
 			sprintf(buf, "%s %s - %s %s", buf_tmp, __DATE__, __TIME__, EMU_DESMUME_COMPILER_DETAIL());
 			SetDlgItemText(dialog, IDC_TXT_COMPILED, buf);
 

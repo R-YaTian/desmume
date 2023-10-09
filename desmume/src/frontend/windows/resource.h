@@ -1045,6 +1045,9 @@
 #define ID_LABEL_HK3c                   44671
 #define ID_LABEL_HK3d                   44672
 #define ID_LABEL_HK8b                   44720
+#define ID_ABOUT_TM01                   44721
+#define ID_ABOUT_TM02                   44722
+#define ID_ABOUT_TM03                   44723
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002
