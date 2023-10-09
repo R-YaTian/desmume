@@ -1341,7 +1341,7 @@ static BOOL SelectingByKeyboard()
 	return (a | b | c | d) & 0x80;
 }
 
-extern void init_list_box(HWND Box, const char* Strs[], int numColumns, int *columnWidths);
+extern void init_list_box(HWND Box, char* Strs[], int numColumns, int *columnWidths);
 
 LRESULT CALLBACK RamSearchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -1460,7 +1460,11 @@ LRESULT CALLBACK RamSearchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 			SendDlgItemMessage(hDlg,IDC_C_AUTOSEARCH,BM_SETCHECK,AutoSearch?BST_CHECKED:BST_UNCHECKED,0);
 			//const char* names[5] = {"Address","Value","Previous","Changes","Notes"};
 			//int widths[5] = {62,64,64,55,55};
-			const char* names[] = {"Address","Value","Previous","Changes"};
+			char* names[4] = {new char[16], new char[16], new char[16], new char[16]};
+			STRA(ID_LIST_STR01, names[0]);
+			STRA(ID_LIST_STR02, names[1]);
+			STRA(ID_LIST_STR06, names[2]);
+			STRA(ID_LIST_STR07, names[3]);
 			int widths[4] = {68,76,76,68};
 			if (!ResultCount)
 				reset_address_info();

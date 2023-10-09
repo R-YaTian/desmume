@@ -148,19 +148,29 @@ std::string GetPrivateProfileStdString(LPCSTR lpAppName,LPCSTR lpKeyName,LPCSTR 
 	return buf;
 }
 
-std::wstring STRW(UINT id)
+std::wstring STRW(UINT id, wchar_t* dest)
 {
 	static const int BUFSIZE = 32768;
 	static wchar_t wstr[BUFSIZE];
-	LoadStringW(NULL,id,wstr,BUFSIZE);
+	LoadStringW(NULL, id, wstr, BUFSIZE);
+	if (dest != NULL)
+	{
+		size_t len = wcslen(wstr) + 1;
+		wcscpy_s(dest, len, wstr);
+	}
 	return wstr;
 }
 
-std::string STRA(UINT id)
+std::string STRA(UINT id, char* dest)
 {
 	static const int BUFSIZE = 32768;
 	static char str[BUFSIZE];
 	LoadStringA(NULL, id, str, BUFSIZE);
+	if (dest != NULL)
+	{
+		size_t len = strlen(str) + 1;
+		strcpy_s(dest, len, str);
+	}
 	return str;
 }
 

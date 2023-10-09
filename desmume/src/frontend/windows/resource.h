@@ -1049,6 +1049,15 @@
 #define ID_CHEAT_STR03                  44726
 #define ID_CHEAT_STR04                  44727
 #define ID_CHEAT_STR05                  44728
+#define ID_DISASM_STR01                 44729
+#define ID_DISASM_STR02                 44730
+#define ID_LIST_STR01                   44731
+#define ID_LIST_STR02                   44732
+#define ID_LIST_STR03                   44733
+#define ID_LIST_STR04                   44734
+#define ID_LIST_STR05                   44735
+#define ID_LIST_STR06                   44736
+#define ID_LIST_STR07                   44737
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002

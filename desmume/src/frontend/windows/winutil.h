@@ -41,9 +41,9 @@ void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file)
 
 
 //returns the specified resource string ID as a std::wstring
-std::wstring STRW(UINT id);
+std::wstring STRW(UINT id, wchar_t* dest = NULL);
 //returns the specified resource string ID as a std::string
-std::string STRA(UINT id);
+std::string STRA(UINT id, char* dest = NULL);
 
 inline bool operator==(const RECT& lhs, const RECT& rhs)
 {

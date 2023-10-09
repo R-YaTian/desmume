@@ -811,7 +811,7 @@ LRESULT CALLBACK EditWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	return false;
 }
 
-void init_list_box(HWND Box, const char* Strs[], int numColumns, int *columnWidths) //initializes the ram search and/or ram watch listbox
+void init_list_box(HWND Box, char* Strs[], int numColumns, int *columnWidths) //initializes the ram search and/or ram watch listbox
 {
 	LVCOLUMN Col;
 	Col.mask = LVCF_FMT | LVCF_ORDER | LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH;
@@ -820,7 +820,7 @@ void init_list_box(HWND Box, const char* Strs[], int numColumns, int *columnWidt
 	{
 		Col.iOrder = i;
 		Col.iSubItem = i;
-		Col.pszText = (LPSTR)(Strs[i]);
+		Col.pszText = Strs[i];
 		Col.cx = columnWidths[i];
 		ListView_InsertColumn(Box,i,&Col);
 	}
@@ -877,7 +877,7 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 			ramw_y = wrect.top;
 			break;
 			};
-			
+
 		case WM_INITDIALOG: {
 			GetWindowRect(MainWindow->getHWnd(), &r);  //Ramwatch window
 			dx1 = (r.right - r.left) / 2;
@@ -887,7 +887,6 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 			dx2 = (r2.right - r2.left) / 2;
 			dy2 = (r2.bottom - r2.top) / 2;
 
-			
 			// push it away from the main window if we can
 			const int width = (r.right-r.left);
 			const int height = (r.bottom - r.top);
@@ -902,7 +901,7 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 				r.right -= width2;
 				r.left -= width2;
 			}
-			
+
 			//-----------------------------------------------------------------------------------
 			//If user has Save Window Pos selected, override default positioning
 			if (RWSaveWindowPos)	
@@ -916,12 +915,15 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 			}
 			//-------------------------------------------------------------------------------------
 			SetWindowPos(hDlg, NULL, r.left, r.top, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW);
-			
+
 			ramwatchmenu=GetMenu(hDlg);
 			rwrecentmenu=CreateMenu();
 			UpdateRW_RMenu(rwrecentmenu, RAMMENU_FILE_RECENT, RW_MENU_FIRST_RECENT_FILE);
-			
-			const char* names[3] = {"Address","Value","Notes"};
+
+			char* names[3] = {new char[16], new char[16], new char[16]};
+			STRA(ID_LIST_STR01, names[0]);
+			STRA(ID_LIST_STR02, names[1]);
+			STRA(ID_LIST_STR04, names[2]);
 			int widths[3] = {62,64,64+51+53};
 			init_list_box(GetDlgItem(hDlg,IDC_WATCHLIST),names,3,widths);
 /*			if (!ResultCount)  //TODO what do these do
@@ -943,7 +945,7 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 			return true;
 			break;
 		}
-		
+
 		case WM_INITMENU:
 			CheckMenuItem(ramwatchmenu, RAMMENU_FILE_AUTOLOAD, AutoRWLoad ? MF_CHECKED : MF_UNCHECKED);
 			CheckMenuItem(ramwatchmenu, RAMMENU_FILE_SAVEWINDOW, RWSaveWindowPos ? MF_CHECKED : MF_UNCHECKED);
@@ -1177,7 +1179,7 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 					OpenRWRecentFile(LOWORD(wParam) - RW_MENU_FIRST_RECENT_FILE);
 			}
 			break;
-		
+
 		case WM_KEYDOWN: // handle accelerator keys
 		{
 			SetFocus(GetDlgItem(hDlg,IDC_WATCHLIST));
@@ -1207,4 +1209,3 @@ LRESULT CALLBACK RamWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam
 
 	return false;
 }
-

@@ -30,6 +30,7 @@
 
 #include "resource.h"
 #include "main.h"
+#include "winutil.h"
 
 typedef struct
 {
@@ -338,7 +339,7 @@ BOOL CALLBACK ViewDisasm_ARM7Proc (HWND hwnd, UINT message, WPARAM wParam, LPARA
 	{
 			case WM_INITDIALOG :
 				{
-					SetWindowText(hwnd, "ARM7 Disassembler");
+					SetWindowText(hwnd, STRA(ID_DISASM_STR01).c_str());
 					SetDlgItemInt(hwnd, IDC_SETPNUM, 1, FALSE);
 					SendMessage(GetDlgItem(hwnd, IDC_AUTO_DES), BM_SETCHECK, TRUE, 0);
 					DisView7 = new disview_struct;
@@ -671,7 +672,7 @@ BOOL CALLBACK ViewDisasm_ARM9Proc (HWND hwnd, UINT message, WPARAM wParam, LPARA
      {
             case WM_INITDIALOG :
 				{
-					SetWindowText(hwnd, "ARM9 Disassembler");
+					SetWindowText(hwnd, STRA(ID_DISASM_STR02).c_str());
 					SetDlgItemInt(hwnd, IDC_SETPNUM, 1, FALSE);
 					SendMessage(GetDlgItem(hwnd, IDC_AUTO_DES), BM_SETCHECK, TRUE, 0);
 					DisView9 = new disview_struct;

@@ -29,7 +29,6 @@
 
 #include "resource.h"
 #include "main.h"
-#include "winutil.h"
 
 extern u8	CheatsR4Type = 0;
 
@@ -730,7 +729,8 @@ INT_PTR CALLBACK CheatsListBox_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM l
 			cheatListView = GetDlgItem(dialog, IDC_LIST1);
 
 			ListView_SetExtendedListViewStyle(cheatListView, LVS_EX_FULLROWSELECT | LVS_EX_TWOCLICKACTIVATE | LVS_EX_CHECKBOXES);
-			
+
+			char* psz_tmp = new char[16];
 			memset(&lvColumn,0,sizeof(LV_COLUMN));
 			lvColumn.mask=LVCF_FMT|LVCF_WIDTH|LVCF_TEXT;
 			lvColumn.fmt=LVCFMT_CENTER;
@@ -739,13 +739,16 @@ INT_PTR CALLBACK CheatsListBox_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM l
 			ListView_InsertColumn(cheatListView, 0, &lvColumn);
 			lvColumn.fmt=LVCFMT_LEFT;
 			lvColumn.cx=84;
-			lvColumn.pszText="Address";
+			STRA(ID_LIST_STR01, psz_tmp);
+			lvColumn.pszText= psz_tmp;
 			ListView_InsertColumn(cheatListView, 1, &lvColumn);
 			lvColumn.cx=100;
-			lvColumn.pszText="Value";
+			STRA(ID_LIST_STR02, psz_tmp);
+			lvColumn.pszText= psz_tmp;
 			ListView_InsertColumn(cheatListView, 2, &lvColumn);
 			lvColumn.cx=467;
-			lvColumn.pszText="Description";
+			STRA(ID_LIST_STR03, psz_tmp);
+			lvColumn.pszText= psz_tmp;
 			ListView_InsertColumn(cheatListView, 3, &lvColumn);
 			lvColumn.fmt=LVCFMT_CENTER;
 
@@ -1286,15 +1289,18 @@ INT_PTR CALLBACK CheatsSearchViewWnd(HWND dialog, UINT msg,WPARAM wparam,LPARAM 
 				searchListView = GetDlgItem(dialog, IDC_LIST);
 
 				ListView_SetExtendedListViewStyle(searchListView, LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES);
-				
+
+				char* psz_tmp = new char[16];
 				memset(&lvColumn,0,sizeof(LV_COLUMN));
 				lvColumn.mask=LVCF_FMT|LVCF_WIDTH|LVCF_TEXT;
 				lvColumn.fmt=LVCFMT_LEFT;
 				lvColumn.cx=94;
-				lvColumn.pszText="Address";
+				STRA(ID_LIST_STR01, psz_tmp);
+				lvColumn.pszText= psz_tmp;
 				ListView_InsertColumn(searchListView, 0, &lvColumn);
 				lvColumn.cx=130;
-				lvColumn.pszText="Value";
+				STRA(ID_LIST_STR02, psz_tmp);
+				lvColumn.pszText= psz_tmp;
 				ListView_InsertColumn(searchListView, 1, &lvColumn);
 
 				LVITEM lvi;
@@ -1547,12 +1553,14 @@ INT_PTR CALLBACK CheatsExportProc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lpa
 			LV_COLUMN lvColumn;
 			exportListView = GetDlgItem(dialog, IDC_LIST_CHEATS);
 			ListView_SetExtendedListViewStyle(exportListView, LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES|LVS_EX_CHECKBOXES);
-			
+
+			char* psz_tmp = new char[16];
 			memset(&lvColumn,0,sizeof(LV_COLUMN));
 			lvColumn.mask=LVCF_FMT|LVCF_TEXT|LVCF_WIDTH;
 			lvColumn.fmt=LVCFMT_LEFT;
 			lvColumn.cx=1000;
-			lvColumn.pszText="Cheats";
+			STRA(ID_LIST_STR05, psz_tmp);
+			lvColumn.pszText= psz_tmp;
 			ListView_InsertColumn(exportListView, 0, &lvColumn);
 
 			LVITEM lvi;

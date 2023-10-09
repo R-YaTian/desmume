@@ -20,6 +20,7 @@
 
 #include <windows.h>
 #include "types.h"
+#include "winutil.h"
 
 extern void CheatsListDialog(HWND hwnd);
 extern void CheatsSearchDialog(HWND hwnd);
