@@ -609,12 +609,12 @@ OSDCLASS::OSDCLASS(u8 core)
 	offset=0;
 
 	lastLineText=0;
-	lineText_x = 5;
-	lineText_y = 120;
+	lineText_x = 1;
+	lineText_y = 132;
 	lineText_color = AggColor(255, 255, 255);
 	for (int i=0; i < OSD_MAX_LINES+1; i++)
 	{
-		lineText[i] = new char[1024];
+		lineText[i] = new wchar_t[1024];
 		memset(lineText[i], 0, 1024);
 		lineTimer[i] = 0;
 		lineColor[i] = lineText_color;
@@ -684,7 +684,7 @@ bool OSDCLASS::checkTimers()
 			{
 				for (int j=i; j < lastLineText; j++)
 				{
-					strcpy(lineText[j], lineText[j+1]);
+					wcscpy(lineText[j], lineText[j+1]);
 					lineTimer[j] = lineTimer[j+1];
 					lineColor[j] = lineColor[j+1];
 				}
@@ -707,7 +707,8 @@ void OSDCLASS::update()
 			for (int i=0; i < lastLineText; i++)
 			{
 				aggDraw.hud->lineColor(lineColor[i]);
-				aggDraw.hud->renderTextDropshadowed(lineText_x,lineText_y+(i*16),lineText[i]);
+				//aggDraw.hud->renderTextDropshadowed(lineText_x,lineText_y+(i*16),lineText[i]);
+				aggDraw.hud->textDropshadowed(lineText_x, lineText_y + (i * 16), lineText[i]);
 			}
 		}
 		else
@@ -738,14 +739,43 @@ void OSDCLASS::addLine(const char *fmt)
 		lastLineText--;
 		for (int j=0; j < lastLineText; j++)
 		{
-			strcpy(lineText[j], lineText[j+1]);
+			wcscpy(lineText[j], lineText[j+1]);
 			lineTimer[j] = lineTimer[j+1];
 			lineColor[j] = lineColor[j+1];
 		}
 	}
 
-	strncpy(lineText[lastLineText],fmt,1023);
-	
+	//setlocale(LC_CTYPE, "");
+	wchar_t* p = new wchar_t[1024];
+	mbstowcs_s(NULL, p, strlen(fmt) + 1, fmt, 1024);
+	wcsncpy(lineText[lastLineText],p,1023);
+	delete[] p;
+
+	lineColor[lastLineText] = lineText_color;
+	lineTimer[lastLineText] = time(NULL);
+	needUpdate = true;
+
+	lastLineText++;
+}
+
+void OSDCLASS::addLine(const wchar_t* fmt)
+{
+	//yucky copied code from the va_list addline
+
+	if (lastLineText > OSD_MAX_LINES) lastLineText = OSD_MAX_LINES;
+	if (lastLineText == OSD_MAX_LINES)	// full
+	{
+		lastLineText--;
+		for (int j = 0; j < lastLineText; j++)
+		{
+			wcscpy(lineText[j], lineText[j + 1]);
+			lineTimer[j] = lineTimer[j + 1];
+			lineColor[j] = lineColor[j + 1];
+		}
+	}
+
+	wcsncpy(lineText[lastLineText], fmt, 1023);
+
 	lineColor[lastLineText] = lineText_color;
 	lineTimer[lastLineText] = time(NULL);
 	needUpdate = true;
@@ -761,16 +791,46 @@ void OSDCLASS::addLine(const char *fmt, va_list args)
 		lastLineText--;
 		for (int j=0; j < lastLineText; j++)
 		{
-			strcpy(lineText[j], lineText[j+1]);
+			wcscpy(lineText[j], lineText[j+1]);
 			lineTimer[j] = lineTimer[j+1];
 			lineColor[j] = lineColor[j+1];
 		}
 	}
 
+	//setlocale(LC_CTYPE, "");
+	wchar_t* p = new wchar_t[1024];
+	mbstowcs_s(NULL, p, strlen(fmt) + 1, fmt, 1024);
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
-		_vsnprintf(lineText[lastLineText],1023,fmt,args);
+	_vsnwprintf(lineText[lastLineText],1023,p,args);
 #else
-		vsnprintf(lineText[lastLineText],1023,fmt,args);
+	vsnwprintf(lineText[lastLineText],1023,p,args);
+#endif
+	delete[] p;
+	lineColor[lastLineText] = lineText_color;
+	lineTimer[lastLineText] = time(NULL);
+	needUpdate = true;
+
+	lastLineText++;
+}
+
+void OSDCLASS::addLine(const wchar_t* fmt, va_list args)
+{
+	if (lastLineText > OSD_MAX_LINES) lastLineText = OSD_MAX_LINES;
+	if (lastLineText == OSD_MAX_LINES)	// full
+	{
+		lastLineText--;
+		for (int j = 0; j < lastLineText; j++)
+		{
+			wcscpy(lineText[j], lineText[j + 1]);
+			lineTimer[j] = lineTimer[j + 1];
+			lineColor[j] = lineColor[j + 1];
+		}
+	}
+
+#if defined(_MSC_VER) || defined(__INTEL_COMPILER)
+	_vsnwprintf(lineText[lastLineText], 1023, fmt, args);
+#else
+	vsnwprintf(lineText[lastLineText], 1023, fmt, args);
 #endif
 	lineColor[lastLineText] = lineText_color;
 	lineTimer[lastLineText] = time(NULL);

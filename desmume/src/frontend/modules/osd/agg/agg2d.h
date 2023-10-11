@@ -23,11 +23,10 @@
 #ifndef AGG2D_INCLUDED
 #define AGG2D_INCLUDED
 
-//we're not using vector fonts right now.
-//#define AGG2D_USE_VECTORFONTS
+#define AGG2D_USE_VECTORFONTS
 
 #ifdef AGG2D_USE_VECTORFONTS
-#if defined(UNDER_CE) || not defined(WIN32)
+#if defined(UNDER_CE) || !defined(WIN32)
 #define AGG2D_USE_FREETYPE
 #endif
 #endif
@@ -513,7 +512,7 @@ public:
 	//-----------------------
 #ifdef AGG2D_USE_VECTORFONTS
 	void   flipText(bool flip);
-	void   font(const char* fileName, double height,
+	void   font(const char* fontName, double height,
 		bool bold = false,
 		bool italic = false,
 		FontCacheType ch = RasterFontCache,
@@ -528,9 +527,6 @@ public:
 	double textWidth(const wchar_t* str, unsigned int len);
 	void   text(double x, double y, const char* str, unsigned int len, bool roundOff=false, double dx=0.0, double dy=0.0);
 	void   text(double x, double y, const wchar_t* str, unsigned int len, bool roundOff=false, double dx=0.0, double dy=0.0);
-
-	double textWidth(const char* str);
-	void   text(double x, double y, const char* str, bool roundOff=false, double dx=0.0, double dy=0.0);
 #endif
 
 	// Path commands
@@ -756,7 +752,6 @@ public:
 	}
 
 
-
 	// Copy image directly, together with alpha-channel
 	AGG2D_IMAGE_TEMPLATE void copyImage(TIMAGE& img,
 		int imgX1, int imgY1, int imgX2, int imgY2,
@@ -796,8 +791,8 @@ private:
 	void render(bool fillColor);
 
 #ifdef AGG2D_USE_VECTORFONTS
-#if !defined( UNDER_CE )
-	void render(FontRasterizer& ras, FontScanline& sl);
+#if !defined(UNDER_CE)
+	void render(FontRasterizer& ras, FontScanline& sl, bool fillColor = false);
 #endif
 #endif
 

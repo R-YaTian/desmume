@@ -1048,6 +1048,7 @@ STRINGTABLE
 BEGIN
     ID_LIST_STR06           "先前值"
     ID_LIST_STR07           "变更"
+    ID_OSD_MSG01            "JIT Block 大小变更为"
 END
 
 #endif    // 中文(简体，中国) resources

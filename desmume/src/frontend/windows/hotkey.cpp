@@ -112,8 +112,8 @@ void HK_CpuMode(int, bool justPressed)
 	CommonSettings.use_jit = !CommonSettings.use_jit;
 	arm_jit_reset(CommonSettings.use_jit);
 
-	char tmp[256];
-	sprintf(tmp,"CPU mode: %s", CommonSettings.use_jit?"JIT":"Interpreter");
+	wchar_t tmp[256]{};
+	swprintf(tmp, L"%s: %s", STRW(ID_LABEL_HK3b).c_str(), CommonSettings.use_jit ? L"JIT" : L"Interpreter");
 	driver->AddLine(tmp);
 	//WritePrivateProfileInt("Emulation", "CpuMode", CommonSettings.use_jit, IniName)
 }
@@ -124,8 +124,8 @@ void HK_JitBlockSizeDec(int, bool justPressed)
 	if (CommonSettings.jit_max_block_size < 2) return;
 
 	CommonSettings.jit_max_block_size--;
-	char tmp[256];
-	sprintf(tmp,"JIT block size changed to: %u", CommonSettings.jit_max_block_size);
+	wchar_t tmp[256];
+	swprintf(tmp,L"%s: %u", STRW(ID_OSD_MSG01).c_str(), CommonSettings.jit_max_block_size);
 	driver->AddLine(tmp);
 	arm_jit_reset(CommonSettings.use_jit, true);
 }
@@ -136,8 +136,8 @@ void HK_JitBlockSizeInc(int, bool justPressed)
 	if (CommonSettings.jit_max_block_size > 99) return;
 
 	CommonSettings.jit_max_block_size++;
-	char tmp[256];
-	sprintf(tmp,"JIT block size changed to: %u", CommonSettings.jit_max_block_size);
+	wchar_t tmp[256];
+	swprintf(tmp, L"%s: %u", STRW(ID_OSD_MSG01).c_str(), CommonSettings.jit_max_block_size);
 	driver->AddLine(tmp);
 	arm_jit_reset(CommonSettings.use_jit, true);
 }

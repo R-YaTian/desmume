@@ -1058,6 +1058,7 @@
 #define ID_LIST_STR05                   44735
 #define ID_LIST_STR06                   44736
 #define ID_LIST_STR07                   44737
+#define ID_OSD_MSG01                    44738
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002

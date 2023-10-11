@@ -74,6 +74,7 @@ public:
 	void VIEW3D_Init();
 
 	virtual void AddLine(const char *fmt, ...);
+	virtual void AddLine(const wchar_t* fmt, ...);
 	virtual void SetLineColor(u8 r, u8 b, u8 g);
 };
 extern BaseDriver* driver;

@@ -99,7 +99,7 @@ private:
 	u16		lineText_y;
 	AggColor		lineText_color;
 	u8		lastLineText;
-	char	*lineText[OSD_MAX_LINES+1];
+	wchar_t	*lineText[OSD_MAX_LINES+1];
 	time_t	lineTimer[OSD_MAX_LINES+1];
 	AggColor lineColor[OSD_MAX_LINES+1];
 
@@ -123,6 +123,8 @@ public:
 	void	setLineColor(u8 r, u8 b, u8 g);
 	void	addLine(const char* fmt);
 	void	addLine(const char* fmt, va_list args);
+	void	addLine(const wchar_t* fmt);
+	void	addLine(const wchar_t* fmt, va_list args);
 	void	addFixed(u16 x, u16 y, const char *fmt, ...);
 	void	border(bool enabled);
 
@@ -141,7 +143,8 @@ public:
   void    clear();
   void    setLineColor(u8 r, u8 b, u8 g);
   void    addLine(const char *fmt, ...);
-		void SaveHudEditor() {}
+  void    addLine(const wchar_t* fmt, ...);
+  void    SaveHudEditor() {}
 };
 
 extern OSDCLASS        *osd;

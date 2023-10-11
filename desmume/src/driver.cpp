@@ -59,6 +59,16 @@ void BaseDriver::AddLine(const char *fmt, ...)
 	va_end(list);
 #endif
 }
+void BaseDriver::AddLine(const wchar_t* fmt, ...)
+{
+#if HAVE_LIBAGG
+	if (!osd) return;
+	va_list list;
+	va_start(list, fmt);
+	osd->addLine(fmt, list);
+	va_end(list);
+#endif
+}
 void BaseDriver::SetLineColor(u8 r, u8 b, u8 g)
 {
 #if HAVE_LIBAGG
