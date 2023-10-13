@@ -80,6 +80,9 @@
     <ClCompile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
     <ResourceCompile>
@@ -684,6 +687,7 @@
     <ClInclude Include="slot1_config.h" />
     <ClInclude Include="sndxa2.h" />
     <ClInclude Include="throttle.h" />
+    <ClInclude Include="VersionHelpers.h" />
     <ClInclude Include="winpcap.h" />
     <ClInclude Include="winutil.h" />
     <ClInclude Include="disView.h" />

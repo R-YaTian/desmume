@@ -10,6 +10,7 @@
 		<DEVELOPER>false</DEVELOPER>
 		<GDB_STUB>false</GDB_STUB>
 		<EXPERIMENTAL_WIFI_COMM>true</EXPERIMENTAL_WIFI_COMM>
+		<EXPERIMENTAL_WIFI_COMM Condition="'$(Platform)' == 'Win32'">false</EXPERIMENTAL_WIFI_COMM>
 	</PropertyGroup>
 
 

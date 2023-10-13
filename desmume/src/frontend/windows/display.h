@@ -91,7 +91,7 @@ extern int scanline_filter_c;
 extern int scanline_filter_d;
 
 void Display();
-void DoDisplay();
+void DoDisplay(bool first);
 void KillDisplay();
 
 void GetNdsScreenRect(RECT* r);

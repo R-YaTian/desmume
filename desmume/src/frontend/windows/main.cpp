@@ -1303,7 +1303,7 @@ static void StepRunLoop_Paused()
 	if(CommonSettings.single_core() && GetActiveWindow() == mainLoopData.hwnd)
 	{
 		video.srcBuffer = (u8*)GPU->GetDisplayInfo().masterCustomBuffer;
-		DoDisplay();
+		DoDisplay(true);
 	}
 
 	ServiceDisplayThreadInvocations();
@@ -1574,8 +1574,8 @@ static BOOL LoadROM(const char * filename, const char * physicalName, const char
 
 	if (NDS_LoadROM(filename, physicalName, logicalName) > 0)
 	{
-		INFO("Loading %s was successful\n",logicalName);
-		
+		INFO("Loading %s was successful\n", logicalName);
+
 		NDS_SLOT2_TYPE selectedSlot2Type = slot2_GetSelectedType();
 		Guitar.Enabled	= (selectedSlot2Type == NDS_SLOT2_GUITARGRIP)?true:false;
 		Piano.Enabled	= (selectedSlot2Type == NDS_SLOT2_EASYPIANO)?true:false;
@@ -4285,7 +4285,7 @@ DOKEYDOWN:
 				{
 					const NDSDisplayInfo &dispInfo = GPU->GetDisplayInfo();
 					video.srcBuffer = (u8*)dispInfo.masterCustomBuffer;
-					DoDisplay();
+					DoDisplay(true);
 				}
 			}
 

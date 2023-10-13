@@ -28,7 +28,7 @@ bool GLDISPLAY::initialize(HWND hwnd)
 		this->hwnd = hwnd;
 		privateDC = GetDC(hwnd);
 		wglMakeCurrent(privateDC, privateContext);
-		
+
 		// Certain video drivers may try to set the V-sync setting to whatever they want on
 		// initialization, and so we can't assume that wantVsync will match whatever the video
 		// driver is doing.

@@ -23,6 +23,7 @@
 
 #include "main.h"
 #include "winutil.h"
+#include "VersionHelpers.h"
 
 ///////////////////////////////////////////////////////////////// Console
 #define BUFFER_SIZE 100
@@ -140,9 +141,14 @@ void OpenConsole()
 	}
 	else
 	{
-		UINT consoleCP = GetACP();
-		SetConsoleCP(consoleCP == 936 ? 65001 : consoleCP);
-		SetConsoleOutputCP(consoleCP == 936 ? 65001 : consoleCP);
+		if (IsWindows8OrGreater()) {
+			SetConsoleCP(65001);
+			SetConsoleOutputCP(65001);
+		} else {
+			UINT consoleCP = GetACP();
+			SetConsoleCP(consoleCP);
+			SetConsoleOutputCP(consoleCP);
+		}
 	}
 
 	//newer and improved console title:

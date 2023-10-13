@@ -613,8 +613,9 @@ void displayProc()
 		currDisplayBuffer = todo;
 		video.srcBuffer = (u8*)displayBuffers[currDisplayBuffer].buffer;
 		video.srcBufferSize = displayBuffers[currDisplayBuffer].size;
+		DoDisplay(true);
 	}
-	DoDisplay();
+	DoDisplay(false);
 }
 void displayThread(void *arg)
 {
@@ -658,7 +659,7 @@ void Display()
 	{
 		video.srcBuffer = (u8*)dispInfo.masterCustomBuffer;
 		video.srcBufferSize = static_cast<size_t>(2) * dispInfo.customWidth * dispInfo.customHeight * dispInfo.pixelBytes;
-		DoDisplay();
+		DoDisplay(true);
 	}
 	else
 	{
@@ -691,7 +692,7 @@ void Display()
 }
 
 //does a single display work unit. only to be used from the display thread
-void DoDisplay()
+void DoDisplay(bool first)
 {
 	Lock lock(win_backbuffer_sync);
 
@@ -705,6 +706,12 @@ void DoDisplay()
 	else
 		ColorspaceConvertBuffer888XTo8888Opaque<true, false>((u32*)video.srcBuffer, video.buffer, video.srcBufferSize / 4);
 
+	if (first)
+	{
+		aggDraw.hud->attach((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
+		DoDisplay_DrawHud();
+	}
+
 	//some games use the backlight for fading effects
 	const size_t pixCount = video.prefilterWidth / static_cast<size_t>(2) * video.prefilterHeight;
 	const NDSDisplayInfo &displayInfo = GPU->GetDisplayInfo();
@@ -712,7 +719,7 @@ void DoDisplay()
 	ColorspaceApplyIntensityToBuffer32<false, false>(video.buffer + pixCount, pixCount, displayInfo.backlightIntensity[NDSDisplayID_Touch]);
 
 	// Lua draws to the HUD buffer, so clear it here instead of right before redrawing the HUD.
-	aggDraw.hud->clear();
+	//aggDraw.hud->clear();
 	if (AnyLuaActive())
 	{
 		if (sthread_isself(display_thread))
@@ -727,12 +734,13 @@ void DoDisplay()
 	}
 
 	// draw hud
-	DoDisplay_DrawHud();
+	//DoDisplay_DrawHud();
+
 	if (displayMethod == DISPMETHOD_DDRAW_HW || displayMethod == DISPMETHOD_DDRAW_SW)
 	{
 		// DirectDraw doesn't support alpha blending, so we must scale and overlay the HUD ourselves.
-		T_AGG_RGBA target((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
-		target.transformImage(aggDraw.hud->image<T_AGG_PF_RGBA>(), 0, 0, video.prefilterWidth, video.prefilterHeight);
+		//T_AGG_RGBA target((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
+		//target.transformImage(aggDraw.hud->image<T_AGG_PF_RGBA>(), 0, 0, video.prefilterWidth, video.prefilterHeight);
 	}
 
 	//apply user's filter
