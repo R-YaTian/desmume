@@ -82,6 +82,7 @@
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
+      <OptimizeReferences Condition="'$(Configuration)'=='Release Fastbuild'">true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
@@ -91,6 +92,9 @@
     <ClCompile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <Link>
+      <OptimizeReferences Condition="'$(Configuration)'=='Release Fastbuild'">true</OptimizeReferences>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\addons\slot1comp_mc.cpp" />

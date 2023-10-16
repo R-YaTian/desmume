@@ -156,10 +156,7 @@ std::wstring STRW(UINT id, wchar_t* dest)
 	static wchar_t wstr[BUFSIZE];
 	LoadStringW(NULL, id, wstr, BUFSIZE);
 	if (dest != NULL)
-	{
-		size_t len = wcslen(wstr) + 1;
-		wcscpy_s(dest, len, wstr);
-	}
+		wcscpy_s(dest, wcslen(wstr) + 1, wstr);
 	return wstr;
 }
 
@@ -169,11 +166,20 @@ std::string STRA(UINT id, char* dest)
 	static char str[BUFSIZE];
 	LoadStringA(NULL, id, str, BUFSIZE);
 	if (dest != NULL)
-	{
-		size_t len = strlen(str) + 1;
-		strcpy_s(dest, len, str);
-	}
+		strcpy_s(dest, strlen(str) + 1, str);
 	return str;
+}
+
+std::string STRU(UINT id, char* dest)
+{
+	static const int BUFSIZE = 32768;
+	static char str[BUFSIZE];
+	static char stru[BUFSIZE];
+	LoadStringA(NULL, id, str, BUFSIZE);
+	ANSIToUTF8(str, stru);
+	if (dest != NULL)
+		strcpy_s(dest, strlen(stru) + 1, stru);
+	return stru;
 }
 
 bool IsDlgCheckboxChecked(HWND hDlg, int id)
@@ -220,4 +226,43 @@ int GetSubMenuIndexByHMENU(HMENU menu, HMENU sub)
 		if(sub == trial) return i;
 	}
 	return -1;
+}
+
+void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String)
+{
+	int nRetLen = 0;
+	nRetLen = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, NULL, 0);
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, utf16String, nRetLen);
+}
+
+void UTF8ToANSI(const char* utf8String, char* ansiString)
+{
+	wchar_t* unicodeStr = NULL;
+	int nRetLen = 0;
+
+	nRetLen = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, NULL, 0);
+	// unicodeStr = (wchar_t*) malloc(nRetLen * sizeof(wchar_t));
+	unicodeStr = new wchar_t[nRetLen + 1];
+	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, unicodeStr, nRetLen);
+
+	nRetLen = WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, NULL, 0, NULL, NULL);
+	WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, ansiString, nRetLen, NULL, NULL);
+
+	// free(unicodeStr);
+	delete[] unicodeStr;
+}
+
+void ANSIToUTF8(const char* ansiString, char* utf8String)
+{
+	wchar_t* unicodeStr = NULL;
+	int nRetLen = 0;
+
+	nRetLen = MultiByteToWideChar(CP_ACP, 0, ansiString, -1, NULL, 0);
+	unicodeStr = new wchar_t[nRetLen + 1];
+	MultiByteToWideChar(CP_ACP, 0, ansiString, -1, unicodeStr, nRetLen);
+
+	nRetLen = WideCharToMultiByte(CP_UTF8, 0, unicodeStr, -1, NULL, 0, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, unicodeStr, -1, utf8String, nRetLen, NULL, NULL);
+
+	delete[] unicodeStr;
 }

@@ -44,6 +44,12 @@ void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file)
 std::wstring STRW(UINT id, wchar_t* dest = NULL);
 //returns the specified resource string ID as a std::string
 std::string STRA(UINT id, char* dest = NULL);
+//returns the specified resource string ID as a std::string (UTF-8)
+std::string STRU(UINT id, char* dest = NULL);
+
+void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String);
+void UTF8ToANSI(const char* utf8String, char* ansiString);
+void ANSIToUTF8(const char* ansiString, char* utf8String);
 
 inline bool operator==(const RECT& lhs, const RECT& rhs)
 {

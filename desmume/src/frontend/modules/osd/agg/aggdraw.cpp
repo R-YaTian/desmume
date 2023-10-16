@@ -155,7 +155,7 @@ void Agg_init()
 	#endif
 
 	aggDraw.hud->setFont("verdana18_bold");
-	aggDraw.hud->setFontDC("s8514fix", 14, true);
+	aggDraw.hud->setVectorFont("s8514fix", 14, true);
 }
 
 void AggDraw_Desmume::setTarget(AggTarget newTarget)

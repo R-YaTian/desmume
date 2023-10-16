@@ -323,37 +323,30 @@ Logger::~Logger() {
 }
 
 #ifdef WIN32
-void u2g(const char* utf8String, char* gbkString)
-{
-	wchar_t* unicodeStr = NULL;
-	int nRetLen = 0;
-	nRetLen = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, NULL, 0);
-	//unicodeStr = (wchar_t*) malloc(nRetLen * sizeof(wchar_t));
-	unicodeStr = new wchar_t[nRetLen + 1];
-	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, unicodeStr, nRetLen);
-	nRetLen = WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, NULL, 0, NULL, NULL);
-	WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, gbkString, nRetLen, NULL, NULL);
-	//free(unicodeStr);
-	delete[] unicodeStr;
-}
+extern void UTF8ToANSI(const char* utf8String, char* ansiString);
 #endif
 
 void Logger::vprintf(const char * format, va_list l, const char * file, unsigned int line) {
 	char buffer[1024]{};
 	char* cur = buffer;
-	char* gbk_buf = new char[1024];
 
 	if (flags & Logger::FILE) cur += sprintf(cur, "%s:", file);
 	if (flags & Logger::LINE) cur += sprintf(cur, "%d:", line);
 	if (flags) cur += sprintf(cur, " ");
 
 	::vsnprintf(cur, 1024, format, l);
-	if (!IsWindows8OrGreater() && GetACP() == 936)
+
+#ifdef WIN32
+	char* ansi_buf = new char[1024];
+	if (!IsWindows7SP1OrGreater())
 	{
-		u2g(cur, gbk_buf);
-		callback(*this, gbk_buf);
+		UTF8ToANSI(cur, ansi_buf);
+		callback(*this, ansi_buf);
 	} else
 		callback(*this, buffer);
+#else
+	callback(*this, buffer);
+#endif
 }
 
 void Logger::setOutput(std::ostream * o) {

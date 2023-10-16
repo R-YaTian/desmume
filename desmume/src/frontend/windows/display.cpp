@@ -614,8 +614,8 @@ void displayProc()
 		video.srcBuffer = (u8*)displayBuffers[currDisplayBuffer].buffer;
 		video.srcBufferSize = displayBuffers[currDisplayBuffer].size;
 		DoDisplay(true);
-	}
-	DoDisplay(false);
+	} else
+		DoDisplay(false);
 }
 void displayThread(void *arg)
 {
@@ -706,7 +706,7 @@ void DoDisplay(bool first)
 	else
 		ColorspaceConvertBuffer888XTo8888Opaque<true, false>((u32*)video.srcBuffer, video.buffer, video.srcBufferSize / 4);
 
-	if (first)
+	if (first && CommonSettings.single_core())
 	{
 		aggDraw.hud->attach((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
 		DoDisplay_DrawHud();
@@ -719,7 +719,9 @@ void DoDisplay(bool first)
 	ColorspaceApplyIntensityToBuffer32<false, false>(video.buffer + pixCount, pixCount, displayInfo.backlightIntensity[NDSDisplayID_Touch]);
 
 	// Lua draws to the HUD buffer, so clear it here instead of right before redrawing the HUD.
-	//aggDraw.hud->clear();
+	if (!CommonSettings.single_core())
+		aggDraw.hud->clear();
+
 	if (AnyLuaActive())
 	{
 		if (sthread_isself(display_thread))
@@ -734,13 +736,14 @@ void DoDisplay(bool first)
 	}
 
 	// draw hud
-	//DoDisplay_DrawHud();
+	if (!CommonSettings.single_core())
+		DoDisplay_DrawHud();
 
-	if (displayMethod == DISPMETHOD_DDRAW_HW || displayMethod == DISPMETHOD_DDRAW_SW)
+	if ((displayMethod == DISPMETHOD_DDRAW_HW || displayMethod == DISPMETHOD_DDRAW_SW) && !CommonSettings.single_core())
 	{
 		// DirectDraw doesn't support alpha blending, so we must scale and overlay the HUD ourselves.
-		//T_AGG_RGBA target((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
-		//target.transformImage(aggDraw.hud->image<T_AGG_PF_RGBA>(), 0, 0, video.prefilterWidth, video.prefilterHeight);
+		T_AGG_RGBA target((u8*)video.buffer, video.prefilterWidth, video.prefilterHeight, video.prefilterWidth * 4);
+		target.transformImage(aggDraw.hud->image<T_AGG_PF_RGBA>(), 0, 0, video.prefilterWidth, video.prefilterHeight);
 	}
 
 	//apply user's filter

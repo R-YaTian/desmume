@@ -141,7 +141,7 @@ void OpenConsole()
 	}
 	else
 	{
-		if (IsWindows8OrGreater()) {
+		if (IsWindows7SP1OrGreater()) {
 			SetConsoleCP(65001);
 			SetConsoleOutputCP(65001);
 		} else {

@@ -667,7 +667,12 @@ void OSDCLASS::setRotate(u16 angle)
 
 void OSDCLASS::clear()
 {
-	needUpdate=false;
+	needUpdate = false;
+}
+
+bool OSDCLASS::checkUpdating()
+{
+	return lastLineText;
 }
 
 bool OSDCLASS::checkTimers()
@@ -745,9 +750,8 @@ void OSDCLASS::addLine(const char *fmt)
 		}
 	}
 
-	//setlocale(LC_CTYPE, "");
 	wchar_t* p = new wchar_t[1024];
-	mbstowcs_s(NULL, p, strlen(fmt) + 1, fmt, 1024);
+	UTF8ToUTF16(fmt, p);
 	wcsncpy(lineText[lastLineText],p,1023);
 	delete[] p;
 
@@ -797,9 +801,8 @@ void OSDCLASS::addLine(const char *fmt, va_list args)
 		}
 	}
 
-	//setlocale(LC_CTYPE, "");
 	wchar_t* p = new wchar_t[1024];
-	mbstowcs_s(NULL, p, strlen(fmt) + 1, fmt, 1024);
+	UTF8ToUTF16(fmt, p);
 #if defined(_MSC_VER) || defined(__INTEL_COMPILER)
 	_vsnwprintf(lineText[lastLineText],1023,p,args);
 #else

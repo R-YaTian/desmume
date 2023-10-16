@@ -4560,30 +4560,41 @@ static const struct luaL_reg agggeneralattributes [] =
 
 #ifdef HAVE_LIBAGG
 
-static int setFont(lua_State *L) {
+static int setVectorFont(lua_State* L) {
+	int height, bold;
+	const char* choice;
 
-	const char *choice;
-	choice = luaL_checkstring(L,1);
+	choice = luaL_checkstring(L, 1);
+	height = luaL_checkinteger(L, 2);
+	bold = luaL_checkinteger(L, 3);
 
-	aggDraw.hud->setFont(choice);
+	aggDraw.hud->setVectorFont(choice, height, bold);
 	return 0;
 }
 
+extern void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String);
+
 static int text(lua_State *L) {
+	//if (osd->checkUpdating())
+		//return 0;
+
 	int x, y;
 	const char *choice;
+	wchar_t* unicode_buf = new wchar_t[1024];
 
 	x = luaL_checkinteger(L, 1);
 	y = luaL_checkinteger(L, 2);
 	choice = luaL_checkstring(L,3);
 
-	aggDraw.hud->renderTextDropshadowed(x,y,choice);
+	UTF8ToUTF16(choice, unicode_buf);
+	aggDraw.hud->textDropshadowed(x, y, unicode_buf);
+	delete[] unicode_buf;
 	return 0;
 }
 
 #else
 
-static int setFont(lua_State *L)
+static int setVectorFont(lua_State *L)
 {
 	return 0;
 }
@@ -4597,7 +4608,7 @@ static int text(lua_State *L)
 
 static const struct luaL_reg aggcustom [] =
 {
-	{"setFont", setFont},
+	{"setVectorFont", setVectorFont},
 	{"text", text},
 	{NULL, NULL}
 };

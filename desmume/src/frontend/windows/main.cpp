@@ -2488,6 +2488,7 @@ int _main()
 
 	if (cmdline.nds_file != "")
 	{
+		MainWindow->Show(SW_NORMAL);
 		if(OpenCoreSystemCP(cmdline.nds_file.c_str()))
 		{
 			romloaded = TRUE;
@@ -2498,7 +2499,7 @@ int _main()
 	//if(cmdline.language != -1) CommonSettings.fwConfig.language = cmdline.language;
 
 	cmdline.process_movieCommands();
-	
+
 	if(cmdline.load_slot != -1)
 	{
 		int load = cmdline.load_slot;
@@ -2506,7 +2507,8 @@ int _main()
 		HK_StateLoadSlot(load, true);
 	}
 
-	MainWindow->Show(SW_NORMAL);
+	if (!romloaded)
+		MainWindow->Show(SW_NORMAL);
 
 	if(cmdline.windowed_fullscreen)
 		ToggleFullscreen();

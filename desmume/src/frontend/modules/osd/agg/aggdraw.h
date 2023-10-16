@@ -219,6 +219,7 @@ namespace agg
 
 typedef PixFormatSetDeclaration<agg::my_pixfmt_rgb555,agg::my_pixfmt_rgb555_pre,agg::span_simple_blur_rgb24<agg::order_rgba> > T_AGG_PF_RGB555;
 typedef PixFormatSetDeclaration<agg::pixfmt_bgra32,agg::pixfmt_bgra32_pre,agg::span_simple_blur_rgb24<agg::order_rgba> > T_AGG_PF_RGBA;
+static bool text_darwing = false;
 
 class AggDrawTarget
 {
@@ -400,12 +401,16 @@ public:
     virtual Agg2DBase::ImageResample imageResample() = 0;
     static const agg::int8u* lookupFont(const std::string& name);
     virtual void setFont(const std::string& name) = 0;
-    virtual void setFontDC(const char* fontName, double height, bool bold) = 0;
+    virtual void setVectorFont(const char* fontName, double height, bool bold) = 0;
     virtual void renderText(double dstX, double dstY, const std::string& str) = 0;
     virtual void text(double x, double y, const char* str) = 0;
     virtual void text(double x, double y, const wchar_t* str) = 0;
     virtual void textDropshadowed(double x, double y, const char* str)
     {
+        if (text_darwing)
+            return;
+        else
+            text_darwing = true;
         AggColor lineColorOld = lineColor();
         if (lineColorOld.r + lineColorOld.g + lineColorOld.b < 192)
             lineColor(255 - lineColorOld.r, 255 - lineColorOld.g, 255 - lineColorOld.b);
@@ -421,9 +426,14 @@ public:
         text(x + 1, y + 1, str);
         lineColor(lineColorOld);
         text(x, y, str);
+        text_darwing = false;
     }
     virtual void textDropshadowed(double x, double y, const wchar_t* str)
     {
+        if (text_darwing)
+            return;
+        else
+            text_darwing = true;
         AggColor lineColorOld = lineColor();
         if (lineColorOld.r + lineColorOld.g + lineColorOld.b < 192)
             lineColor(255 - lineColorOld.r, 255 - lineColorOld.g, 255 - lineColorOld.b);
@@ -439,6 +449,7 @@ public:
         text(x + 1, y + 1, str);
         lineColor(lineColorOld);
         text(x, y, str);
+        text_darwing = false;
     }
     virtual void renderTextDropshadowed(double dstX, double dstY, const std::string& str)
     {
@@ -606,7 +617,7 @@ public:
     virtual void polyline(double* xy, int numPoints) {dirty(); BASE::polyline(xy, numPoints);};
 
     virtual void setFont(const std::string& name) { BASE::font(lookupFont(name)); }
-    virtual void setFontDC(const char* fontName, double height, bool bold) { BASE::font(fontName, height, bold); }
+    virtual void setVectorFont(const char* fontName, double height, bool bold) { BASE::font(fontName, height, bold); }
     virtual void renderText(double dstX, double dstY, const std::string& str) {
         dirty();
         int height = BASE::font()[0];
