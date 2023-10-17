@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (C) 2006 Theo Berkau
 	Copyright (C) 2006-2023 DeSmuME team
 
@@ -1581,7 +1581,7 @@ static BOOL LoadROM(const char * filename, const char * physicalName, const char
 		Piano.Enabled	= (selectedSlot2Type == NDS_SLOT2_EASYPIANO)?true:false;
 		Paddle.Enabled	= (selectedSlot2Type == NDS_SLOT2_PADDLE)?true:false;
 		HCV1000.Enabled = (selectedSlot2Type == NDS_SLOT2_HCV1000)?true:false;
-		
+
 		LoadSaveStateInfo();
 		lagframecounter=0;
 		UpdateRecentRoms(logicalName);
@@ -1873,7 +1873,7 @@ static void RefreshMicSettings()
 		}
 		else
 		{
-			driver->AddLine("Mic sample %d selected", MicSampleSelection);
+			driver->AddLine(STRW(ID_OSD_MSG03).c_str(), MicSampleSelection);
 		}
 	}
 	else
@@ -2873,7 +2873,7 @@ void AviEnd()
 
 	DRV_AviEnd();
 	LOG("AVI recording ended.");
-	driver->AddLine("AVI recording ended.");
+	driver->AddLine(STRW(ID_OSD_MSG09).c_str());
 
 	NDS_UnPause();
 }
@@ -2934,14 +2934,14 @@ void AviRecordTo()
 		{
 			DRV_AviEnd();
 			LOG("AVI recording ended.");
-			driver->AddLine("AVI recording ended.");
+			driver->AddLine(STRW(ID_OSD_MSG09).c_str());
 		}
 
 		bool result = DRV_AviBegin(outFilename);
 		if (result)
 		{
 			LOG("AVI recording started.");
-			driver->AddLine("AVI recording started.");
+			driver->AddLine(STRW(ID_OSD_MSG10).c_str());
 		}
 
 		dir = Path::GetFileDirectoryPath(outFilename);

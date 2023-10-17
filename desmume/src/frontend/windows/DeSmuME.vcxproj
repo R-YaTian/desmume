@@ -79,6 +79,7 @@
     </ResourceCompile>
     <ClCompile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4091</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
@@ -91,6 +92,7 @@
     </ResourceCompile>
     <ClCompile>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4091</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <OptimizeReferences Condition="'$(Configuration)'=='Release Fastbuild'">true</OptimizeReferences>

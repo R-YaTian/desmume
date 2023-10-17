@@ -32,6 +32,7 @@
 #include "driver.h"
 #include "NDSSystem.h"
 #include "winutil.h"
+#include "resource.h"
 
 int FastForward=0;
 static u64 tmethod,tfreq,afsfreq;
@@ -63,7 +64,7 @@ void IncreaseSpeed(void) {
 	desiredfps = core_desiredfps * desiredFpsScaler / 256;
 	desiredspf = 65536.0f / desiredfps;
 	printf("Throttle fps scaling increased to: %f\n",desiredFpsScaler/256.0);
-	driver->AddLine("Target FPS up to %2.04f",desiredFpsScaler/256.0);
+	driver->AddLine(STRW(ID_OSD_MSG12).c_str(),desiredFpsScaler/256.0);
 	WritePrivateProfileInt("Video","FPS Scaler Index", desiredFpsScalerIndex, IniName);
 }
 
@@ -75,7 +76,7 @@ void DecreaseSpeed(void) {
 	desiredfps = core_desiredfps * desiredFpsScaler / 256;
 	desiredspf = 65536.0f / desiredfps;
 	printf("Throttle fps scaling decreased to: %f\n",desiredFpsScaler/256.0);
-	driver->AddLine("Target FPS down to %2.04f",desiredFpsScaler/256.0);
+	driver->AddLine(STRW(ID_OSD_MSG13).c_str(),desiredFpsScaler/256.0);
 	WritePrivateProfileInt("Video","FPS Scaler Index", desiredFpsScalerIndex, IniName);
 }
 
@@ -83,7 +84,7 @@ static u64 GetCurTime(void)
 {
 	if(tmethod)
 	{
-		u64 tmp;
+		u64 tmp = 0;
 		QueryPerformanceCounter((LARGE_INTEGER*)&tmp);
 		return tmp;
 	}

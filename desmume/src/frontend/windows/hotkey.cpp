@@ -322,7 +322,7 @@ void HK_StateSetSlot(int num, bool justPressed)
 	if (romloaded)
 	{
 		lastSaveState = num;
-		driver->AddLine("State %i selected", num);
+		driver->AddLine(STRW(ID_OSD_MSG02).c_str(), num);
 	}
 }
 
@@ -345,13 +345,13 @@ void Mic_PrevSample();
 void HK_NextSampleKeyDown(int, bool justPressed)
 {
 	Mic_NextSample();
-	driver->AddLine("Mic sample %d selected", MicSampleSelection);
+	driver->AddLine(STRW(ID_OSD_MSG03).c_str(), MicSampleSelection);
 }
 
 void HK_PrevSampleKeyDown(int, bool justPressed)
 {
 	Mic_PrevSample();
-	driver->AddLine("Mic sample %d selected", MicSampleSelection);
+	driver->AddLine(STRW(ID_OSD_MSG03).c_str(), MicSampleSelection);
 }
 
 void HK_AutoHoldKeyDown(int, bool justPressed) {AutoHoldPressed = true;}
@@ -419,13 +419,13 @@ void HK_ToggleReadOnly(int, bool justPressed) {
 	char msg [64];
 	char* pMsg = msg;
 	if(movie_readonly)
-		pMsg += sprintf(pMsg, "Read-Only");
+		pMsg += sprintf(pMsg, STRU(ID_OSD_MSG05).c_str());
 	else
-		pMsg += sprintf(pMsg, "Read+Write");
+		pMsg += sprintf(pMsg, STRU(ID_OSD_MSG06).c_str());
 	if(movieMode == MOVIEMODE_INACTIVE)
-		pMsg += sprintf(pMsg, " (no movie)");
+		pMsg += sprintf(pMsg, STRU(ID_OSD_MSG07).c_str());
 	if(movieMode == MOVIEMODE_FINISHED)
-		pMsg += sprintf(pMsg, " (finished)");
+		pMsg += sprintf(pMsg, STRU(ID_OSD_MSG08).c_str());
 	if(movieMode == MOVIEMODE_INACTIVE)
 		driver->SetLineColor(255,0,0);
 	else if(movieMode == MOVIEMODE_FINISHED)
@@ -433,6 +433,7 @@ void HK_ToggleReadOnly(int, bool justPressed) {
 	else
 		driver->SetLineColor(255,255,255);
 	driver->AddLine(msg);
+	driver->SetLineColor(255, 255, 255);
 }
 
 void HK_PlayMovie(int, bool justPressed) 
@@ -505,7 +506,7 @@ void HK_NextSaveSlot(int, bool justPressed) {
 	lastSaveState++; 
 	if(lastSaveState>9) 
 		lastSaveState=0; 
-	driver->AddLine("State %i selected", lastSaveState);
+	driver->AddLine(STRW(ID_OSD_MSG02).c_str(), lastSaveState);
 }
 
 void HK_PreviousSaveSlot(int, bool justPressed) { 
@@ -514,7 +515,7 @@ void HK_PreviousSaveSlot(int, bool justPressed) {
 		lastSaveState=9; 
 	else
 		lastSaveState--;
-	driver->AddLine("State %i selected", lastSaveState);
+	driver->AddLine(STRW(ID_OSD_MSG02).c_str(), lastSaveState);
 }
 
 void HK_Pause(int, bool justPressed) { if(justPressed) TogglePause(); }
@@ -542,12 +543,12 @@ void HK_ToggleRasterizer(int, bool justPressed) {
 void HK_IncreasePressure(int, bool justPressed) {
 	CommonSettings.StylusPressure += 10;
 	if(CommonSettings.StylusPressure>100) CommonSettings.StylusPressure = 100;
-	driver->AddLine("Stylus Pressure to %d%%",CommonSettings.StylusPressure);
+	driver->AddLine(STRW(ID_OSD_MSG04).c_str(),CommonSettings.StylusPressure);
 }
 void HK_DecreasePressure(int, bool justPressed) {
 	CommonSettings.StylusPressure -= 10;
 	if(CommonSettings.StylusPressure<0) CommonSettings.StylusPressure = 0;
-	driver->AddLine("Stylus Pressure to %d%%",CommonSettings.StylusPressure);
+	driver->AddLine(STRW(ID_OSD_MSG04).c_str(),CommonSettings.StylusPressure);
 }
 
 void HK_Rotate0(int, bool justPressed) { SetRotate(MainWindow->getHWnd(), 0);}

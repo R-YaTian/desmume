@@ -69,6 +69,7 @@ struct Rar_Allocator
 {
 	// provides allocator that doesn't throw an exception on failure
 	static void operator delete ( void* p ) { free( p ); }
+	static void operator delete ( void* pos, void* p ) { free(pos); }
 	static void* operator new ( size_t s ) UNRAR_NOTHROW { return malloc( s ); }
 	static void* operator new ( size_t, void* p ) UNRAR_NOTHROW { return p; }
 };

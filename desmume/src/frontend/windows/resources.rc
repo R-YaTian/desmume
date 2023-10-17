@@ -1049,6 +1049,27 @@ BEGIN
     ID_LIST_STR06           "先前值"
     ID_LIST_STR07           "变更"
     ID_OSD_MSG01            "JIT Block 大小变更为"
+    ID_OSD_MSG02            "已选中存档位 %i"
+    ID_OSD_MSG03            "已选择麦克风样本 %d"
+    ID_OSD_MSG04            "触摸笔压力设为 %d%%"
+    ID_OSD_MSG05            "只读"
+    ID_OSD_MSG06            "读+写"
+    ID_OSD_MSG07            " (无视频)"
+    ID_OSD_MSG08            " (已完成)"
+    ID_OSD_MSG09            "AVI 录制结束"
+    ID_OSD_MSG10            "AVI 录制开始"
+    ID_OSD_MSG11            "无法播放 AVI 文件"
+    ID_OSD_MSG12            "目标 FPS 上调到 %2.04f"
+    ID_OSD_MSG13            "目标 FPS 下调到 %2.04f"
+    ID_OSD_MSG14            "无法保存视频文件!"
+END
+
+STRINGTABLE
+BEGIN
+    ID_OSD_MSG15            "已保存到存档位 %i"
+    ID_OSD_MSG16            "无法保存到存档位 %i"
+    ID_OSD_MSG17            "从存档位 %i 读取成功"
+    ID_OSD_MSG18            "从存档位 %i 读取失败"
 END
 
 #endif    // 中文(简体，中国) resources

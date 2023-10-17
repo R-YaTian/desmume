@@ -172,7 +172,7 @@ void HudStruct::reset()
 	RTCDisplay.ysize=10;
 
 	SavestateSlots.x = 8;
-	SavestateSlots.y = 160;
+	SavestateSlots.y = 188;
 	SavestateSlots.xsize = 240;
 	SavestateSlots.ysize = 24;
 
@@ -463,7 +463,7 @@ static s64 slotTimer=0;
 
 static void DrawStateSlots(){
 
-	const int yloc = calcY(Hud.SavestateSlots.y); //160
+	const int yloc = calcY(Hud.SavestateSlots.y); //188
 	const int xloc = Hud.SavestateSlots.x; //8
 
 	s64 fadecounter = 512 - (hudTimer-slotTimer)/4; //change constant to alter fade speed

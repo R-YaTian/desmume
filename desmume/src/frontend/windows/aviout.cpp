@@ -28,7 +28,8 @@
 #include "windriver.h"
 #include "driver.h"
 #include "NDSSystem.h"
-
+#include "winutil.h"
+#include "resource.h"
 
 NDSCaptureObject *captureObject = NULL;
 bool AVIFileStream::__needAviLibraryInit = true;
@@ -846,7 +847,7 @@ bool DRV_AviBegin(const char *fileName)
 		if (error != E_ABORT)
 		{
 			EMU_PrintError("Error starting AVI file.");
-			driver->AddLine("Error starting AVI file.");
+			driver->AddLine(STRW(ID_OSD_MSG11).c_str());
 		}
 
 		delete newCaptureObject;
@@ -905,7 +906,7 @@ void DRV_AviFileWriteStart()
 		captureObject = NULL;
 
 		EMU_PrintMessage("AVI recording ended.");
-		driver->AddLine("AVI recording ended.");
+		driver->AddLine(STRW(ID_OSD_MSG09).c_str());
 
 		return;
 	}

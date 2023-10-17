@@ -301,15 +301,15 @@ unrar_err_t unrar_try_extract( const unrar_t* p )
 		// Save and restore archive reader
 		unrar_read_func read = p->Arc.user_read;
 		void* user_data      = p->Arc.user_read_data;
-		
+
 		void (*close_file)( void* ) = p->close_file;
 		p->close_file = NULL;
-		
+
 		p->~unrar_t();
 		new (p) unrar_t;
-		
+
 		p->close_file = close_file;
-		
+
 		return open_( p, read, user_data );
 	}
 

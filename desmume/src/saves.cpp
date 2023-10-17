@@ -702,12 +702,21 @@ void savestate_slot(int num)
 	if (savestate_save(filename))
 	{
 		driver->SetLineColor(255, 255, 255);
+#ifdef WIN32
+		driver->AddLine(STRW(ID_OSD_MSG15).c_str(), num);
+#else
 		driver->AddLine("Saved to %i slot", num);
+#endif
 	}
 	else
 	{
 		driver->SetLineColor(255, 0, 0);
+#ifdef WIN32
+		driver->AddLine(STRW(ID_OSD_MSG16).c_str(), num);
+#else
 		driver->AddLine("Error saving %i slot", num);
+#endif
+		driver->SetLineColor(255, 255, 255);
 		return;
 	}
 
@@ -794,12 +803,21 @@ void loadstate_slot(int num)
 	if (savestate_load(filename))
 	{
 		driver->SetLineColor(255, 255, 255);
+#ifdef WIN32
+		driver->AddLine(STRW(ID_OSD_MSG17).c_str(), num);
+#else
 		driver->AddLine("Loaded from %i slot", num);
+#endif
 	}
 	else
 	{
 		driver->SetLineColor(255, 0, 0);
+#ifdef WIN32
+		driver->AddLine(STRW(ID_OSD_MSG18).c_str(), num);
+#else
 		driver->AddLine("Error loading %i slot", num);
+#endif
+		driver->SetLineColor(255, 255, 255);
 	}
 }
 

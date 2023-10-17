@@ -1181,8 +1181,13 @@ bool mov_loadstate(EMUFILE &fp, int size)
 			openRecordingMovie(curMovieFilename);
 			if(!osRecordingMovie)
 			{
-			   driver->SetLineColor(255, 0, 0);
-			   driver->AddLine("Can't save movie file!");
+				driver->SetLineColor(255, 0, 0);
+#ifdef WIN32
+				driver->AddLine(STRW(ID_OSD_MSG14).c_str());
+#else
+				driver->AddLine("Can't save movie file!");
+#endif
+				driver->SetLineColor(255, 255, 255);
 			}
 
 			//printf("DUMPING MOVIE: %d FRAMES\n",currMovieData.records.size());
