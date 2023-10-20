@@ -88,7 +88,8 @@
 	<ItemDefinitionGroup>
 
 		<PreBuildEvent>
-			<Command>"%windir%\system32\cscript" /nologo /E:JScript "defaultconfig\make_scmrev.h.js"</Command>
+			<Command>"%windir%\system32\cscript" /nologo /E:JScript "defaultconfig\make_scmrev.h.js"
+python fix_encoding.py</Command>
 		</PreBuildEvent>
 
 		<ClCompile>

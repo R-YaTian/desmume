@@ -30,6 +30,7 @@
         #include "frontend/windows/video.h"
         #include "frontend/windows/resource.h"
         #include "frontend/windows/display.h"
+        #include "frontend/windows/winutil.h"
     #else
         typedef void* PlatformMenu;
         #define MAX_MENU_COUNT 0
@@ -511,11 +512,16 @@ static int doPopup(lua_State* L, const char* deftype, const char* deficon)
 	assert(iicon >= 0 && iicon <= 3);
 	if(!(iicon >= 0 && iicon <= 3)) iicon = 0;
 
-	static const char * const titles [] = {"Notice", "Question", "Warning", "Error"};
 	const char* answer = "ok";
 #if defined(WIN32_FRONTEND)
+	static char * const titles [] = { new char[16], new char[16], new char[16], new char[16] };
+	STRA(ID_BOX_MSG02, titles[0]);
+	STRA(ID_BOX_MSG03, titles[1]);
+	STRA(ID_BOX_MSG04, titles[2]);
+	STRA(ID_BOX_MSG05, titles[3]);
 	static const int etypes [] = {MB_OK, MB_YESNO, MB_YESNOCANCEL, MB_OKCANCEL, MB_ABORTRETRYIGNORE};
 	static const int eicons [] = {MB_ICONINFORMATION, MB_ICONQUESTION, MB_ICONWARNING, MB_ICONERROR};
+	char* ansi_str = new char[1024];
 //	DialogsOpen++;
 	uintptr_t uid = luaStateToUIDMap[L->l_G->mainthread];
 	EnableWindow(MainWindow->getHWnd(), false);
@@ -524,8 +530,10 @@ static int doPopup(lua_State* L, const char* deftype, const char* deficon)
 //		while (ShowCursor(false) >= 0);
 //		while (ShowCursor(true) < 0);
 //	}
-	int ianswer = MessageBox((HWND)uid, str, titles[iicon], etypes[itype] | eicons[iicon]);
+	UTF8ToANSI(str, ansi_str);
+	int ianswer = MessageBox((HWND)uid, ansi_str, titles[iicon], etypes[itype] | eicons[iicon]);
 	EnableWindow(MainWindow->getHWnd(), true);
+	delete[] ansi_str;
 //	DialogsOpen--;
 	switch(ianswer)
 	{
@@ -4571,8 +4579,6 @@ static int setVectorFont(lua_State* L) {
 	aggDraw.hud->setVectorFont(choice, height, bold);
 	return 0;
 }
-
-extern void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String);
 
 static int text(lua_State *L) {
 	//if (osd->checkUpdating())

@@ -21,6 +21,8 @@
 
 #include "types.h"
 #include "windriver.h"
+#include "winutil.h"
+#include "resource.h"
 
 int SNDXA2Init(int buffersize);
 void SNDXA2DeInit();
@@ -98,15 +100,15 @@ int SNDXA2Init(int buffersize)
 {
 	HRESULT hr;
 	if ( FAILED(hr = XAudio2Create( &pXAudio2, 0 , XAUDIO2_DEFAULT_PROCESSOR ) ) ) {
-		MessageBox (NULL, TEXT("XAudio2Create Error\nThis is usually caused by not having a recent DirectX release installed."),
-			TEXT("Error"),
+		MessageBox (NULL, TEXT(STRA(ID_BOX_MSG10).c_str()),
+			TEXT(STRA(ID_BOX_MSG05).c_str()),
 			MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
 
 	if ( FAILED(hr = pXAudio2->CreateMasteringVoice( &pMasterVoice, 2, DESMUME_SAMPLE_RATE, 0, 0 , NULL ) ) ) {
-		MessageBox (NULL, TEXT("CreateMasteringVoice Error."),
-			TEXT("Error"),
+		MessageBox (NULL, TEXT(STRA(ID_BOX_MSG11).c_str()),
+			TEXT(STRA(ID_BOX_MSG05).c_str()),
 			MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
@@ -122,8 +124,8 @@ int SNDXA2Init(int buffersize)
 
 	if( FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx,
 			XAUDIO2_VOICE_NOSRC , XAUDIO2_DEFAULT_FREQ_RATIO, &voiceCallback, NULL, NULL ) ) ) {
-		 MessageBox (NULL, TEXT("CreateMasteringVoice Error."),
-			TEXT("Error"),
+		MessageBox (NULL, TEXT(STRA(ID_BOX_MSG11).c_str()),
+			TEXT(STRA(ID_BOX_MSG05).c_str()),
 			MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}

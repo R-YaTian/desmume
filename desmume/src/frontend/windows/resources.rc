@@ -1070,6 +1070,17 @@ BEGIN
     ID_OSD_MSG16            "无法保存到存档位 %i"
     ID_OSD_MSG17            "从存档位 %i 读取成功"
     ID_OSD_MSG18            "从存档位 %i 读取失败"
+    ID_BOX_MSG01            "该 ROM 文件头的游戏标题部分包含无效的非ASCII字符，该 ROM 可能无效或是改版 ROM 未正确处理好文件头，确定要继续尝试加载该 ROM 吗？"
+    ID_BOX_MSG02            "信息"
+    ID_BOX_MSG03            "询问"
+    ID_BOX_MSG04            "警告"
+    ID_BOX_MSG05            "错误"
+    ID_BOX_MSG06            "读取即时存档时发生错误"
+    ID_BOX_MSG07            "即时存档的视频与当前视频不匹配\n当前: "
+    ID_BOX_MSG08            "\n即时存档: "
+    ID_BOX_MSG09            "\n\n这意味着正要加载的即时存档属于与当前播放视频不同的另一个视频\n\n要继续加载该即时存档吗?"
+    ID_BOX_MSG10            "XAudio2Create 操作失败\n该问题通常是由 DirectX 运行库尚未安装所导致"
+    ID_BOX_MSG11            "CreateMasteringVoice 操作失败"
 END
 
 #endif    // 中文(简体，中国) resources
@@ -1081,7 +1092,7 @@ END
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
+#pragma code_page(65001)
 
 /////////////////////////////////////////////////////////////////////////////
 //

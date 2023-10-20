@@ -1116,8 +1116,8 @@ bool mov_loadstate(EMUFILE &fp, int size)
 		{
 			//mbg 8/18/08 - this code  can be used to turn the error message into an OK/CANCEL
 			#if defined(WIN32_FRONTEND)
-				std::string msg = "There is a mismatch between savestate's movie and current movie.\ncurrent: " + currMovieData.guid.toString() + "\nsavestate: " + tempMovieData.guid.toString() + "\n\nThis means that you have loaded a savestate belonging to a different movie than the one you are playing now.\n\nContinue loading this savestate anyway?";
-				int result = MessageBox(MainWindow->getHWnd(),msg.c_str(),"Error loading savestate",MB_OKCANCEL);
+				std::string msg = STRA(ID_BOX_MSG07) + currMovieData.guid.toString() + STRA(ID_BOX_MSG08) + tempMovieData.guid.toString() + STRA(ID_BOX_MSG09);
+				int result = MessageBox(MainWindow->getHWnd(),msg.c_str(), STRA(ID_BOX_MSG06).c_str(), MB_OKCANCEL);
 				if(result == IDCANCEL)
 					return false;
 			#else

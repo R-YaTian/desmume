@@ -1076,6 +1076,17 @@
 #define ID_OSD_MSG16                    44753
 #define ID_OSD_MSG17                    44754
 #define ID_OSD_MSG18                    44755
+#define ID_BOX_MSG01                    44756
+#define ID_BOX_MSG02                    44757
+#define ID_BOX_MSG03                    44758
+#define ID_BOX_MSG04                    44759
+#define ID_BOX_MSG05                    44760
+#define ID_BOX_MSG06                    44761
+#define ID_BOX_MSG07                    44762
+#define ID_BOX_MSG08                    44763
+#define ID_BOX_MSG09                    44764
+#define ID_BOX_MSG10                    44765
+#define ID_BOX_MSG11                    44766
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002

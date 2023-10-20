@@ -337,7 +337,7 @@ const RomBanner& GameInfo::getRomBanner()
 bool GameInfo::ValidateHeader()
 {
 	bool isRomValid = false;
-	
+
 	// Validate the ROM type.
 	int detectedRomType = DetectRomType(*(Header *)&header, (char *)secureArea);
 	if (detectedRomType == ROMTYPE_INVALID)
@@ -345,7 +345,7 @@ bool GameInfo::ValidateHeader()
 		printf("ROM Validation: Invalid ROM type detected.\n");
 		return isRomValid;
 	}
-	
+
 	// Ensure that the game title and game code are both clean ASCII, but also
 	// make an exception for homebrew ROMs, which may not always have clean
 	// headers to begin with.
@@ -358,10 +358,15 @@ bool GameInfo::ValidateHeader()
 			{
 				printf("ROM Validation: Invalid character detected in ROM Title.\n");
 				printf("                charIndex = %d, charValue = %d\n", (int)i, c);
+#ifdef WIN32
+				int val = MessageBox(MainWindow->getHWnd(), STRA(ID_BOX_MSG01).c_str(), "DeSmuME", (MB_YESNO | MB_ICONWARNING));
+				if (val == IDYES)
+					return true;
+#endif
 				return isRomValid;
 			}
 		}
-		
+
 		for (size_t i = 0; i < 4; i++)
 		{
 			char c = (char)header.gameCode[i];
@@ -373,7 +378,7 @@ bool GameInfo::ValidateHeader()
 			}
 		}
 	}
-	
+
 	isRomValid = true;
 	return isRomValid;
 }
