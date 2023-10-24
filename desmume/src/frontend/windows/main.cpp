@@ -1741,6 +1741,12 @@ class WinDriver : public BaseDriver
 		osd->addLine(message);
 	}
 
+	virtual void USR_InfoMessage(const wchar_t* message)
+	{
+		LOG(L"%ls\n", message);
+		osd->addLine(message);
+	}
+
 	virtual void AVI_SoundUpdate(void* soundData, int soundLen) { 
 		::DRV_AviSoundUpdate(soundData, soundLen);
 	}

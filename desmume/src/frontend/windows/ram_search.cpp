@@ -1236,7 +1236,7 @@ void Update_RAM_Search() //keeps RAM values up to date in the search and watch w
 		if(!AutoSearchAutoRetry)
 		{
 //			Clear_Sound_Buffer();
-			int answer = MessageBox(RamSearchHWnd,"Choosing Retry will reset the search once and continue autosearching.\nChoose Ignore will reset the search whenever necessary and continue autosearching.\nChoosing Abort will reset the search once and stop autosearching.","Autosearch - out of results.",MB_ABORTRETRYIGNORE|MB_DEFBUTTON2|MB_ICONINFORMATION);
+			int answer = MessageBox(RamSearchHWnd, STRA(ID_BOX_MSG29).c_str(), STRA(ID_BOX_MSG30).c_str(), MB_ABORTRETRYIGNORE | MB_DEFBUTTON2 | MB_ICONINFORMATION);
 			if(answer == IDABORT)
 			{
 				SendDlgItemMessage(RamSearchHWnd, IDC_C_AUTOSEARCH, BM_SETCHECK, BST_UNCHECKED, 0);
@@ -1800,14 +1800,14 @@ LRESULT CALLBACK RamSearchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					if(!ResultCount)
 					{
 
-						MessageBox(RamSearchHWnd,"Resetting search.","Out of results.",MB_OK|MB_ICONINFORMATION);
+						MessageBox(RamSearchHWnd, STRA(ID_BOX_MSG31).c_str(), STRA(ID_BOX_MSG32).c_str(), MB_OK|MB_ICONINFORMATION);
 						soft_reset_address_info();
 					}
 
 					{rv = true; break;}
 
 invalid_field:
-					MessageBox(RamSearchHWnd,"Invalid or out-of-bound entered value.","Error",MB_OK|MB_ICONSTOP);
+					MessageBox(RamSearchHWnd, STRA(ID_BOX_MSG33).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK|MB_ICONSTOP);
 					if(AutoSearch) // stop autosearch if it just started
 					{
 						SendDlgItemMessage(hDlg, IDC_C_AUTOSEARCH, BM_SETCHECK, BST_UNCHECKED, 0);

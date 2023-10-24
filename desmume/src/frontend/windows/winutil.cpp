@@ -241,16 +241,17 @@ void UTF8ToANSI(const char* utf8String, char* ansiString)
 	int nRetLen = 0;
 
 	nRetLen = MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, NULL, 0);
-	// unicodeStr = (wchar_t*) malloc(nRetLen * sizeof(wchar_t));
-	unicodeStr = new wchar_t[nRetLen + 1];
+	unicodeStr = (wchar_t*) malloc(nRetLen * sizeof(wchar_t));
+	// unicodeStr = new wchar_t[nRetLen + 1];
 	MultiByteToWideChar(CP_UTF8, 0, utf8String, -1, unicodeStr, nRetLen);
 
 	nRetLen = WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, NULL, 0, NULL, NULL);
 	WideCharToMultiByte(CP_ACP, 0, unicodeStr, -1, ansiString, nRetLen, NULL, NULL);
 
-	// free(unicodeStr);
-	delete[] unicodeStr;
+	free(unicodeStr);
+	// delete[] unicodeStr;
 }
+extern "C" void C_UTF8ToANSI(const char* utf8String, char* ansiString) { UTF8ToANSI(utf8String, ansiString); }
 
 void ANSIToUTF8(const char* ansiString, char* utf8String)
 {
@@ -258,11 +259,13 @@ void ANSIToUTF8(const char* ansiString, char* utf8String)
 	int nRetLen = 0;
 
 	nRetLen = MultiByteToWideChar(CP_ACP, 0, ansiString, -1, NULL, 0);
-	unicodeStr = new wchar_t[nRetLen + 1];
+	// unicodeStr = new wchar_t[nRetLen + 1];
+	unicodeStr = (wchar_t*) malloc(nRetLen * sizeof(wchar_t));
 	MultiByteToWideChar(CP_ACP, 0, ansiString, -1, unicodeStr, nRetLen);
 
 	nRetLen = WideCharToMultiByte(CP_UTF8, 0, unicodeStr, -1, NULL, 0, NULL, NULL);
 	WideCharToMultiByte(CP_UTF8, 0, unicodeStr, -1, utf8String, nRetLen, NULL, NULL);
 
-	delete[] unicodeStr;
+	// delete[] unicodeStr;
+	free(unicodeStr);
 }

@@ -30,6 +30,7 @@
 #include "resource.h"
 #include "main.h"
 #include "rtc.h"
+#include "winutil.h"
 
 bool replayreadonly=1;
 
@@ -201,7 +202,7 @@ INT_PTR CALLBACK ReplayDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM
 			case IDOK:	
 				error = FCEUI_LoadMovie(playfilename, replayreadonly, false, 80000);
 				if (error)
-					MessageBox(hwndDlg, error, "Failed to load movie", MB_OK);
+					MessageBox(hwndDlg, error, STRA(ID_BOX_MSG17).c_str(), MB_OK);
 
 				ZeroMemory(&playfilename, sizeof(playfilename));
 				EndDialog(hwndDlg, 0);

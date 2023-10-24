@@ -1634,6 +1634,9 @@
     <ClInclude Include="VersionHelpers.h">
       <Filter>frontend\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="UnicodeHelpers.h">
+      <Filter>frontend\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="bitmap1.bmp">

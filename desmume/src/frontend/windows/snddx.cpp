@@ -36,6 +36,8 @@ const char*  __stdcall DXGetErrorDescription8A(HRESULT hr);
 #include "SPU.h"
 #include "CWindow.h"
 #include "windriver.h"
+#include "winutil.h"
+#include "resource.h"
 
 int SNDDXInit(int buffersize);
 void SNDDXDeInit();
@@ -101,15 +103,15 @@ int SNDDXInit(int buffersize)
 
 	if (FAILED(ret = DirectSoundCreate8(NULL, &lpDS8, NULL)))
 	{
-		sprintf(tempstr, "DirectSound8Create error: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-		MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+		sprintf(tempstr, STRA(ID_BOX_MSG12).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+		MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
 
 	if (FAILED(ret = lpDS8->SetCooperativeLevel(MainWindow->getHWnd(), DSSCL_PRIORITY)))
 	{
-		sprintf(tempstr, "IDirectSound8_SetCooperativeLevel error: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-		MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+		sprintf(tempstr, STRA(ID_BOX_MSG13).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+		MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
 
@@ -121,8 +123,8 @@ int SNDDXInit(int buffersize)
 
 	if (FAILED(ret = lpDS8->CreateSoundBuffer(&dsbdesc, &lpDSB, NULL)))
 	{
-		sprintf(tempstr, "Error when creating primary sound buffer: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-		MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+		sprintf(tempstr, STRA(ID_BOX_MSG14).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+		MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
 
@@ -139,8 +141,8 @@ int SNDDXInit(int buffersize)
 
 	if (FAILED(ret = lpDSB->SetFormat(&wfx)))
 	{
-		sprintf(tempstr, "IDirectSoundBuffer8_SetFormat error: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-		MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+		sprintf(tempstr, STRA(ID_BOX_MSG15).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+		MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 		return -1;
 	}
 
@@ -166,15 +168,15 @@ int SNDDXInit(int buffersize)
 
 			if (FAILED(ret = lpDS8->CreateSoundBuffer(&dsbdesc, &lpDSB2, NULL)))
 			{
-				sprintf(tempstr, "Error when creating secondary sound buffer: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-				MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+				sprintf(tempstr, STRA(ID_BOX_MSG16).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+				MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 				return -1;
 			}
 		}
 		else
 		{
-			sprintf(tempstr, "Error when creating secondary sound buffer: %s - %s", DXGetErrorString8(ret), DXGetErrorDescription8(ret));
-			MessageBox (NULL, tempstr, "Error",  MB_OK | MB_ICONINFORMATION);
+			sprintf(tempstr, STRA(ID_BOX_MSG16).c_str(), DXGetErrorString8(ret), DXGetErrorDescription8(ret));
+			MessageBox (NULL, tempstr, STRA(ID_BOX_MSG05).c_str(),  MB_OK | MB_ICONINFORMATION);
 			return -1;
 		}
 	}

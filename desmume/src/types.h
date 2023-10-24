@@ -29,6 +29,7 @@
 
 //analyze microsoft compilers
 #ifdef _MSC_VER
+	#include "frontend/windows/UnicodeHelpers.h"
 	#define HOST_WINDOWS
 #endif //_MSC_VER
 

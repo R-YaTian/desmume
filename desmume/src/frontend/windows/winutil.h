@@ -50,6 +50,7 @@ std::string STRU(UINT id, char* dest = NULL);
 void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String);
 void UTF8ToANSI(const char* utf8String, char* ansiString);
 void ANSIToUTF8(const char* ansiString, char* utf8String);
+extern "C" void C_UTF8ToANSI(const char* utf8String, char* ansiString);
 
 inline bool operator==(const RECT& lhs, const RECT& rhs)
 {

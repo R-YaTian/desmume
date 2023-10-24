@@ -38,6 +38,8 @@
 #include "debug.h"
 #include "movie.h"
 #include "readwrite.h"
+#include "winutil.h"
+#include "resource.h"
 
 int MicDisplay;
 
@@ -164,7 +166,7 @@ static bool formatChunk(EMUFILE &inf)
 				channel_count != 1 ||
 				bits_per_sample != 8)
 			{
-					MessageBox(0,"not a valid RIFF WAVE file; must be 8bit mono pcm",0,0);
+					MessageBox(0,STRA(ID_BOX_MSG26).c_str(), 0, 0);
 					return false;
 			}
 
@@ -215,7 +217,7 @@ bool LoadSample(const char* name)
 		memcmp(riff_id, "RIFF", 4) != 0 ||
 		riff_length == 0 ||
 		memcmp(riff_datatype, "WAVE", 4) != 0) {
-		MessageBox(0,"not a valid RIFF WAVE file",0,0);
+		MessageBox(0,STRA(ID_BOX_MSG27).c_str(),0,0);
 		return false;
 	}
 
@@ -224,7 +226,7 @@ bool LoadSample(const char* name)
 
 	if (!dataChunk(inf))
 	{
-		MessageBox(0,"not a valid WAVE file. some unknown problem.",0,0);
+		MessageBox(0,STRA(ID_BOX_MSG28).c_str(),0,0);
 		return false;
 	}
 

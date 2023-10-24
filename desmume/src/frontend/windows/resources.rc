@@ -1081,6 +1081,58 @@ BEGIN
     ID_BOX_MSG09            "\n\n这意味着正要加载的即时存档属于与当前播放视频不同的另一个视频\n\n要继续加载该即时存档吗?"
     ID_BOX_MSG10            "XAudio2Create 操作失败\n该问题通常是由 DirectX 运行库尚未安装所导致"
     ID_BOX_MSG11            "CreateMasteringVoice 操作失败"
+    ID_BOX_MSG12            "DirectSound8Create 操作失败: %s - %s"
+END
+
+STRINGTABLE
+BEGIN
+    ID_BOX_MSG13            "IDirectSound8_SetCooperativeLevel 操作失败: %s - %s"
+    ID_BOX_MSG14            "创建主声道缓冲区时发生错误: %s - %s"
+    ID_BOX_MSG15            "IDirectSoundBuffer8_SetFormat 操作失败: %s - %s"
+    ID_BOX_MSG16            "创建次声道缓冲区时发生错误: %s - %s"
+    ID_BOX_MSG17            "视频加载失败"
+    ID_BOX_MSG18            "该压缩文档空白或已加密"
+    ID_BOX_MSG19            "无法加载!"
+    ID_BOX_MSG20            "错误:\n指定的地址无效\n地址必须为十六进制值"
+    ID_BOX_MSG21            "LoadMovie 操作暂不支持浏览文件"
+    ID_BOX_MSG22            "无法加载视频的即时存档。在视频所在目录中，应当有一个与视频相同文件名的 .dst 后缀文件。"
+    ID_BOX_MSG23            "加载 SRAM 失败"
+    ID_BOX_MSG24            "开始播放录像 (只读)"
+    ID_BOX_MSG25            "开始播放录像 (读+写)"
+    ID_BOX_MSG26            "不是有效的 RIFF 波形文件; 必须为 8 位单声道 PCM 格式"
+    ID_BOX_MSG27            "不是有效的 RIFF 波形文件"
+    ID_BOX_MSG28            "不是有效的波形文件，发生了某些未知错误。"
+END
+
+STRINGTABLE
+BEGIN
+    ID_BOX_MSG29            "选择重试将重置搜索一次并继续自动搜索\n选择忽略会在必要时重置搜索并继续自动搜索\n选择终止则重置搜索一次并停止自动搜索"
+    ID_BOX_MSG30            "自动搜索 - 结果数超限"
+    ID_BOX_MSG31            "正在重置搜索"
+    ID_BOX_MSG32            "结果数超限"
+    ID_BOX_MSG33            "输入的值无效或越界"
+    ID_BOX_MSG34            "要保存变更吗?"
+    ID_BOX_MSG35            "内存监视"
+    ID_BOX_MSG36            "打开文件时发生错误"
+    ID_BOX_MSG37            "无效的地址"
+    ID_BOX_MSG38            "错误:"
+    ID_BOX_MSG39            " 必须指定大小"
+    ID_BOX_MSG40            " 必须指定类型"
+    ID_BOX_MSG41            "Action Replay 代码中存在语法错误\n请重试"
+    ID_BOX_MSG42            "Codebreaker 代码中存在语法错误\n请重试"
+    ID_BOX_MSG43            "无法保存金手指到文件\n请检查路径配置 (菜单->配置->路径设置->金手指)"
+    ID_BOX_MSG44            "是否要保存更改?"
+END
+
+STRINGTABLE
+BEGIN
+    ID_BOX_MSG45            "保存?"
+    ID_BOX_MSG46            "在金手指数据库中找不到该游戏的金手指代码"
+    ID_BOX_MSG47            "加载金手指数据库时发生错误，找不到 %s 文件\n请检查路径配置 (菜单->配置->路径设置->金手指)"
+    ID_BOX_MSG48            "%s 文件不是有效的 R4 金手指数据库\n错误的文件格式!"
+    ID_BOX_MSG49            "在数据库中找不到 CRC 为 %8X 的条目"
+    ID_BOX_MSG50            "从数据库中导出数据时发生错误"
+    ID_BOX_MSG51            "发生未知错误!!!"
 END
 
 #endif    // 中文(简体，中国) resources

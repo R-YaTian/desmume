@@ -593,7 +593,7 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 						{
 							if (!cheats->add_AR(buf, tempCheat.description, tempCheat.enabled))
 							{
-								MessageBox(dialog, "Syntax error in Action Replay code.\nTry again", DESMUME_NAME,
+								MessageBox(dialog, STRA(ID_BOX_MSG41).c_str(), DESMUME_NAME,
 											MB_OK | MB_ICONERROR);
 								return FALSE;
 							}
@@ -602,7 +602,7 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 						{
 							if (!cheats->update_AR(buf, tempCheat.description, tempCheat.enabled, cheatEditPos))
 							{
-								MessageBox(dialog, "Syntax error in Action Replay code.\nTry again", DESMUME_NAME,
+								MessageBox(dialog, STRA(ID_BOX_MSG41).c_str(), DESMUME_NAME,
 											MB_OK | MB_ICONERROR);
 								return FALSE;
 							}
@@ -614,7 +614,7 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 						{
 							if (!cheats->add_CB(buf, tempCheat.description, tempCheat.enabled))
 							{
-								MessageBox(dialog, "Syntax error in Codebreaker code.\nTry again", DESMUME_NAME,
+								MessageBox(dialog, STRA(ID_BOX_MSG42).c_str(), DESMUME_NAME,
 											MB_OK | MB_ICONERROR);
 								return FALSE;
 							}
@@ -623,7 +623,7 @@ INT_PTR CALLBACK CheatsAdd_XX_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lp
 						{
 							if (!cheats->update_CB(buf, tempCheat.description, tempCheat.enabled, cheatEditPos))
 							{
-								MessageBox(dialog, "Syntax error in Codebreaker code.\nTry again", DESMUME_NAME,
+								MessageBox(dialog, STRA(ID_BOX_MSG42).c_str(), DESMUME_NAME,
 											MB_OK | MB_ICONERROR);
 								return FALSE;
 							}
@@ -678,7 +678,7 @@ void AttemptSaveAndClose(HWND dialog)
 	if (cheats->save())
 		EndDialog(dialog, TRUE);
 	else
-		MessageBox(dialog, "Can't save cheats to file.\nCheck your path (Menu->Config->Path Settings->\"Cheats\")", "Error", MB_OK);
+		MessageBox(dialog, STRA(ID_BOX_MSG43).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 }
 void MoveRow(HWND list, int src, int dst)
 {
@@ -958,7 +958,7 @@ INT_PTR CALLBACK CheatsListBox_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM l
 				{
 					if (IsWindowEnabled(GetDlgItem(dialog, IDOK)))
 					{
-						int result = MessageBox(dialog, "Do you wish to save your changes?", "Save?", MB_YESNOCANCEL);
+						int result = MessageBox(dialog, STRA(ID_BOX_MSG44).c_str(), STRA(ID_BOX_MSG45).c_str(), MB_YESNOCANCEL);
 						if (result == IDYES)
 							AttemptSaveAndClose(dialog);
 						else if (result == IDNO)
@@ -1629,7 +1629,7 @@ bool CheatsExportDialog(HWND hwnd)
 	bool res = false;
 	cheatsExport = new CHEATSEXPORT();
 	if (!cheatsExport) return false;
-	
+
 	char buf[MAX_PATH] = {0};
 	strcpy(buf, path.getpath(path.CHEATS).c_str());
 	if (path.r4Format == path.R4_CHEAT_DAT)
@@ -1643,36 +1643,38 @@ bool CheatsExportDialog(HWND hwnd)
 		if (cheatsExport->getCheatsNum() > 0)
 			res = DialogBoxW(hAppInst, MAKEINTRESOURCEW(IDD_CHEAT_EXPORT), hwnd, (DLGPROC) CheatsExportProc);
 		else
-			MessageBox(hwnd, "Cheats for this game in database not founded.", DESMUME_NAME, MB_OK | MB_ICONERROR);
+			MessageBox(hwnd, STRA(ID_BOX_MSG46).c_str(), DESMUME_NAME, MB_OK | MB_ICONERROR);
 	}
 	else
 	{
 		char buf2[512] = {0};
+		char ansi_buf[MAX_PATH] = {0};
+		UTF8ToANSI(buf, ansi_buf); // MessageBoxA need ANSI str
 		CheatSystemError theError = cheatsExport->getErrorCode();
-		
+
 		switch (theError)
 		{
 			case CheatSystemError_FileOpenFailed:
-				sprintf(buf2, "Error loading cheats database. File not found\n\"%s\"\nCheck your path (Menu->Config->Path Settings->\"Cheats\")\n\nYou can download it from http://www.codemasters-project.net/vb/forumdisplay.php?44-Nintendo-DS", buf);
+				sprintf(buf2, STRA(ID_BOX_MSG47).c_str(), ansi_buf);
 				break;
-				
+
 			case CheatSystemError_FileFormatInvalid:
-				sprintf(buf2, "File \"%s\" is not R4 cheats database.\nWrong file format!", buf);
+				sprintf(buf2, STRA(ID_BOX_MSG48).c_str(), ansi_buf);
 				break;
-				
+
 			case CheatSystemError_GameNotFound:
-				sprintf(buf2, "CRC %8X not found in database.", gameInfo.crcForCheatsDb);
+				sprintf(buf2, STRA(ID_BOX_MSG49).c_str(), gameInfo.crcForCheatsDb);
 				break;
-				
+
 			case CheatSystemError_LoadEntryError:
-				sprintf(buf2, "Error export from database");
+				sprintf(buf2, STRA(ID_BOX_MSG50).c_str());
 				break;
-				
+
 			default:
-				sprintf(buf2, "Unknown error!!!");
+				sprintf(buf2, STRA(ID_BOX_MSG51).c_str());
 				break;
 		}
-		
+
 		MessageBox(hwnd, buf2, "DeSmuME", MB_OK | MB_ICONERROR);				
 	}
 
@@ -1682,4 +1684,3 @@ bool CheatsExportDialog(HWND hwnd)
 
 	return res;
 }
-

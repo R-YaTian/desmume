@@ -60,7 +60,13 @@ bool path_mkdir(const char *dir)
    if (!*basedir || !strcmp(basedir, dir))
       goto end;
 
+#ifdef _WIN32
+   char basedir_ansi[1024] = {0};
+   C_UTF8ToANSI(basedir, basedir_ansi);
+   if (path_is_directory(basedir_ansi))
+#else
    if (path_is_directory(basedir))
+#endif
    {
       target = dir;
       ret    = mkdir_norecurse(dir);

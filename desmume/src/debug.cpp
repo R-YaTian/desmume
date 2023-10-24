@@ -165,7 +165,7 @@ void HandleDebugEvent_CacheMiss()
 	extern int currFrameCounter;
 	if(currFrameCounter<200) return;
 	static FILE* outf = NULL;
-	if(!outf) outf = fopen("c:\\miss.txt","wb");
+	if(!outf) outf = fopen("miss.txt","wb");
 	fprintf(outf,"%05d,%08X,%d\n",currFrameCounter,DebugEventData.addr,DebugEventData.size);
 }
 

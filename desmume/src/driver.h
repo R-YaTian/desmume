@@ -42,6 +42,7 @@ public:
 	virtual bool WAV_IsRecording() { return FALSE; }
 
 	virtual void USR_InfoMessage(const char *message) { LOG("%s\n", message); }
+	virtual void USR_InfoMessage(const wchar_t* message) { LOG(L"%ls\n", message); }
 	virtual void USR_RefreshScreen() {}
 	virtual void USR_SetDisplayPostpone(int milliseconds, bool drawNextFrame) {} // -1 == indefinitely, 0 == don't pospone, 500 == don't draw for 0.5 seconds
 

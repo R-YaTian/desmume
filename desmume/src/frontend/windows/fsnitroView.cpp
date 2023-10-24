@@ -261,7 +261,8 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 				case ID_EXTRACTALL:
 					{
 						char tmp_path[MAX_PATH] = {0};
-						
+						char tmp_path_utf8[MAX_PATH] = {0};
+
 						BROWSEINFO bp={0};
 						memset(&bp, 0, sizeof(bp));
 						bp.hwndOwner = hWnd;
@@ -270,7 +271,7 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 						bp.lpszTitle = "Select destination directory";
 						bp.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_USENEWUI;
 						bp.lpfn = BrowseCallbackProc;
-		
+
 						LPITEMIDLIST tmp = SHBrowseForFolder((LPBROWSEINFO)&bp);
 						if (tmp)
 						{
@@ -278,11 +279,12 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 							SHGetPathFromIDList(tmp, tmp_path);
 							if (tmp_path[strlen(tmp_path)-1] != '\\')
 								tmp_path[strlen(tmp_path)] = '\\';
+							ANSIToUTF8(tmp_path, tmp_path_utf8); // SHGetPathFromIDListA will output ANSI str, so conv to UTF-8
 
 							if (LOWORD(wParam) == ID_EXTRACTALL)
 							{
-								string tmp = (string)tmp_path + (string)path.GetRomNameWithoutExtension() + (string)"\\";
-								mkdir(tmp.c_str(),0777);
+								string tmp = (string)tmp_path_utf8 + (string)path.GetRomNameWithoutExtension() + (string)"\\";
+								mkdir(tmp.c_str(), 0777);
 								HWND progress = CreateDialog(hAppInst, MAKEINTRESOURCE(IDD_PROGRESS_WND), NULL, (DLGPROC)ProgressWnd);
 								ShowWindow(progress, SW_SHOW);
 								UpdateWindow(progress);

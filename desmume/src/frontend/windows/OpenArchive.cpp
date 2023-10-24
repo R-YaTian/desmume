@@ -33,6 +33,7 @@
 #include "main.h"
 #include "utils/decrypt/header.h"
 #include "utils/xstring.h"
+#include "winutil.h"
 
 static char Str_Tmp[1024];
 
@@ -151,7 +152,7 @@ int ChooseItemFromArchive(ArchiveFile& archive, bool autoChooseIfOnly1, const ch
 	if(info.files.size() < 1)
 	{
 //		DialogsOpen++;
-		MessageBox(GetArchiveParentHWND(), "The archive is either empty or encrypted.", "Nothing to load!", MB_OK | MB_ICONWARNING);
+		MessageBox(GetArchiveParentHWND(), STRA(ID_BOX_MSG18).c_str(), STRA(ID_BOX_MSG19).c_str(), MB_OK | MB_ICONWARNING);
 //		DialogsOpen--;
 		return -1;
 	}

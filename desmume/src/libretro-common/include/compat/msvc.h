@@ -69,7 +69,14 @@ typedef int ssize_t;
 #endif
 #endif
 
-#define mkdir(dirname, unused) _mkdir(dirname)
+extern void UTF8ToANSI(const char* utf8String, char* ansiString);
+inline int __cdecl _mkdir_(char const* _Path)
+{
+   char ansi_buf[1024] = {0};
+   UTF8ToANSI(_Path, ansi_buf);
+   return _mkdir(ansi_buf);
+}
+#define mkdir(dirname, unused) _mkdir_(dirname)
 #define strtoull _strtoui64
 #undef strcasecmp
 #define strcasecmp _stricmp

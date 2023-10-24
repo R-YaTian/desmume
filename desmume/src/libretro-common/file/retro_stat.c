@@ -184,11 +184,16 @@ int32_t path_get_size(const char *path)
  *
  * Returns: true (1) if directory could be created, otherwise false (0).
  **/
+#if defined(_WIN32)
+extern void C_UTF8ToANSI(const char* utf8String, char* ansiString);
+#endif
 bool mkdir_norecurse(const char *dir)
 {
    int ret;
 #if defined(_WIN32)
-   ret = _mkdir(dir);
+   char ansi_buf[1024] = {0};
+   C_UTF8ToANSI(dir, ansi_buf);
+   ret = _mkdir(ansi_buf);
 #elif defined(IOS)
    ret = mkdir(dir, 0755);
 #elif defined(VITA) || defined(PSP)

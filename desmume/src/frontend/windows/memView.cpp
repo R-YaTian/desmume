@@ -467,7 +467,7 @@ INT_PTR CALLBACK MemView_DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 				if(error)
 				{
-					MessageBox(hDlg, "Error:\nInvalid address specified.\nThe address must be an hexadecimal value.", DESMUME_NAME, (MB_OK | MB_ICONERROR));
+					MessageBox(hDlg, STRA(ID_BOX_MSG20).c_str(), DESMUME_NAME, (MB_OK | MB_ICONERROR));
 					SetWindowText(gAddress, "");
 					return 1;
 				}

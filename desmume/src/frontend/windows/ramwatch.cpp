@@ -254,7 +254,7 @@ bool AskSave()
 	if (RWfileChanged)
 	{
 		HWND Hwnd = MainWindow->getHWnd();
-		int answer = MessageBox(Hwnd, "Save Changes?", "Ram Watch", MB_YESNOCANCEL);
+		int answer = MessageBox(Hwnd, STRA(ID_BOX_MSG34).c_str(), STRA(ID_BOX_MSG35).c_str(), MB_YESNOCANCEL);
 		if(answer == IDYES)
 			if(!QuickSaveWatches())
 				return false;
@@ -408,7 +408,7 @@ void OpenRWRecentFile(int memwRFileNumber)
 	FILE *WatchFile = fopen(Str_Tmp,"rb");
 	if (!WatchFile)
 	{
-		int answer = MessageBox(MESSAGEBOXPARENT,"Error opening file.","ERROR",MB_OKCANCEL);
+		int answer = MessageBox(MESSAGEBOXPARENT, STRA(ID_BOX_MSG36).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OKCANCEL);
 		if (answer == IDOK)
 		{
 			rw_recent_files[rnum][0] = '\0';	//Clear file from list 
@@ -543,7 +543,7 @@ bool Load_Watches(bool clear, const char* filename)
 	FILE* WatchFile = fopen(filename,"rb");
 	if (!WatchFile)
 	{
-		MessageBox(MESSAGEBOXPARENT,"Error opening file.","ERROR",MB_OK);
+		MessageBox(MESSAGEBOXPARENT, STRA(ID_BOX_MSG36).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 		return false;
 	}
 	if(clear)
@@ -779,17 +779,17 @@ LRESULT CALLBACK EditWatchProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 						}
 						else
 						{
-							MessageBox(hDlg,"Invalid Address","ERROR",MB_OK);
+							MessageBox(hDlg, STRA(ID_BOX_MSG37).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 						}
 					}
 					else
 					{
-						strcpy(Str_Tmp,"Error:");
+						strcpy(Str_Tmp, STRA(ID_BOX_MSG38).c_str());
 						if (!s)
-							strcat(Str_Tmp," Size must be specified.");
+							strcat(Str_Tmp, STRA(ID_BOX_MSG39).c_str());
 						if (!t)
-							strcat(Str_Tmp," Type must be specified.");
-						MessageBox(hDlg,Str_Tmp,"ERROR",MB_OK);
+							strcat(Str_Tmp, STRA(ID_BOX_MSG40).c_str());
+						MessageBox(hDlg,Str_Tmp, STRA(ID_BOX_MSG05).c_str(), MB_OK);
 					}
 					RWfileChanged=true;
 					return true;

@@ -666,7 +666,11 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 	// when called from movie_play
 	assert(fname);
 	if(!fname)
+#ifdef WIN32_FRONTEND
+		return STRA(ID_BOX_MSG21).c_str();
+#else
 		return "LoadMovie doesn't support browsing yet";
+#endif
 
 	//mbg 6/10/08 - we used to call StopMovie here, but that cleared curMovieFilename and gave us crashes...
 	if(movieMode == MOVIEMODE_PLAY || movieMode == MOVIEMODE_FINISHED)
@@ -685,7 +689,11 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 	delete fp;
 
 	if(!loadedfm2)
+#ifdef WIN32_FRONTEND
+		return STRA(ID_BOX_MSG17).c_str();
+#else
 		return "failed to load movie";
+#endif
 
 	//TODO
 	//fully reload the game to reinitialize everything before playing any movie
@@ -702,7 +710,11 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 		ssName.erase(ssName.length() - 3, 3);
 		ssName.append("dst");
 		if (!savestate_load(ssName.c_str()))
+#ifdef WIN32_FRONTEND
+			return STRA(ID_BOX_MSG22).c_str();
+#else
 			return "Could not load movie's savestate. There should be a .dst file with the same name as the movie, in the same folder.";
+#endif
 	}
 	else
 	{
@@ -725,7 +737,11 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 	if(currMovieData.sram.size() != 0)
 	{
 		bool success = MovieData::loadSramFrom(&currMovieData.sram);
+#ifdef WIN32_FRONTEND
+		if (!success) return STRA(ID_BOX_MSG23).c_str();
+#else
 		if(!success) return "failed to load sram";
+#endif
 	}
 	else
 		MMU_new.backupDevice.load_movie_blank();
@@ -738,9 +754,15 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 	ClearAutoHold();
 
 	if(movie_readonly)
+#ifdef WIN32_FRONTEND
+		driver->USR_InfoMessage(STRU(ID_BOX_MSG24).c_str());
+	else
+		driver->USR_InfoMessage(STRU(ID_BOX_MSG25).c_str());
+#else
 		driver->USR_InfoMessage("Replay started Read-Only.");
 	else
 		driver->USR_InfoMessage("Replay started Read+Write.");
+#endif
 
 	return NULL; // success
 }
