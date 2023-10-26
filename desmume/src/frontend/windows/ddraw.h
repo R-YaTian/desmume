@@ -21,7 +21,7 @@ along with the this software.  If not, see <http://www.gnu.org/licenses/>.
 #include "types.h"
 #include "directx/ddraw.h"
 
-extern const char *DDerrors[];
+extern char* const DDerrors[];
 
 struct DDRAW
 {

@@ -113,7 +113,7 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 
 				if (!fs)
 				{
-					msgbox->error("Error reading FS from ROM");
+					msgbox->error(STRU(ID_BOX_MSG54).c_str());
 					SendMessage(hWnd, WM_CLOSE, 0, 0);
 					return TRUE;
 				}

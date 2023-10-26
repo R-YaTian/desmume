@@ -667,7 +667,11 @@ void BackupDevice::detect()
 			case 0:
 			case 1:
 				this->_addr_size = 1; //choose 1 just to keep the busted savefile from growing too big
+#ifdef WIN32
+				msgbox->error(STRU(ID_BOX_MSG55).c_str());
+#else
 				msgbox->error("Catastrophic error while autodetecting save type.\nIt will need to be specified manually\n");
+#endif
 				break;
 
 			case 2:

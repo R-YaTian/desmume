@@ -1256,7 +1256,11 @@ static bool ReadStateChunks(EMUFILE &is, s32 totalsize)
 	
 	if (chunkError)
 	{
+#ifdef WIN32
+		msgbox->warn(STRU(ID_BOX_MSG56).c_str());
+#else
 		msgbox->warn("There was an error loading the savestate. Your game session is probably corrupt now.");
+#endif
 	}
 	else
 	{
@@ -1296,7 +1300,11 @@ static bool ReadStateChunks(EMUFILE &is, s32 totalsize)
 		//printf("\tHeader CRC16: %04Xh\n", header.headerCRC16);
 
 		if (gameInfo.romsize != romsize || memcmp(&gameInfo.header, &header, sizeof(header)) != 0)
+#ifdef WIN32
+			msgbox->warn(STRU(ID_BOX_MSG57).c_str());
+#else
 			msgbox->warn("The savestate you are loading does not match the ROM you are running.\nYou should find the correct ROM");
+#endif
 	}
 
 	return ret;
@@ -1398,7 +1406,11 @@ bool savestate_load(EMUFILE &is)
 
 	if (!x && !SAV_silent_fail_flag)
 	{
+#ifdef WIN32
+		msgbox->error(STRU(ID_BOX_MSG58).c_str());
+#else
 		msgbox->error("Error loading savestate. It failed halfway through;\nSince there is no savestate backup system, your current game session is wrecked");
+#endif
 		return false;
 	}
 

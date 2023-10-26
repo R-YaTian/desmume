@@ -351,6 +351,7 @@ static MAKER makerCodes[] = {
 	{ 0x3946, "Cybersoft" },
 	{ 0x4246, "Psygnosis" },
 	{ 0x4546, "Davidson/Western Tech." },
+	{ 0x5146, "iQue" },
 	{ 0x3147, "PCCW Japan" },
 	{ 0x3447, "KiKi Co Ltd" },
 	{ 0x3547, "Open Sesame Inc???" },
@@ -361,6 +362,7 @@ static MAKER makerCodes[] = {
 	{ 0x4247, "Konami Computer Entertainment Japan" },
 	{ 0x4447, "Square-Enix" },
 	{ 0x4849, "Yojigen" },
+	{ 0x364E, "McDonalds" },
 };
 
 //------------------------------------------------------------

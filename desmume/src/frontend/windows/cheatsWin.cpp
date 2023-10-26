@@ -1095,7 +1095,7 @@ INT_PTR CALLBACK CheatsListBox_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM l
 
 				case IDC_BREMOVE:
 				{
-					if (!msgbox->confirm("Are you sure you want to delete?")) return TRUE;
+					if (!msgbox->confirm(STRU(ID_BOX_MSG59).c_str())) return TRUE;
 					while(true)
 					{
 						int tmp_pos = ListView_GetNextItem(cheatListView, -1, LVNI_ALL | LVNI_SELECTED);

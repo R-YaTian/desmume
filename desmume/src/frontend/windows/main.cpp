@@ -259,32 +259,39 @@ using namespace std;
 		vsprintf (msg_buf, fmt, args); \
 		va_end (args); \
 	}
+#define MSG_CONV \
+	char ansi_buf[1024] = {0}; \
+	UTF8ToANSI(msg_buf, ansi_buf);
 void msgWndInfo(const char *fmt, ...)
 {
 	MSG_ARG;
 	printf("[INFO] %s\n", msg_buf);
-	MessageBox(MainWindow->getHWnd(), msg_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONINFORMATION);
+	MSG_CONV;
+	MessageBox(MainWindow->getHWnd(), ansi_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONINFORMATION);
 }
 
 bool msgWndConfirm(const char *fmt, ...)
 {
 	MSG_ARG;
 	printf("[CONF] %s\n", msg_buf);
-	return (MessageBox(MainWindow->getHWnd(), msg_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_YESNO | MB_ICONQUESTION) == IDYES);
+	MSG_CONV;
+	return (MessageBox(MainWindow->getHWnd(), ansi_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_YESNO | MB_ICONQUESTION) == IDYES);
 }
 
 void msgWndError(const char *fmt, ...)
 {
 	MSG_ARG;
 	printf("[ERR] %s\n", msg_buf);
-	MessageBox(MainWindow->getHWnd(), msg_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONERROR);
+	MSG_CONV;
+	MessageBox(MainWindow->getHWnd(), ansi_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONERROR);
 }
 
 void msgWndWarn(const char *fmt, ...)
 {
 	MSG_ARG;
 	printf("[WARN] %s\n", msg_buf);
-	MessageBox(MainWindow->getHWnd(), msg_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONWARNING);
+	MSG_CONV;
+	MessageBox(MainWindow->getHWnd(), ansi_buf, EMU_DESMUME_NAME_AND_VERSION(), MB_OK | MB_ICONWARNING);
 }
 
 msgBoxInterface msgBoxWnd = {
@@ -1455,6 +1462,11 @@ DWORD WINAPI run()
 	u32 res = ddraw.create(hwnd);
 	if (res != 0)
 	{
+		STRA(ID_BOX_MSG61, DDerrors[0]);
+		STRA(ID_BOX_MSG62, DDerrors[1]);
+		STRA(ID_BOX_MSG63, DDerrors[2]);
+		STRA(ID_BOX_MSG64, DDerrors[3]);
+		STRA(ID_BOX_MSG65, DDerrors[4]);
 		MessageBox(hwnd,DDerrors[res],EMU_DESMUME_NAME_AND_VERSION(),MB_OK | MB_ICONERROR);
 		return -1;
 	}
@@ -1597,7 +1609,7 @@ static BOOL LoadROM(const char * filename, const char * physicalName, const char
 		return TRUE;		
 	}
 	else
-		msgbox->error("Loading %s FAILED.\n", logicalName);
+		msgbox->error(STRU(ID_BOX_MSG52).c_str(), logicalName);
 
 	return FALSE;
 }
@@ -1607,6 +1619,7 @@ void OpenRecentROM(int listNum)
 	if (listNum > MAX_RECENT_ROMS) return; //Just in case
 	if (listNum >= (int)RecentRoms.size()) return;
 	char filename[MAX_PATH];
+	char ansiname[MAX_PATH];
 	strcpy(filename, RecentRoms[listNum].c_str());
 	//LOG("Attempting to load %s\n",filename);
 	if(OpenCore(filename))
@@ -1616,13 +1629,12 @@ void OpenRecentROM(int listNum)
 	else
 	//Rom failed to load, ask the user how to handle it
 	{
-		string str = "Could not open ";
-		str.append(filename);
-		str.append("\n\nRemove from list?");
-		if (MessageBox(MainWindow->getHWnd(), str.c_str(), "File error", MB_YESNO) == IDYES)
-		{
+		string str = STRA(ID_BOX_MSG66);
+		UTF8ToANSI(filename, ansiname);
+		str.append(ansiname);
+		str.append(STRA(ID_BOX_MSG67));
+		if (MessageBox(MainWindow->getHWnd(), str.c_str(), STRA(ID_BOX_MSG68).c_str(), MB_YESNO) == IDYES)
 			RemoveRecentRom(RecentRoms[listNum]);
-		}
 	}
 
 	NDS_UnPause();
@@ -1651,7 +1663,7 @@ bool DemandLua()
 	HMODULE mod = LoadLibrary("lua51.dll");
 	if(!mod)
 	{
-		MessageBox(NULL, "lua51.dll was not found. Please get it into your PATH or in the same directory as desmume.exe", DESMUME_NAME, MB_OK | MB_ICONERROR);
+		MessageBox(NULL, STRA(ID_BOX_MSG69).c_str(), DESMUME_NAME, MB_OK | MB_ICONERROR);
 		return false;
 	}
 	FreeLibrary(mod);
@@ -1875,7 +1887,7 @@ static void RefreshMicSettings()
 	{
 		if(!LoadSamples(MicSampleName))
 		{
-			MessageBox(NULL, "Unable to read the mic sample", DESMUME_NAME, (MB_OK | MB_ICONEXCLAMATION));
+			MessageBox(NULL, STRA(ID_BOX_MSG70).c_str(), DESMUME_NAME, (MB_OK | MB_ICONEXCLAMATION));
 		}
 		else
 		{
@@ -1987,7 +1999,7 @@ int _main()
 	ColorCtrl_Register();
 	if (!RegWndClass(L"DeSmuME", WindowProcedure, CS_DBLCLKS, LoadIcon(hAppInst, MAKEINTRESOURCE(ICONDESMUME))))
 	{
-		MessageBox(NULL, "Error registering windows class", DESMUME_NAME, MB_OK);
+		MessageBox(NULL, STRA(ID_BOX_MSG71).c_str(), DESMUME_NAME, MB_OK);
 		exit(-1);
 	}
 
@@ -2133,7 +2145,7 @@ int _main()
 		WS_CAPTION | WS_SYSMENU | WS_SIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 
 		NULL))
 	{
-		MessageBox(NULL, "Error creating main window", DESMUME_NAME, MB_OK);
+		MessageBox(NULL, STRA(ID_BOX_MSG72).c_str(), DESMUME_NAME, MB_OK);
 		delete MainWindow;
 		exit(-1);
 	}
@@ -2155,7 +2167,7 @@ int _main()
 
 	if(MenuInit() == 0)
 	{
-		MessageBox(NULL, "Error creating main menu", DESMUME_NAME, MB_OK);
+		MessageBox(NULL, STRA(ID_BOX_MSG73).c_str(), DESMUME_NAME, MB_OK);
 		delete MainWindow;
 		exit(-1);
 	}
@@ -2434,7 +2446,7 @@ int _main()
 	LeaveCriticalSection(&win_execute_sync);
 	if(spu_ret != 0)
 	{
-		MessageBox(MainWindow->getHWnd(),"Unable to initialize DirectSound","Error",MB_OK);
+		MessageBox(MainWindow->getHWnd(), STRA(ID_BOX_MSG74).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 		sndcoretype = 0;
 	}
 
@@ -3145,18 +3157,12 @@ static BOOL OpenCore(const char* filename)
 		if (testFs == NULL)
 			testFs = _wfopen(batteryPathStringW.c_str(), L"wb");
 		if (testFs == NULL)
-		{
-			msgbox->warn("\
-Could not get read/write access to the battery save file! The file will not be saved in this current session.\n\n\
-Choose Config > Path Settings and ensure that the SaveRam directory exists and is available for read/write access.");
-		}
+			msgbox->warn(STRU(ID_BOX_MSG53).c_str());
 		else
-		{
 			fclose(testFs);
-		}
 
 		UpdateTitle();		
-		
+
 		return TRUE;
 	}
 	else return FALSE;
@@ -4537,7 +4543,7 @@ DOKEYDOWN:
 			else if(wParam == recentRoms_clearid)
 			{
 				/* Clear all the recent ROMs */
-				if(IDYES == MessageBox(hwnd, "Are you sure you want to clear the recent ROMs list?", "DeSmuME", MB_YESNO | MB_ICONQUESTION))
+				if(IDYES == MessageBox(hwnd, STRA(ID_BOX_MSG75).c_str(), "DeSmuME", MB_YESNO | MB_ICONQUESTION))
 					ClearRecentRoms();
 				return 0;
 			}
@@ -4862,7 +4868,7 @@ DOKEYDOWN:
 			{
 				NDS_Pause();
 				if (!importSave(hwnd, hAppInst))
-					MessageBox(hwnd,"Save was not successfully imported", "Error", MB_OK | MB_ICONERROR);
+					MessageBox(hwnd, STRA(ID_BOX_MSG76).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK | MB_ICONERROR);
 				NDS_UnPause();
 				return 0;
 			}
@@ -4870,7 +4876,7 @@ DOKEYDOWN:
 			{
 				NDS_Pause();
 				if (!exportSave(hwnd, hAppInst))
-					MessageBox(hwnd,"Save was not successfully exported","Error",MB_OK);
+					MessageBox(hwnd, STRA(ID_BOX_MSG77).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 				NDS_UnPause();
 				return 0;
 			}
@@ -4905,19 +4911,17 @@ DOKEYDOWN:
 				u32 count = advsc.convertDB(ImportSavName,outf);
 				if (count > 0)
 				{
-					sprintf(buffer, "ADVANsCEne database was successfully imported\n(%i records)", count);
+					sprintf(buffer, STRA(ID_BOX_MSG78).c_str(), count);
 					MessageBox(hwnd,buffer,"DeSmuME",MB_OK|MB_ICONINFORMATION);
 				}
 				else
 				{
-					MessageBox(hwnd,"ADVANsCEne database was not successfully imported.","DeSmuME",MB_OK|MB_ICONERROR);
-					if(advsc.lastImportErrorMessage != "") MessageBox(hwnd,advsc.lastImportErrorMessage.c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
+					MessageBox(hwnd,STRA(ID_BOX_MSG79).c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
+					if(advsc.lastImportErrorMessage != "") MessageBox(hwnd,STRA(ID_BOX_MSG80).c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
 				}
 				NDS_UnPause();
 				return 0;
 			}
-		
-		
 		case IDM_CONFIG:
 			RunConfig(CONFIGSCREEN_INPUT);
 			return 0;
@@ -4927,8 +4931,7 @@ DOKEYDOWN:
 		case IDM_FIRMSETTINGS:
 			if (AreMovieEmulationSettingsActive())
 			{
-				MessageBox(hwnd, "The current settings have been set by a movie. Reset or unload the current game if you want to restore your saved settings.\n\n"
-					"If you make changes here, the new settings will overwrite your currently saved settings.", "Movie Settings Active", MB_OK);
+				MessageBox(hwnd, STRA(ID_BOX_MSG81).c_str(), STRA(ID_BOX_MSG82).c_str(), MB_OK);
 			}
 			RunConfig(CONFIGSCREEN_FIRMWARE);
 			return 0;
@@ -4941,8 +4944,7 @@ DOKEYDOWN:
 		case IDM_EMULATIONSETTINGS:
 			if (AreMovieEmulationSettingsActive())
 			{
-				MessageBox(hwnd, "The current settings have been set by a movie. Reset or unload the current game if you want to restore your saved settings.\n\n"
-					"If you make changes here (whether you reset now or not), the new settings will overwrite your currently saved settings.", "Movie Settings Active", MB_OK);
+				MessageBox(hwnd, STRA(ID_BOX_MSG83).c_str(), STRA(ID_BOX_MSG82).c_str(), MB_OK);
 			}
 			RunConfig(CONFIGSCREEN_EMULATION);
 			return 0;
@@ -6062,13 +6064,13 @@ LRESULT CALLBACK EmulationSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, L
 						jit_size = atoi(jit_size_buf);
 						if ((jit_size < 1) || (jit_size > 100))
 						{
-							MessageBox(hDlg, "JIT block size should be in range 1..100\nTry again", "DeSmuME", MB_OK | MB_ICONERROR);
+							MessageBox(hDlg, STRA(ID_BOX_MSG84).c_str(), "DeSmuME", MB_OK | MB_ICONERROR);
 							return FALSE;
 						}
 					}
 #endif
 					if(romloaded)
-						val = MessageBox(hDlg, "The current ROM needs to be reset to apply changes.\nReset now ?", "DeSmuME", (MB_YESNO | MB_ICONQUESTION));
+						val = MessageBox(hDlg, STRA(ID_BOX_MSG85).c_str(), "DeSmuME", (MB_YESNO | MB_ICONQUESTION));
 
 					UnloadMovieEmulationSettings();
 
@@ -6410,7 +6412,7 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 					HWND cur;
 
 					if(romloaded)
-						val = MessageBox(hDlg, "The current ROM needs to be reset to apply changes.\nReset now ?", "DeSmuME", (MB_YESNO | MB_ICONQUESTION));
+						val = MessageBox(hDlg, STRA(ID_BOX_MSG85).c_str(), "DeSmuME", (MB_YESNO | MB_ICONQUESTION));
 
 #ifdef EXPERIMENTAL_WIFI_COMM
 					if (IsDlgCheckboxChecked(hDlg, IDC_WIFI_ENABLED))

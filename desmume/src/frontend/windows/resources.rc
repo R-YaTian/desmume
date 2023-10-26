@@ -1133,6 +1133,48 @@ BEGIN
     ID_BOX_MSG49            "在数据库中找不到 CRC 为 %8X 的条目"
     ID_BOX_MSG50            "从数据库中导出数据时发生错误"
     ID_BOX_MSG51            "发生未知错误!!!"
+    ID_BOX_MSG52            "加载 %s 失败\n"
+    ID_BOX_MSG53            "无法获取对电池存档文件的读写权限！该文件将不会被保存在当前会话中。\n\n请选择菜单->配置->路径设置，检查 SRAM 存档一项所配置的路径存在且有效并可用于读写访问。"
+    ID_BOX_MSG54            "从 ROM 中读取文件系统时发生错误"
+    ID_BOX_MSG55            "自动检测存档类型时发生灾难性错误\n需要手动指定存档类型"
+    ID_BOX_MSG56            "读取即时存档时发生错误，当前游戏会话可能已损坏"
+    ID_BOX_MSG57            "正尝试读取的即时存档与运行中的 ROM 不匹配\n请运行与即时存档文件相对应的 ROM 文件"
+    ID_BOX_MSG58            "在读取即时存档的过程中发生了错误;\n由于没有即时存档备份系统，当前游戏会话已损坏。"
+    ID_BOX_MSG59            "确定要删除吗?"
+    ID_BOX_MSG60            "该 ROM 文件头无效\n文件头中的 Devicecapacity (卡带芯片容量) 字段已自动增大以适应当前的 ROM 文件大小\n"
+END
+
+STRINGTABLE
+BEGIN
+    ID_BOX_MSG61            "未发生错误"
+    ID_BOX_MSG62            "无法初始化 DirectDraw"
+    ID_BOX_MSG63            "无法设置 DirectDraw 协作等级"
+    ID_BOX_MSG64            "无法创建 DirectDraw 主绘制平面"
+    ID_BOX_MSG65            "无法设置 DirectDraw clipper"
+    ID_BOX_MSG66            "无法打开 "
+    ID_BOX_MSG67            "\n\n要从列表中移除吗?"
+    ID_BOX_MSG68            "文件错误"
+    ID_BOX_MSG69            "找不到对应体系结构的 lua51.dll 文件。请将该文件所在目录添加到环境变量或是将该文件放置到 desmume.exe 所在的目录下。"
+    ID_BOX_MSG70            "无法读取麦克风样本"
+    ID_BOX_MSG71            "注册窗口的类时发生错误"
+    ID_BOX_MSG72            "创建主窗口时发生错误"
+    ID_BOX_MSG73            "创建主菜单时发生错误"
+    ID_BOX_MSG74            "无法初始化 DirectSound"
+    ID_BOX_MSG75            "确定要清空最近使用 ROM 列表吗?"
+    ID_BOX_MSG76            "电池存档导入失败"
+END
+
+STRINGTABLE
+BEGIN
+    ID_BOX_MSG77            "电池存档导出失败"
+    ID_BOX_MSG78            "ADVANsCEne 数据库导入成功\n(共 %i 条记录)"
+    ID_BOX_MSG79            "ADVANsCEne 数据库导入失败"
+    ID_BOX_MSG80            "缺失 <serial> 元素。确认使用的是正确的 xml 文件? 需要使用的是 RtoolDS 版本。"
+    ID_BOX_MSG81            "当前设置已被视频配置。若要还原保存的设置内容，请重置或关闭当前游戏。\n\n若在此更改设置，新设置内容将会覆盖当前保存的设置内容。"
+    ID_BOX_MSG82            "视频设置已激活"
+    ID_BOX_MSG83            "当前设置已被视频配置。若要还原保存的设置内容，请重置或关闭当前游戏。\n\n若在此更改设置（无论现在是否重置游戏），新设置内容都会覆盖当前保存的设置内容。"
+    ID_BOX_MSG84            "JIT block 大小应当在 1 到 100 范围内\n请重试"
+    ID_BOX_MSG85            "需要重置当前 ROM 以应用更改\n是否立即重置?"
 END
 
 #endif    // 中文(简体，中国) resources

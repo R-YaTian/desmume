@@ -21,12 +21,7 @@ along with the this software.  If not, see <http://www.gnu.org/licenses/>.
 #include "GPU.h"
 #include "types.h"
 
-const char *DDerrors[] = {
-	"no errors",
-	"Unable to initialize DirectDraw",
-	"Unable to set DirectDraw Cooperative Level",
-	"Unable to create DirectDraw primary surface",
-	"Unable to set DirectDraw clipper" };
+char* const DDerrors[] = { new char[64], new char[64], new char[64], new char[64], new char[64] };
 
 DDRAW::DDRAW() :
 	handle(NULL), clip(NULL)
