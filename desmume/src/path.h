@@ -69,7 +69,7 @@ public:
 
 	#define MAX_FORMAT		20
 	#define SECTION			"PathSettings"
-	#define LSECTION			L"PathSettings"
+	#define LSECTION		L"PathSettings"
 
 	#define ROMKEY			L"Roms"
 	#define BATTERYKEY		L"Battery"
@@ -135,7 +135,7 @@ public:
 		SET
 	};
 
-	void GetDefaultPath(char *pathToDefault, const char *key, int maxCount);
+	void GetDefaultPath(char *pathToDefault, int maxCount);
 
 	void ReadKey(char *pathToRead, const char *key);
 	void ReadKeyW(char *pathToRead, const wchar_t *key);

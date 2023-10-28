@@ -317,8 +317,23 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 			break;
 		case IDC_PATHDEFAULTS:
 			{
-			/*	GetDefaultPath(currentSelection, currentKey, MAX_PATH);
-				SetDlgItemText(hDlg, IDC_PATHEDIT, currentSelection);*/
+				SetDlgItemTextW(hDlg, IDC_ROMPATHEDIT, L".\\Roms");
+				SetDlgItemTextW(hDlg, IDC_SAVERAMPATHEDIT, L".\\Battery");
+				SetDlgItemTextW(hDlg, IDC_SRAMIMPORTPATHEDIT, L".\\SramImportExport");
+				SetDlgItemTextW(hDlg, IDC_STATEPATHEDIT, L".\\States");
+				SetDlgItemTextW(hDlg, IDC_STATESLOTPATHEDIT, L".\\StateSlots");
+				SetDlgItemTextW(hDlg, IDC_SCREENSHOTPATHEDIT, L".\\Screenshots");
+				SetDlgItemTextW(hDlg, IDC_AVIPATHEDIT, L".\\AviFiles");
+				SetDlgItemTextW(hDlg, IDC_CHEATPATHEDIT, L".\\Cheats");
+				SetDlgItemTextW(hDlg, IDC_LUAPATHEDIT, L".\\Lua");
+				CheckDlgButton(hDlg, IDC_USELASTVISIT, BST_CHECKED);
+				CheckDlgButton(hDlg, IDC_ASSOCIATE, BST_UNCHECKED);
+				CheckRadioButton(hDlg, IDC_PNG, IDC_BMP, IDC_PNG);
+				SetDlgItemText(hDlg, IDC_FORMATEDIT, "%f_%s_%r");
+				CheckRadioButton(hDlg, IDC_R4TYPE1, IDC_R4TYPE2, IDC_R4TYPE2);
+				CheckDlgButton(hDlg, IDC_AUTOLOADLUA, BST_UNCHECKED);
+				associate = false;
+				autoLoadLua = false;
 			}
 			break;
 		case IDC_PNG:

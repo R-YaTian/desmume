@@ -2929,18 +2929,25 @@ void AviRecordTo()
 	memset(&ofn, 0, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = MainWindow->getHWnd();
-	ofn.lpstrFilter = "AVI Files (*.avi)\0*.avi\0\0";
+	std::string strFilter = STRA(ID_DLG_STR01);
+	std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+	ofn.lpstrFilter = strFilter.c_str();
 	ofn.lpstrDefExt = "avi";
-	ofn.lpstrTitle = "Save AVI as";
+	std::string strTitle = STRA(ID_DLG_STR03);
+	ofn.lpstrTitle = strTitle.c_str();
 
 	std::string dir = path.getpath(path.AVI_FILES);
-	ofn.lpstrInitialDir = dir.c_str();
+	char dir_ansi[1024] = {0};
+	UTF8ToANSI(dir.c_str(), dir_ansi);
+	ofn.lpstrInitialDir = dir_ansi;
 	path.formatname(outFilename);
+	UTF8ToANSI(outFilename, outFilename);
 	ofn.lpstrFile = outFilename;
 
 	int len = strlen(outFilename);
-	if(len + dir.length() > MAX_PATH - 4)
-		outFilename[MAX_PATH - dir.length() - 4] = '\0';
+	int dir_len = strlen(dir_ansi);
+	if(len + dir_len > MAX_PATH - 4)
+		outFilename[MAX_PATH - dir_len - 4] = '\0';
 	strcat(outFilename, ".avi");
 
 	ofn.nMaxFile = MAX_PATH;
@@ -2948,6 +2955,8 @@ void AviRecordTo()
 
 	if (GetSaveFileName(&ofn))
 	{
+		ANSIToUTF8(outFilename, outFilename);
+
 		if (AVI_IsRecording())
 		{
 			DRV_AviEnd();
@@ -3067,18 +3076,25 @@ void WavRecordTo(int wavmode)
 	memset(&ofn, 0, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = MainWindow->getHWnd();
-	ofn.lpstrFilter = "WAV Files (*.wav)\0*.wav\0\0";
+	std::string strFilter = STRA(ID_DLG_STR02);
+	std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+	ofn.lpstrFilter = strFilter.c_str();
 	ofn.lpstrDefExt = "wav";
-	ofn.lpstrTitle = "Save WAV as";
+	std::string strTitle = STRA(ID_DLG_STR04);
+	ofn.lpstrTitle = strTitle.c_str();
 
 	std::string dir = path.getpath(path.AVI_FILES);
-	ofn.lpstrInitialDir = dir.c_str();
+	char dir_ansi[1024] = {0};
+	UTF8ToANSI(dir.c_str(), dir_ansi);
+	ofn.lpstrInitialDir = dir_ansi;
 	path.formatname(outFilename);
+	UTF8ToANSI(outFilename, outFilename);
 	ofn.lpstrFile = outFilename;
 
 	int len = strlen(outFilename);
-	if (len + dir.length() > MAX_PATH - 4)
-		outFilename[MAX_PATH - dir.length() - 4] = '\0';
+	int dir_len = strlen(dir_ansi);
+	if (len + dir_len > MAX_PATH - 4)
+		outFilename[MAX_PATH - dir_len - 4] = '\0';
 	strcat(outFilename, ".wav");
 
 	ofn.nMaxFile = MAX_PATH;
@@ -3086,6 +3102,7 @@ void WavRecordTo(int wavmode)
 
 	if(GetSaveFileName(&ofn))
 	{
+		ANSIToUTF8(outFilename, outFilename);
 		WAV_Begin(outFilename, (WAVMode)wavmode);
 
 		dir = Path::GetFileDirectoryPath(outFilename);
@@ -3174,28 +3191,20 @@ LRESULT OpenFile()
 
 	int filterSize = 0, i = 0;
 	OPENFILENAMEW ofn;
-	wchar_t filename[MAX_PATH] = L"",
-		fileFilter[512]=L"";
+	wchar_t filename[MAX_PATH] = L"", fileFilter[512]=L"";
 	NDS_Pause(); //Stop emulation while opening new rom
 
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = hwnd;
 
-	ofn.lpstrFilter = 
-		L"All Usable Files (*.nds, *.ds.gba, *.srl, *.zip, *.7z, *.rar, *.gz)\0*.nds;*.ds.gba;*.srl;*.zip;*.7z;*.rar;*.gz\0"
-		"NDS ROM file (*.nds,*.srl)\0*.nds;*.srl\0"
-		"NDS/GBA ROM File (*.ds.gba)\0*.ds.gba\0"
-		"Zipped NDS ROM file (*.zip)\0*.zip\0"
-		"7Zipped NDS ROM file (*.7z)\0*.7z\0"
-		"RARed NDS ROM file (*.rar)\0*.rar\0"
-		"GZipped NDS ROM file (*.gz)\0*.gz\0"
-		"Any file (*.*)\0*.*\0"
-		"\0"
-		; //gzip doesnt actually work right now
+	std::wstring strFilter = STRW(ID_DLG_STR05);
+	for (int i = 1; i < 8; i++) strFilter += STRW(ID_DLG_STR05 + i);
+	std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+	ofn.lpstrFilter = strFilter.c_str(); //gzip doesnt actually work right now
 
 	ofn.nFilterIndex = 1;
-	ofn.lpstrFile =  filename;
+	ofn.lpstrFile = filename;
 	ofn.nMaxFile = MAX_PATH;
 	ofn.lpstrDefExt = L"nds";
 	ofn.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
@@ -4784,9 +4793,13 @@ DOKEYDOWN:
 				ZeroMemory(&ofn, sizeof(ofn));
 				ofn.lStructSize = sizeof(ofn);
 				ofn.hwndOwner = hwnd;
-				ofn.lpstrFilter = L"DeSmuME Savestate (*.dst or *.ds#)\0*.dst;*.ds0*;*.ds1*;*.ds2*;*.ds3*;*.ds4*;*.ds5*;*.ds6*;*.ds7*;*.ds8*;*.ds9*;*.ds-*\0DeSmuME Savestate (*.dst only)\0*.dst\0All files (*.*)\0*.*\0\0";
+				std::wstring strFilter = STRW(ID_DLG_STR13);
+				strFilter += STRW(ID_DLG_STR14);
+				strFilter += STRW(ID_DLG_STR12);
+				std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+				ofn.lpstrFilter = strFilter.c_str();
 				ofn.nFilterIndex = 1;
-				ofn.lpstrFile =  SavName;
+				ofn.lpstrFile = SavName;
 				ofn.nMaxFile = MAX_PATH;
 				ofn.lpstrDefExt = L"dst";
 				ofn.Flags = OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
@@ -4815,9 +4828,13 @@ DOKEYDOWN:
 				ZeroMemory(&ofn, sizeof(ofn));
 				ofn.lStructSize = sizeof(ofn);
 				ofn.hwndOwner = hwnd;
-				ofn.lpstrFilter = L"DeSmuME Savestate (*.dst or *.ds#)\0*.dst;*.ds0*;*.ds1*;*.ds2*;*.ds3*;*.ds4*;*.ds5*;*.ds6*;*.ds7*;*.ds8*;*.ds9*;*.ds-*\0DeSmuME Savestate (*.dst only)\0*.dst\0All files (*.*)\0*.*\0\0";
+				std::wstring strFilter = STRW(ID_DLG_STR13);
+				strFilter += STRW(ID_DLG_STR14);
+				strFilter += STRW(ID_DLG_STR12);
+				std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+				ofn.lpstrFilter = strFilter.c_str();
 				ofn.nFilterIndex = 1;
-				ofn.lpstrFile =  SavName;
+				ofn.lpstrFile = SavName;
 				ofn.nMaxFile = MAX_PATH;
 				ofn.lpstrDefExt = L"dst";
 				ofn.Flags = OFN_NOREADONLYRETURN | OFN_PATHMUSTEXIST;
@@ -4848,8 +4865,8 @@ DOKEYDOWN:
 		case IDM_STATE_SAVE_F8:
 		case IDM_STATE_SAVE_F9:
 		case IDM_STATE_SAVE_F10:
-				HK_StateSaveSlot(LOWORD(wParam)-IDM_STATE_SAVE_F10, true);
-				return 0;
+			HK_StateSaveSlot(LOWORD(wParam)-IDM_STATE_SAVE_F10, true);
+			return 0;
 
 		case IDM_STATE_LOAD_F1:
 		case IDM_STATE_LOAD_F2:
@@ -4882,6 +4899,7 @@ DOKEYDOWN:
 			}
 		case IDM_FILE_IMPORT_DB:
 			{
+			/*
 				OPENFILENAME ofn;
 				NDS_Pause();
 				ZeroMemory(&ofn, sizeof(ofn));
@@ -4920,6 +4938,7 @@ DOKEYDOWN:
 					if(advsc.lastImportErrorMessage != "") MessageBox(hwnd,STRA(ID_BOX_MSG80).c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
 				}
 				NDS_UnPause();
+			*/
 				return 0;
 			}
 		case IDM_CONFIG:
@@ -6178,23 +6197,28 @@ LRESULT CALLBACK EmulationSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, L
 					ZeroMemory(&ofn, sizeof(ofn));
 					ofn.lStructSize = sizeof(ofn);
 					ofn.hwndOwner = hDlg;
-					ofn.lpstrFilter = "Binary file (*.bin)\0*.bin\0ROM file (*.rom)\0*.rom\0Any file(*.*)\0*.*\0\0";
+					std::string strFilter = STRA(ID_DLG_STR15);
+					strFilter += STRA(ID_DLG_STR12);
+					std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+					ofn.lpstrFilter = strFilter.c_str();
 					ofn.nFilterIndex = 1;
 					ofn.lpstrFile = fileName;
 					ofn.nMaxFile = 256;
 					ofn.lpstrDefExt = "bin";
 					ofn.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
 					std::string dir = path.getpath(path.FIRMWARE);
-					ofn.lpstrInitialDir = dir.c_str();
+					char dir_ansi[1024] = {0};
+					UTF8ToANSI(dir.c_str(), dir_ansi);
+					ofn.lpstrInitialDir = dir_ansi;
 
 					if(GetOpenFileName(&ofn))
 					{
+						ANSIToUTF8(fileName, fileName);
 						std::string dir = Path::GetFileDirectoryPath(fileName);
 						path.setpath(path.FIRMWARE, dir);
 						WritePrivateProfileStringW(LSECTION, FIRMWAREKEY, mbstowcs(dir).c_str(), IniNameW);
 
 						HWND cur;
-
 						switch(LOWORD(wParam))
 						{
 						case IDC_ARM9BIOSBROWSE: cur = GetDlgItem(hDlg, IDC_ARM9BIOS); break;
@@ -6202,6 +6226,7 @@ LRESULT CALLBACK EmulationSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, L
 						case IDC_FIRMWAREBROWSE: cur = GetDlgItem(hDlg, IDC_FIRMWARE); break;
 						}
 
+						UTF8ToANSI(fileName, fileName);
 						SetWindowText(cur, fileName);
 					}
 				}
@@ -6214,7 +6239,6 @@ LRESULT CALLBACK EmulationSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, L
 		}
 		return TRUE;
 	}
-	
 	return FALSE;
 }
 
@@ -6298,28 +6322,33 @@ LRESULT CALLBACK MicrophoneSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 					ZeroMemory(&ofn, sizeof(ofn));
 					ofn.lStructSize = sizeof(ofn);
 					ofn.hwndOwner = hDlg;
-					ofn.lpstrFilter = "8bit PCM mono WAV file(*.wav)\0*.wav\0\0";
+					std::string strFilter = STRA(ID_DLG_STR16);
+					std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+					ofn.lpstrFilter = strFilter.c_str();
 					ofn.nFilterIndex = 1;
 					ofn.lpstrFile = fileName;
 					ofn.nMaxFile = 256;
 					ofn.lpstrDefExt = "wav";
 					ofn.Flags = OFN_NOCHANGEDIR | OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
 					std::string dir = path.getpath(path.SOUNDS);
-					ofn.lpstrInitialDir = dir.c_str();
+					char dir_ansi[1024] = { 0 };
+					UTF8ToANSI(dir.c_str(), dir_ansi);
+					ofn.lpstrInitialDir = dir_ansi;
 
 					if(GetOpenFileName(&ofn))
 					{
+						ANSIToUTF8(fileName, fileName);
 						std::string dir = Path::GetFileDirectoryPath(fileName);
 						path.setpath(path.SOUNDS, dir);
 						WritePrivateProfileStringW(LSECTION, SOUNDKEY, mbstowcs(dir).c_str(), IniNameW);
 
 						HWND cur;
-
 						switch(LOWORD(wParam))
 						{
 						case IDC_MICSAMPLEBROWSE: cur = GetDlgItem(hDlg, IDC_MICSAMPLE); break;
 						}
 
+						UTF8ToANSI(fileName, fileName);
 						SetWindowText(cur, fileName);
 					}
 				}
@@ -6328,7 +6357,6 @@ LRESULT CALLBACK MicrophoneSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 		}
 		return TRUE;
 	}
-	
 	return FALSE;
 }
 

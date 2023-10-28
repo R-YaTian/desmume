@@ -755,9 +755,9 @@ const char* _CDECL_ FCEUI_LoadMovie(const char *fname, bool _read_only, bool tas
 
 	if(movie_readonly)
 #ifdef WIN32_FRONTEND
-		driver->USR_InfoMessage(STRU(ID_BOX_MSG24).c_str());
+		driver->USR_InfoMessage(STRU(ID_OSD_MSG19).c_str());
 	else
-		driver->USR_InfoMessage(STRU(ID_BOX_MSG25).c_str());
+		driver->USR_InfoMessage(STRU(ID_OSD_MSG20).c_str());
 #else
 		driver->USR_InfoMessage("Replay started Read-Only.");
 	else

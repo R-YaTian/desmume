@@ -222,7 +222,7 @@ void PathInfo::LoadModulePath()
 #endif
 }
 
-void PathInfo::GetDefaultPath(char *pathToDefault, const char *key, int maxCount)
+void PathInfo::GetDefaultPath(char *pathToDefault, int maxCount)
 {
 #ifdef HOST_WINDOWS
 	std::string temp = (std::string)"." + DIRECTORY_DELIMITER_CHAR + pathToDefault;
@@ -234,20 +234,17 @@ void PathInfo::GetDefaultPath(char *pathToDefault, const char *key, int maxCount
 
 void PathInfo::ReadKeyW(char *pathToRead, const wchar_t *key)
 {
-	wchar_t wpath[MAX_PATH];
 	#ifdef HOST_WINDOWS
-	GetPrivateProfileStringW(LSECTION, key, key, wpath, MAX_PATH, IniNameW);
-	if (wcscmp(wpath, key) == 0) {
+	char KeyName[128] = {0};
+	wcstombs_s(NULL, KeyName, key, _TRUNCATE);
+	GetPrivateProfileString(SECTION, KeyName, KeyName, pathToRead, MAX_PATH, IniName);
+	if (strcmp(pathToRead, KeyName) == 0) {
 		//since the variables are all intialized in this file they all use MAX_PATH
-		char temppath[MAX_PATH];
-		temppath[0] = 0;
-		GetDefaultPath(temppath, wcstombs((std::wstring)key).c_str(), MAX_PATH);
-		wcscpy(wpath,mbstowcs((std::string)temppath).c_str());
+		GetDefaultPath(pathToRead, MAX_PATH);
 	}
-	strcpy(pathToRead,wcstombs((std::wstring)wpath).c_str());
 	#else
 	//since the variables are all intialized in this file they all use MAX_PATH
-	GetDefaultPath(pathToRead, wcstombs((std::wstring)key).c_str(), MAX_PATH);
+	GetDefaultPath(pathToRead, MAX_PATH);
 	#endif
 }
 
@@ -257,11 +254,11 @@ void PathInfo::ReadKey(char *pathToRead, const char *key)
 	GetPrivateProfileString(SECTION, key, key, pathToRead, MAX_PATH, IniName);
 	if (strcmp(pathToRead, key) == 0) {
 		//since the variables are all intialized in this file they all use MAX_PATH
-		GetDefaultPath(pathToRead, key, MAX_PATH);
+		GetDefaultPath(pathToRead, MAX_PATH);
 	}
 #else
 	//since the variables are all intialized in this file they all use MAX_PATH
-	GetDefaultPath(pathToRead, key, MAX_PATH);
+	GetDefaultPath(pathToRead, MAX_PATH);
 #endif
 }
 

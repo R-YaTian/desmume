@@ -228,6 +228,13 @@ int GetSubMenuIndexByHMENU(HMENU menu, HMENU sub)
 	return -1;
 }
 
+void UTF16ToUTF8(const wchar_t* utf16String, char* utf8String)
+{
+	int nRetLen = 0;
+	nRetLen = WideCharToMultiByte(CP_UTF8, 0, utf16String, -1, NULL, 0, NULL, NULL);
+	WideCharToMultiByte(CP_UTF8, 0, utf16String, -1, utf8String, nRetLen, NULL, NULL);
+}
+
 void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String)
 {
 	int nRetLen = 0;

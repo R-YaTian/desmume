@@ -66,8 +66,6 @@ BEGIN
         MENUITEM "导入电池存档...",                   IDM_IMPORTBACKUPMEMORY
         MENUITEM "导出电池存档...",                   IDM_EXPORTBACKUPMEMORY
         MENUITEM SEPARATOR
-        MENUITEM "导入 ADVANsCEne 数据库...",        IDM_FILE_IMPORT_DB
-        MENUITEM SEPARATOR
         MENUITEM "保存截屏为(&A)...",                IDM_PRINTSCREEN
         MENUITEM "快速截屏(&Q)",                    IDM_QUICK_PRINTSCREEN
         MENUITEM SEPARATOR
@@ -899,8 +897,8 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_FILE_STOPAVI        "停止录制/播放 AVI"
-    IDM_FILE_STOPWAV        "停止录制/播放 WAV"
+    IDM_FILE_STOPAVI        "停止录制 AVI"
+    IDM_FILE_STOPWAV        "停止录制 WAV"
     IDM_FILE_RECORDAVI      "录制 AVI"
 END
 
@@ -1058,7 +1056,7 @@ BEGIN
     ID_OSD_MSG08            " (已完成)"
     ID_OSD_MSG09            "AVI 录制结束"
     ID_OSD_MSG10            "AVI 录制开始"
-    ID_OSD_MSG11            "无法播放 AVI 文件"
+    ID_OSD_MSG11            "无法录制 AVI 文件"
     ID_OSD_MSG12            "目标 FPS 上调到 %2.04f"
     ID_OSD_MSG13            "目标 FPS 下调到 %2.04f"
     ID_OSD_MSG14            "无法保存视频文件!"
@@ -1097,8 +1095,8 @@ BEGIN
     ID_BOX_MSG21            "LoadMovie 操作暂不支持浏览文件"
     ID_BOX_MSG22            "无法加载视频的即时存档。在视频所在目录中，应当有一个与视频相同文件名的 .dst 后缀文件。"
     ID_BOX_MSG23            "加载 SRAM 失败"
-    ID_BOX_MSG24            "开始播放录像 (只读)"
-    ID_BOX_MSG25            "开始播放录像 (读+写)"
+    ID_OSD_MSG19            "开始播放录像 (只读)"
+    ID_OSD_MSG20            "开始播放录像 (读+写)"
     ID_BOX_MSG26            "不是有效的 RIFF 波形文件; 必须为 8 位单声道 PCM 格式"
     ID_BOX_MSG27            "不是有效的 RIFF 波形文件"
     ID_BOX_MSG28            "不是有效的波形文件，发生了某些未知错误。"
@@ -1167,14 +1165,34 @@ END
 STRINGTABLE
 BEGIN
     ID_BOX_MSG77            "电池存档导出失败"
-    ID_BOX_MSG78            "ADVANsCEne 数据库导入成功\n(共 %i 条记录)"
-    ID_BOX_MSG79            "ADVANsCEne 数据库导入失败"
-    ID_BOX_MSG80            "缺失 <serial> 元素。确认使用的是正确的 xml 文件? 需要使用的是 RtoolDS 版本。"
+    ID_OSD_MSG21            "ADVANsCEne 数据库导入成功\n(共 %i 条记录)"
+    ID_OSD_MSG22            "ADVANsCEne 数据库导入失败"
+    ID_OSD_MSG23            "缺失 <serial> 元素。确认使用的是正确的 xml 文件? 需要使用的是 RtoolDS 版本。"
     ID_BOX_MSG81            "当前设置已被视频配置。若要还原保存的设置内容，请重置或关闭当前游戏。\n\n若在此更改设置，新设置内容将会覆盖当前保存的设置内容。"
     ID_BOX_MSG82            "视频设置已激活"
     ID_BOX_MSG83            "当前设置已被视频配置。若要还原保存的设置内容，请重置或关闭当前游戏。\n\n若在此更改设置（无论现在是否重置游戏），新设置内容都会覆盖当前保存的设置内容。"
     ID_BOX_MSG84            "JIT block 大小应当在 1 到 100 范围内\n请重试"
     ID_BOX_MSG85            "需要重置当前 ROM 以应用更改\n是否立即重置?"
+    ID_DLG_STR01            "AVI 文件 (*.avi)|*.avi|"
+    ID_DLG_STR02            "WAV 文件 (*.wav)|*.wav|"
+    ID_DLG_STR03            "保存 AVI 到"
+    ID_DLG_STR04            "保存 WAV 到"
+    ID_DLG_STR05            "所有支持的文件 (*.nds, *.ds.gba, *.srl, *.zip, *.7z, *.rar, *.gz)|*.nds;*.ds.gba;*.srl;*.zip;*.7z;*.rar;*.gz|"
+    ID_DLG_STR06            "NDS ROM 文件 (*.nds,*.srl)|*.nds;*.srl|"
+    ID_DLG_STR07            "NDS/GBA ROM 文件 (*.ds.gba)|*.ds.gba|"
+END
+
+STRINGTABLE
+BEGIN
+    ID_DLG_STR08            "Zip 压缩的 NDS ROM 文件 (*.zip)|*.zip|"
+    ID_DLG_STR09            "7Zip 压缩的 NDS ROM 文件 (*.7z)|*.7z|"
+    ID_DLG_STR10            "RAR 压缩的 NDS ROM 文件 (*.rar)|*.rar|"
+    ID_DLG_STR11            "GZip 压缩的 NDS ROM 文件 (*.gz)|*.gz|"
+    ID_DLG_STR12            "所有文件 (*.*)|*.*|"
+    ID_DLG_STR13            "DeSmuME 即时存档 (*.dst 或 *.ds#)|*.dst;*.ds0*;*.ds1*;*.ds2*;*.ds3*;*.ds4*;*.ds5*;*.ds6*;*.ds7*;*.ds8*;*.ds9*;*.ds-*|"
+    ID_DLG_STR14            "DeSmuME 即时存档 (仅 *.dst)|*.dst|"
+    ID_DLG_STR15            "二进制文件 (*.bin)|*.bin|ROM 文件 (*.rom)|*.rom|"
+    ID_DLG_STR16            "8位 PCM 单声道 WAV 文件 (*.wav)|*.wav|"
 END
 
 #endif    // 中文(简体，中国) resources

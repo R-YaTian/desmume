@@ -191,6 +191,7 @@ HRESULT AVIFileStream::Open()
 	}
 
 	// open the file
+	UTF8ToANSI(workingFileName, workingFileName);
 	error = AVIFileOpen(&this->_file, workingFileName, OF_CREATE | OF_WRITE, NULL);
 	if (FAILED(error))
 	{
@@ -228,6 +229,12 @@ HRESULT AVIFileStream::Open()
 		if (FAILED(error))
 		{
 			return error;
+		}
+
+		// Try to fix Microsoft RLE, but still not stable
+		if (this->_compressionOptions[VIDEO_STREAM].fccHandler == 1701605997)
+		{
+			_bmpFormat.biBitCount = 8;
 		}
 
 		// set the stream format

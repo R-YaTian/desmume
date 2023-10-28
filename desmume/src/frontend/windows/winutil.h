@@ -40,13 +40,14 @@ bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval
 void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file);
 
 
-//returns the specified resource string ID as a std::wstring
+//returns the specified resource string ID as a std::wstring (UTF16)
 std::wstring STRW(UINT id, wchar_t* dest = NULL);
-//returns the specified resource string ID as a std::string
+//returns the specified resource string ID as a std::string (ANSI)
 std::string STRA(UINT id, char* dest = NULL);
 //returns the specified resource string ID as a std::string (UTF-8)
 std::string STRU(UINT id, char* dest = NULL);
 
+void UTF16ToUTF8(const wchar_t* utf16String, char* utf8String);
 void UTF8ToUTF16(const char* utf8String, wchar_t* utf16String);
 void UTF8ToANSI(const char* utf8String, char* ansiString);
 void ANSIToUTF8(const char* ansiString, char* utf8String);
