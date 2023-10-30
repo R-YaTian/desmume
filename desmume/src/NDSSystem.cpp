@@ -28,7 +28,6 @@
 #include "utils/decrypt/decrypt.h"
 #include "utils/decrypt/crc.h"
 #include "utils/decrypt/header.h"
-#include "utils/advanscene.h"
 #include "utils/task.h"
 #include "utils/bits.h"
 
@@ -146,6 +145,7 @@ void NDS_SetupDefaultFirmware()
 	NDS_GetDefaultFirmwareConfig(CommonSettings.fwConfig);
 }
 
+/*
 void NDS_RunAdvansceneAutoImport()
 {
 	if (CommonSettings.run_advanscene_import != "")
@@ -159,6 +159,7 @@ void NDS_RunAdvansceneAutoImport()
 		else exit(1);
 	}
 }
+*/
 
 int NDS_Init()
 {
@@ -169,6 +170,7 @@ int NDS_Init()
 	//got to print this somewhere..
 	printf("%s\n", EMU_DESMUME_NAME_AND_VERSION());
 	
+	/*
 	{
 		char	buf[MAX_PATH];
 		memset(buf, 0, MAX_PATH);
@@ -179,7 +181,8 @@ int NDS_Init()
 		//why is this done here? shitty engineering. not intended.
 		NDS_RunAdvansceneAutoImport();
 	}
-	
+	*/
+
 	armcpu_new(&NDS_ARM9,0);
 	armcpu_SetBaseMemoryInterface(&NDS_ARM9, &arm9_base_memory_iface);
 	armcpu_SetBaseMemoryInterfaceData(&NDS_ARM9, NULL);
@@ -614,6 +617,9 @@ void GameInfo::closeROM()
 	reader = NULL;
 	romdataForReader = NULL;
 	romsize = 0;
+
+	// close the save file
+	MMU_new.backupDevice.close_rom();
 }
 
 u32 GameInfo::readROM(u32 pos)
@@ -774,24 +780,35 @@ int NDS_LoadROM(const char *filename, const char *physicalName, const char *logi
 	buf[2] = gameInfo.header.gameCode[2];
 	buf[3] = gameInfo.header.gameCode[3];
 	buf[4] = 0;
-	if (advsc.checkDB(buf, gameInfo.crc))
+
+	u32 gameTidHex = 0;
+	u8 save_type = 0xFF;
+	bool found = false;
+	memcpy(&gameTidHex, &gameInfo.header.gameCode, 4);
+
+	for (size_t i = 0; i < ROMListEntryCount; i++) {
+		const ROMListEntry* curentry = &ROMList[i];
+		if (gameTidHex == curentry->GameCode) {
+			if (curentry->SaveMemType != 0xFFFFFFFF) save_type = curentry->SaveMemType;
+			found = true;
+			break;
+		}
+	}
+
+	if (found)
 	{
-		u8 sv = advsc.getSaveType();
-		printf("Found in game database by %s:\n", advsc.getIdMethod());
-		printf("\t* ROM serial:\t\t%s\n", advsc.getSerial());
+		printf("Found in melonDS database by Game Code.\n");
+		printf("\t* ROM serial:\t\t%s\n", buf);
 		printf("\t* ROM save type:\t");
-		if (sv == 0xFF)
+		if (save_type == 0xFF)
 			printf("Unknown");
-		else
-			if (sv == 0xFE)
-				printf("None");
-			else
-			{
-				printf("%s", save_types[sv + 1].descr);
-				if (CommonSettings.autodetectBackupMethod == 1)
-					backup_setManualBackupType(sv + 1);
-			}
-		printf("\n\t* ROM crc:\t\t%08X\n", advsc.getCRC32());
+		else if (save_type == 0)
+			printf("None");
+		else {
+			printf("%s", save_types[save_type].descr);
+			if (CommonSettings.autodetectBackupMethod == 1)
+				backup_setManualBackupType(save_type);
+		}
 	}
 	printf("\n");
 

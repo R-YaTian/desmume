@@ -178,6 +178,7 @@
     <ClCompile Include="..\..\rasterize.cpp" />
     <ClCompile Include="..\..\readwrite.cpp" />
     <ClCompile Include="..\..\render3D.cpp" />
+    <ClCompile Include="..\..\ROMList.cpp" />
     <ClCompile Include="..\..\ROMReader.cpp" />
     <ClCompile Include="..\..\rtc.cpp" />
     <ClCompile Include="..\..\saves.cpp" />
@@ -186,7 +187,6 @@
     <ClCompile Include="..\..\SPU.cpp" />
     <ClCompile Include="..\..\texcache.cpp" />
     <ClCompile Include="..\..\thumb_instructions.cpp" />
-    <ClCompile Include="..\..\utils\advanscene.cpp" />
     <ClCompile Include="..\..\utils\AsmJit\core\assembler.cpp" />
     <ClCompile Include="..\..\utils\AsmJit\core\assert.cpp" />
     <ClCompile Include="..\..\utils\AsmJit\core\buffer.cpp" />
@@ -262,10 +262,6 @@
     <ClCompile Include="..\..\utils\libfat\libfat_public_api.cpp" />
     <ClCompile Include="..\..\utils\libfat\lock.cpp" />
     <ClCompile Include="..\..\utils\libfat\partition.cpp" />
-    <ClCompile Include="..\..\utils\tinyxml\tinystr.cpp" />
-    <ClCompile Include="..\..\utils\tinyxml\tinyxml.cpp" />
-    <ClCompile Include="..\..\utils\tinyxml\tinyxmlerror.cpp" />
-    <ClCompile Include="..\..\utils\tinyxml\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\utils\vfat.cpp" />
     <ClCompile Include="..\..\version.cpp" />
     <ClCompile Include="..\..\wifi.cpp" />
@@ -436,6 +432,7 @@
     <ClInclude Include="..\..\libretro-common\include\libretro.h" />
     <ClInclude Include="..\..\libretro-common\include\rthreads\rthreads.h" />
     <ClInclude Include="..\..\metaspu\SoundTouch\FIRFilter.h" />
+    <ClInclude Include="..\..\ROMList.h" />
     <ClInclude Include="..\..\types.h" />
     <ClInclude Include="..\..\utils\bits.h" />
     <ClInclude Include="..\..\utils\colorspacehandler\colorspacehandler_AltiVec.h">
@@ -516,7 +513,6 @@
     <ClInclude Include="..\..\slot2.h" />
     <ClInclude Include="..\..\SPU.h" />
     <ClInclude Include="..\..\texcache.h" />
-    <ClInclude Include="..\..\utils\advanscene.h" />
     <ClInclude Include="..\..\utils\AsmJit\asmjit.h" />
     <ClInclude Include="..\..\utils\AsmJit\config.h" />
     <ClInclude Include="..\..\utils\AsmJit\core.h" />
@@ -577,8 +573,6 @@
     <ClInclude Include="..\..\utils\libfat\lock.h" />
     <ClInclude Include="..\..\utils\libfat\mem_allocate.h" />
     <ClInclude Include="..\..\utils\libfat\partition.h" />
-    <ClInclude Include="..\..\utils\tinyxml\tinystr.h" />
-    <ClInclude Include="..\..\utils\tinyxml\tinyxml.h" />
     <ClInclude Include="..\..\utils\vfat.h" />
     <ClInclude Include="..\modules\Disassembler.h" />
     <ClInclude Include="..\..\wifi.h" />

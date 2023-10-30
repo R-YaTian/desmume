@@ -30,7 +30,6 @@
 #include "readwrite.h"
 #include "NDSSystem.h"
 #include "path.h"
-#include "utils/advanscene.h"
 #include "utils/xstring.h"
 #include "emufile.h"
 
@@ -89,7 +88,7 @@ static const u32 saveSizes[] = {512,			// 4k
 static const u32 saveSizes_count = ARRAY_SIZE(saveSizes);
 
 //the lookup table from user save types to save parameters
-const SAVE_TYPE save_types[] = {
+const SAVE_TYPE save_types_old[] = {
 	{"Autodetect",		MC_TYPE_AUTODETECT,	1, 0},
 	{"EEPROM 4kbit",	MC_TYPE_EEPROM1,	MC_SIZE_4KBITS		, 1},
 	{"EEPROM 64kbit",	MC_TYPE_EEPROM2,	MC_SIZE_64KBITS		, 2},
@@ -106,6 +105,20 @@ const SAVE_TYPE save_types[] = {
 	{"FLASH 512Mbit",	MC_TYPE_FLASH,		MC_SIZE_512MBITS	, 3}
 };
 
+// melonds sram types list
+const SAVE_TYPE save_types[] = {
+	{"Autodetect",		MC_TYPE_AUTODETECT,	1, 0},
+	{"EEPROM 4kbit",	MC_TYPE_EEPROM1,	MC_SIZE_4KBITS		, 1},
+	{"EEPROM 64kbit",	MC_TYPE_EEPROM2,	MC_SIZE_64KBITS		, 2},
+	{"EEPROM 512kbit",	MC_TYPE_EEPROM2,	MC_SIZE_512KBITS	, 2},
+	{"EEPROM 1Mbit",	MC_TYPE_FLASH,		MC_SIZE_1MBITS		, 2},
+	{"FLASH 2Mbit",		MC_TYPE_FLASH,		MC_SIZE_2MBITS		, 3},
+	{"FLASH 4Mbit",		MC_TYPE_FLASH,		MC_SIZE_4MBITS		, 3},
+	{"FLASH 8Mbit",		MC_TYPE_FLASH,		MC_SIZE_8MBITS		, 3},
+	{"FLASH 64Mbit",	MC_TYPE_FLASH,		MC_SIZE_64MBITS		, 3},
+	{"FLASH 128Mbit",	MC_TYPE_FLASH,		MC_SIZE_128MBITS	, 3},
+	{"FLASH 512Mbit",	MC_TYPE_FLASH,		MC_SIZE_512MBITS	, 3}
+};
 
 //forces the currently selected backup type to be current
 //(can possibly be used to repair poorly chosen save types discovered late in gameplay i.e. pokemon gamers)
@@ -351,33 +364,20 @@ BackupDevice::BackupDevice()
 	
 		_fpMC->fseek(0, SEEK_SET);
 
-		u32 left = 0;
 		if (CommonSettings.autodetectBackupMethod == 1)
 		{
-			if (advsc.isLoaded())
-			{
-				_info.type = advsc.getSaveType();
-				if (_info.type != 0xFF && _info.type != 0xFE)
-				{
-					_info.type++;
-					u32 adv_size = save_types[_info.type].size;
-					if (_info.size > adv_size)
-					{
-						_info.size = adv_size;
-						_fpMC->truncate(adv_size);
-						ensure(adv_size, _fpMC);
-					}
-					else
-						if (_info.size < adv_size)
-						{
-							left = adv_size - _info.size;
-							_info.size = adv_size;
-							ensure(adv_size);
-						}
-
-					_fsize = adv_size;
-				}
+			u32 sav_size = save_types[CommonSettings.manualBackupType].size;
+			_info.addr_size = save_types[CommonSettings.manualBackupType].addr_size;
+			if (_info.size > sav_size) {
+				_info.size = sav_size;
+				_fpMC->truncate(sav_size);
+				ensure(sav_size, _fpMC);
 			}
+			else if (_info.size < sav_size) {
+				_info.size = sav_size;
+				ensure(sav_size);
+			}
+			_fsize = sav_size;
 		}
 
 		_addr_size = _info.addr_size;
@@ -630,6 +630,7 @@ void BackupDevice::reset()
 
 void BackupDevice::close_rom()
 {
+	if (!this->_fpMC) return;
 	this->_fpMC->fflush();
 	delete this->_fpMC;
 	this->_fpMC = NULL;

@@ -22,7 +22,6 @@
 #include "path.h"
 #include "MMU.h"
 #include "NDSSystem.h"
-#include "utils/advanscene.h"
 #include "utils/xstring.h"
 
 #include "resource.h"
@@ -41,27 +40,34 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 		{
 			char buf[256] = {0};
 
-			if (advsc.isLoaded())
+			u32 gameTidHex = 0;
+			u8 save_type = 0xFF;
+			bool found = false;
+			memcpy(&gameTidHex, &gameInfo.header.gameCode, 4);
+
+			for (size_t i = 0; i < ROMListEntryCount; i++) {
+				const ROMListEntry* curentry = &ROMList[i];
+				if (gameTidHex == curentry->GameCode) {
+					if (curentry->SaveMemType != 0xFFFFFFFF) save_type = curentry->SaveMemType;
+					found = true;
+					break;
+				}
+			}
+
+			if (found)
 			{
-				
 				memset(&buf, 0, sizeof(buf));
-				u8 sv = advsc.getSaveType();
-				if (sv == 0xFF)
+				if (save_type == 0xFF)
 				{
 					strcpy(buf, "Unknown");
 					EnableWindow(GetDlgItem(hDlg, IDC_IMP_AUTO_ADVANSCENE), false);
-				}
-				else
-					if (sv == 0xFE)
-					{
-						strcpy(buf, "None");
-						EnableWindow(GetDlgItem(hDlg, IDC_IMP_AUTO_ADVANSCENE), false);
-					}
-					else
-						strcpy(buf, save_types[sv + 1].descr);
+				} else if (save_type == 0) {
+					strcpy(buf, "None");
+					EnableWindow(GetDlgItem(hDlg, IDC_IMP_AUTO_ADVANSCENE), false);
+				} else
+					strcpy(buf, save_types[save_type].descr);
 				SetWindowText(GetDlgItem(hDlg, IDC_IMP_INFO_ADVANSCENE), buf);
-			}
-			else
+			} else
 				EnableWindow(GetDlgItem(hDlg, IDC_IMP_AUTO_ADVANSCENE), false);
 
 			{
@@ -78,7 +84,7 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 			{
 				SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_ADDSTRING, 0, (LPARAM)save_types[i].descr);
 			}
-			SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_SETCURSEL, fileInfo.type, 0);
+			SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_SETCURSEL, fileInfo.type - 1, 0);
 
 			fileSaveSize = MMU_new.backupDevice.importDataSize(SavFName);
 
@@ -104,7 +110,8 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 			}
 			else
 			{
-				strcpy(buf, "ERROR"); // TODO: disable OK button
+				strcpy(buf, "ERROR");
+				EnableWindow(GetDlgItem(hDlg, IDOK), false);
 				EnableWindow(GetDlgItem(hDlg, IDC_IMP_AUTO_FILE), false);
 			}
 
@@ -112,7 +119,7 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
 			SetFocus(GetDlgItem(hDlg, IDC_IMP_AUTO_CURRENT));
 		}
-			
+
 		return false;
 
 		case WM_COMMAND:
@@ -134,25 +141,24 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
 					if (SendDlgItemMessage(hDlg, IDC_IMP_AUTO_CURRENT, BM_GETCHECK, 0, 0) == BST_CHECKED)
 						res = MMU_new.backupDevice.searchFileSaveType(fileInfo.size);
-					else
-						if (SendDlgItemMessage(hDlg, IDC_IMP_AUTO_FILE, BM_GETCHECK, 0, 0) == BST_CHECKED)
-						{
-							if (fileSaveSize == 0) break;
-							if (fileSaveType == 0xFF) break;
-							res = fileSaveType;
-						}
-						else
-							if (SendDlgItemMessage(hDlg, IDC_IMP_AUTO_ADVANSCENE, BM_GETCHECK, 0, 0) == BST_CHECKED)
-							{
-								if (!advsc.isLoaded()) break;
-								res = advsc.getSaveType();
-								if (res > MAX_SAVE_TYPES) break;
+					else if (SendDlgItemMessage(hDlg, IDC_IMP_AUTO_FILE, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+						if (fileSaveSize == 0) break;
+						if (fileSaveType == 0xFF) break;
+						res = fileSaveType;
+					} else if (SendDlgItemMessage(hDlg, IDC_IMP_AUTO_ADVANSCENE, BM_GETCHECK, 0, 0) == BST_CHECKED) {
+						u32 gameTidHex = 0;
+						memcpy(&gameTidHex, &gameInfo.header.gameCode, 4);
+						for (size_t i = 0; i < ROMListEntryCount; i++) {
+							const ROMListEntry* curentry = &ROMList[i];
+							if (gameTidHex == curentry->GameCode) {
+								if (curentry->SaveMemType != 0xFFFFFFFF) res = curentry->SaveMemType;
+								break;
 							}
-							else
-								if (SendDlgItemMessage(hDlg, IDC_IMP_MANUAL, BM_GETCHECK, 0, 0) == BST_CHECKED)
-									res = SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_GETCURSEL, 0, 0);
-								else
-									break;
+						}
+					} else if (SendDlgItemMessage(hDlg, IDC_IMP_MANUAL, BM_GETCHECK, 0, 0) == BST_CHECKED)
+						res = SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_GETCURSEL, 0, 0) + 1;
+					else
+						break;
 					EndDialog(hDlg, res);
 				}
 				break;

@@ -234,7 +234,7 @@ ENDL
 #define OPT_RTC_DAY 800
 #define OPT_RTC_HOUR 801
 
-#define OPT_ADVANSCENE 900
+// #define OPT_ADVANSCENE 900
 
 bool CommandLine::parse(int argc,char **argv)
 {
@@ -326,8 +326,8 @@ bool CommandLine::parse(int argc,char **argv)
 			#endif
 
 			//utilities
-			{ "advanscene-import", required_argument, NULL, OPT_ADVANSCENE},
-				
+			// { "advanscene-import", required_argument, NULL, OPT_ADVANSCENE},
+
 			{0,0,0,0}
 		};
 
@@ -390,7 +390,7 @@ bool CommandLine::parse(int argc,char **argv)
 		case OPT_ARM7GDB: arm7_gdb_port = atoi(optarg); break;
 
 		//utilities
-		case OPT_ADVANSCENE: CommonSettings.run_advanscene_import = optarg; break;
+		// case OPT_ADVANSCENE: CommonSettings.run_advanscene_import = optarg; break;
 		case OPT_LANGUAGE: language = atoi(optarg); break;
 		}
 	} //arg parsing loop

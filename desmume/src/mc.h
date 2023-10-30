@@ -25,8 +25,9 @@
 #include <string>
 
 #include "types.h"
+#include "ROMList.h"
 
-#define MAX_SAVE_TYPES 13
+#define MAX_SAVE_TYPES 10
 #define MC_TYPE_AUTODETECT      0x0
 #define MC_TYPE_EEPROM1         0x1
 #define MC_TYPE_EEPROM2         0x2
@@ -216,7 +217,7 @@ struct SAVE_TYPE
 	int addr_size;
 };
 
+// extern const SAVE_TYPE save_types_old[];
 extern const SAVE_TYPE save_types[];
 
 #endif /*__FW_H__*/
-

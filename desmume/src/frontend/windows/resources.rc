@@ -216,8 +216,8 @@ BEGIN
         MENUITEM "Slot &2 (GBA插槽)",             IDM_GBASLOT
         POPUP "自动检测存档类型(&A)"
         BEGIN
-            MENUITEM "内置",                          IDM_AUTODETECTSAVETYPE_INTERNAL
-            MENUITEM "从数据库",                        IDM_AUTODETECTSAVETYPE_FROMDATABASE
+            MENUITEM "DeSmuME 内置的自动检测方式",           IDM_AUTODETECTSAVETYPE_INTERNAL
+            MENUITEM "从内置的 melonDS 数据库读取",          IDM_AUTODETECTSAVETYPE_FROMDATABASE
         END
         POPUP "ROM 加载方式(&R)"
         BEGIN

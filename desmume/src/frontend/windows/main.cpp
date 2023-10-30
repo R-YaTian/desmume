@@ -1993,7 +1993,7 @@ int _main()
 
 	CommonSettings.loadToMemory = GetPrivateProfileBool("General", "ROM Loading Mode", false, IniName);
 	CommonSettings.cheatsDisable = GetPrivateProfileBool("General", "cheatsDisable", false, IniName);
-	CommonSettings.autodetectBackupMethod = GetPrivateProfileInt("General", "autoDetectMethod", 0, IniName);
+	CommonSettings.autodetectBackupMethod = GetPrivateProfileInt("General", "autoDetectMethod", 1, IniName);
 	CommonSettings.backupSave = GetPrivateProfileBool("General", "backupSave", false, IniName);
 
 	ColorCtrl_Register();
@@ -2045,7 +2045,7 @@ int _main()
 	CommonSettings.micMode = (TCommonSettings::MicMode)GetPrivateProfileInt("MicSettings", "MicMode", (int)TCommonSettings::InternalNoise, IniName);
 	GetPrivateProfileString("MicSettings", "MicSampleFile", "micsample.raw", MicSampleName, MAX_PATH, IniName);
 	RefreshMicSettings();
-	
+
 	autoHideCursor = GetPrivateProfileBool("Display", "Auto-Hide Cursor", false, IniName);
 	GetPrivateProfileString("Display", "Screen Size Ratio", "1.0", scrRatStr, 4, IniName);
 	screenSizeRatio = atof(scrRatStr);
@@ -6256,6 +6256,7 @@ LRESULT CALLBACK MicrophoneSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 			CheckDlgButton(hDlg, IDC_USENOISE, ((CommonSettings.micMode == TCommonSettings::InternalNoise) ? BST_CHECKED : BST_UNCHECKED));
 			CheckDlgButton(hDlg, IDC_USEPHYSICAL, ((CommonSettings.micMode == TCommonSettings::Physical) ? BST_CHECKED : BST_UNCHECKED));
 			GetPrivateProfileString("MicSettings", "MicSampleFile", "micsample.raw", MicSampleName, MAX_PATH, IniName);
+			UTF8ToANSI(MicSampleName, MicSampleName);
 			SetDlgItemText(hDlg, IDC_MICSAMPLE, MicSampleName);
 
 			if(CommonSettings.micMode != TCommonSettings::Sample)
@@ -6289,7 +6290,7 @@ LRESULT CALLBACK MicrophoneSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 
 					cur = GetDlgItem(hDlg, IDC_MICSAMPLE);
 					GetWindowText(cur, MicSampleName, 256);
-	
+					ANSIToUTF8(MicSampleName, MicSampleName);
 					WritePrivateProfileInt("MicSettings", "MicMode", (int)CommonSettings.micMode, IniName);
 					WritePrivateProfileString("MicSettings", "MicSampleFile", MicSampleName, IniName);
 					RefreshMicSettings();
