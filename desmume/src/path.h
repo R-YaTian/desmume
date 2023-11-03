@@ -67,7 +67,7 @@ public:
 	std::string RomName;
 	std::string RomDirectory;
 
-	#define MAX_FORMAT		20
+	#define MAX_FORMAT		64
 	#define SECTION			"PathSettings"
 	#define LSECTION		L"PathSettings"
 
@@ -88,7 +88,7 @@ public:
 	#define LASTVISITKEY	"lastVisit"
 	#define LUAKEY			L"Lua"
 	#define SLOT1DKEY		L"Slot1D"
-	char screenshotFormat[MAX_FORMAT * 3];
+	char screenshotFormat[MAX_FORMAT];
 	bool savelastromvisit;
 
 	enum KnownPath
