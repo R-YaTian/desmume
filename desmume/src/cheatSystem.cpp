@@ -2127,6 +2127,7 @@ CheatDBFile::CheatDBFile()
 	
 	_format = CheatDBFileFormat_Undefined;
 	_isEncrypted = false;
+	_isUTF8 = false;
 	_size = 0;
 	_fp = NULL;
 }
@@ -2144,6 +2145,11 @@ FILE* CheatDBFile::GetFilePtr() const
 bool CheatDBFile::IsEncrypted() const
 {
 	return this->_isEncrypted;
+}
+
+bool CheatDBFile::IsUTF8() const
+{
+	return this->_isUTF8;
 }
 
 const char* CheatDBFile::GetDescription() const
@@ -2164,7 +2170,7 @@ const char* CheatDBFile::GetFormatString() const
 CheatSystemError CheatDBFile::OpenFile(const char *filePath)
 {
 	CheatSystemError error = CheatSystemError_NoError;
-	
+
 	this->_fp = fopen(filePath, "rb");
 	if (this->_fp == NULL)
 	{
@@ -2172,34 +2178,36 @@ CheatSystemError CheatDBFile::OpenFile(const char *filePath)
 		error = CheatSystemError_FileOpenFailed;
 		return error;
 	}
-	
+
 	// Determine the file's total size.
 	fseek(this->_fp, 0, SEEK_END);
 	this->_size = ftell(this->_fp);
-	
+
 	// Validate the file header before doing anything else. At this time,
 	// we will also be determining the file's encryption status.
 	const char *headerID = "R4 CheatCode";
+	const char *UTF8_magic = "UsAY"; // recc4 will add this on header if file encoding is UTF8
+
 	if (this->_size < strlen(headerID))
 	{
 		printf("ERROR: Failed to validate the file header.\n");
 		error = CheatSystemError_FileFormatInvalid;
 		return error;
 	}
-	
+
 	if (this->_size < CHEATDB_FILEOFFSET_FIRST_FAT_ENTRY)
 	{
 		printf("ERROR: No FAT entries found.\n");
 		error = CheatSystemError_FileFormatInvalid;
 		return error;
 	}
-	
+
 	// Read the file header.
 	u8 workingBuffer[512] = {0};
 	fseek(this->_fp, 0, SEEK_SET);
 	const size_t headerReadSize = (this->_size < 512) ? this->_size : 512;
 	fread(workingBuffer, 1, headerReadSize, this->_fp);
-	
+
 	if (strncmp((char *)workingBuffer, headerID, strlen(headerID)) != 0)
 	{
 		// Try checking the file header again, assuming that the file is
@@ -2212,23 +2220,28 @@ CheatSystemError CheatDBFile::OpenFile(const char *filePath)
 			// closed and we will bail out now.
 			fclose(this->_fp);
 			this->_fp = NULL;
-			
+
 			printf("ERROR: Failed to validate the file header.\n");
 			error = CheatSystemError_FileFormatInvalid;
 			return error;
 		}
-		
+
+		// checking file encoding, if the file is encrypted.
+		if (strncmp((char *)(workingBuffer + 0x4C), UTF8_magic, strlen(UTF8_magic)) == 0)
+			this->_isUTF8 = true;
+
 		// File header validation passed, but did so only because we
 		// decrypted the header first, so mark the file as encrypted
 		// for future operations.
 		this->_isEncrypted = true;
-	}
-	
+	} else if (strncmp((char*)(workingBuffer + 0x4C), UTF8_magic, strlen(UTF8_magic)) == 0) // checking file encoding if header validation passed
+		this->_isUTF8 = true;
+
 	this->_format = CheatDBFileFormat_R4;
 	this->_formatString = "R4";
 	this->_description = (const char *)(workingBuffer + CHEATDB_OFFSET_FILE_DESCRIPTION);
 	this->_path = filePath;
-	
+
 	return error;
 }
 
@@ -2557,6 +2570,11 @@ const char* CHEATSEXPORT::getGameTitle() const
 const char* CHEATSEXPORT::getDescription() const
 {
 	return (const char *)this->_dbFile.GetDescription();
+}
+
+bool CHEATSEXPORT::isUTF8() const
+{
+	return this->_dbFile.IsUTF8();
 }
 
 CheatSystemError CHEATSEXPORT::getErrorCode() const

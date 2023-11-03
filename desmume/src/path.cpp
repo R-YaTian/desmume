@@ -337,6 +337,9 @@ void PathInfo::SwitchPath(Action action, KnownPath path, char *buffer)
 	case MODULE:
 		pathToCopy = pathToModule;
 		break;
+	case LUA:
+		pathToCopy = pathToLua;
+		break;
 	case SLOT1D:
 		pathToCopy = pathToSlot1D;
 		break;

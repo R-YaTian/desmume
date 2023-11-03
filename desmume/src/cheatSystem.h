@@ -270,6 +270,7 @@ protected:
 	
 	CheatDBFileFormat _format;
 	bool _isEncrypted;
+	bool _isUTF8;
 	size_t _size;
 	
 	FILE *_fp;
@@ -285,6 +286,7 @@ public:
 	
 	FILE* GetFilePtr() const;
 	bool IsEncrypted() const;
+	bool IsUTF8() const;
 	const char* GetDescription() const;
 	CheatDBFileFormat GetFormat() const;
 	const char* GetFormatString() const;
@@ -315,6 +317,7 @@ public:
 	size_t getCheatsNum() const;
 	const char* getGameTitle() const;
 	const char* getDescription() const;
+	bool isUTF8() const;
 	CheatSystemError getErrorCode() const;
 };
 

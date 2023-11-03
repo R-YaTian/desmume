@@ -111,7 +111,7 @@ const SAVE_TYPE save_types[] = {
 	{"EEPROM 4kbit",	MC_TYPE_EEPROM1,	MC_SIZE_4KBITS		, 1},
 	{"EEPROM 64kbit",	MC_TYPE_EEPROM2,	MC_SIZE_64KBITS		, 2},
 	{"EEPROM 512kbit",	MC_TYPE_EEPROM2,	MC_SIZE_512KBITS	, 2},
-	{"EEPROM 1Mbit",	MC_TYPE_FLASH,		MC_SIZE_1MBITS		, 2},
+	{"EEPROM 1Mbit",	MC_TYPE_FLASH,		MC_SIZE_1MBITS		, 3},
 	{"FLASH 2Mbit",		MC_TYPE_FLASH,		MC_SIZE_2MBITS		, 3},
 	{"FLASH 4Mbit",		MC_TYPE_FLASH,		MC_SIZE_4MBITS		, 3},
 	{"FLASH 8Mbit",		MC_TYPE_FLASH,		MC_SIZE_8MBITS		, 3},
@@ -364,7 +364,7 @@ BackupDevice::BackupDevice()
 	
 		_fpMC->fseek(0, SEEK_SET);
 
-		if (CommonSettings.autodetectBackupMethod == 1)
+		if (CommonSettings.autodetectBackupMethod == 1 && CommonSettings.manualBackupType != 0)
 		{
 			u32 sav_size = save_types[CommonSettings.manualBackupType].size;
 			_info.addr_size = save_types[CommonSettings.manualBackupType].addr_size;
@@ -1394,6 +1394,7 @@ bool BackupDevice::export_no_gba(const char* fname)
 //======================================================================= no$GBA
 bool BackupDevice::export_raw(const char* filename)
 {
+	if (!this->_fsize) return false;
 	std::vector<u8> data(this->_fsize);
 	u32 pos = this->_fpMC->ftell();
 	this->_fpMC->fseek(0, SEEK_SET);

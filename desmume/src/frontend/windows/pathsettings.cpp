@@ -216,18 +216,17 @@ BOOL BrowseForPath(char *pathToBrowse)
 	LPITEMIDLIST idList;
 	BROWSEINFOW bi;
 
-	//stupid shell
-	if(SHGetMalloc( &shMalloc) != S_OK)
+	if(SHGetMalloc(&shMalloc) != S_OK)
 		return FALSE;
 
 	ZeroMemory(&idList, sizeof(idList));
 	ZeroMemory(&bi, sizeof(bi));
 
-	char tmp[MAX_PATH];
-	strncpy(tmp, pathToBrowse, MAX_PATH);
+	wchar_t tmp[64];
+	STRW(ID_DLG_STR22, tmp);
 
 	bi.hwndOwner = MainWindow->getHWnd();
-	bi.lpszTitle = L"Choose a Folder";
+	bi.lpszTitle = tmp;
 	bi.ulFlags = BIF_NONEWFOLDERBUTTON | BIF_USENEWUI;
 
 	/*wanted to add a callback function for the folder initialization but it crashes everytime i do
@@ -235,7 +234,7 @@ BOOL BrowseForPath(char *pathToBrowse)
 	bi.lParam = (LPARAM)pathToBrowse;
 	*/
 
-	if( (idList = SHBrowseForFolderW(&bi)) )
+	if((idList = SHBrowseForFolderW(&bi)))
 	{
 		changed = true;
 		wchar_t wPathToBrowse[MAX_PATH];
@@ -246,7 +245,6 @@ BOOL BrowseForPath(char *pathToBrowse)
 
 	return changed;
 }
-
 
 void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 {
@@ -312,7 +310,7 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 		case IDC_BROWSELUA:
 			{
 				if(BrowseForPath(path.pathToLua))
-					SetDlgItemText(hDlg, IDC_LUAPATHEDIT, path.pathToLua);
+					SetDlgItemTextW(hDlg, IDC_LUAPATHEDIT, mbstowcs((std::string)path.pathToLua).c_str());
 			}
 			break;
 		case IDC_PATHDEFAULTS:

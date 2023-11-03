@@ -72,6 +72,10 @@
 #include <retro_miscellaneous.h>
 #include <boolean.h>
 
+#if defined(_WIN32)
+extern void C_UTF8ToANSI(const char* utf8String, char* ansiString);
+#endif
+
 enum stat_mode
 {
    IS_DIRECTORY = 0,
@@ -100,9 +104,11 @@ static bool path_stat(const char *path, enum stat_mode mode, int32_t *size)
     if (cellFsStat(path, &buf) < 0)
        return false;
 #elif defined(_WIN32)
+   char ansi_buf[1024];
+   C_UTF8ToANSI(path, ansi_buf);
    WIN32_FILE_ATTRIBUTE_DATA file_info;
    GET_FILEEX_INFO_LEVELS fInfoLevelId = GetFileExInfoStandard;
-   DWORD ret = GetFileAttributesEx(path, fInfoLevelId, &file_info);
+   DWORD ret = GetFileAttributesEx(ansi_buf, fInfoLevelId, &file_info);
    if (ret == 0)
       return false;
 #else
@@ -184,9 +190,6 @@ int32_t path_get_size(const char *path)
  *
  * Returns: true (1) if directory could be created, otherwise false (0).
  **/
-#if defined(_WIN32)
-extern void C_UTF8ToANSI(const char* utf8String, char* ansiString);
-#endif
 bool mkdir_norecurse(const char *dir)
 {
    int ret;

@@ -325,9 +325,6 @@ bool CommandLine::parse(int argc,char **argv)
 				{ "arm7gdb", required_argument, NULL, OPT_ARM7GDB},
 			#endif
 
-			//utilities
-			// { "advanscene-import", required_argument, NULL, OPT_ADVANSCENE},
-
 			{0,0,0,0}
 		};
 
@@ -631,4 +628,3 @@ void CommandLine::process_addonCommands()
                 rtcHourOverride = diff;
         }
 }
-

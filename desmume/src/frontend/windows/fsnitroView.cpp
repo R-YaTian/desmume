@@ -67,8 +67,8 @@ BOOL CALLBACK ProgressWnd(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hBar, PBM_SETRANGE32, 0, fs->getNumFiles());
 		SendMessage(hBar, PBM_SETPOS, 0, 0);
 		SendMessage(hBar, PBM_SETSTEP, 1, 0);
-		SetWindowText(GetDlgItem(hWnd, IDC_MESSAGE), "Please, wait...");
-		SetWindowText(hWnd, "Extracting...");
+		SetWindowText(GetDlgItem(hWnd, IDC_MESSAGE), STRA(ID_DLG_STR20).c_str());
+		SetWindowText(hWnd, STRA(ID_DLG_STR21).c_str());
 		return FALSE;
 	}
 	return FALSE;
@@ -96,7 +96,7 @@ void refreshQView(HWND hWnd, u16 id)
 
 		for (u32 i = 0; i < len; i++)
 			if (buf[i] < 0x20) buf[i] = 0x20;
-		
+
 		SetWindowText(ctrl, buf);
 	}
 	else
@@ -262,13 +262,15 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 					{
 						char tmp_path[MAX_PATH] = {0};
 						char tmp_path_utf8[MAX_PATH] = {0};
+						char tmp_str[64] = {0};
 
 						BROWSEINFO bp={0};
 						memset(&bp, 0, sizeof(bp));
 						bp.hwndOwner = hWnd;
 						bp.pidlRoot = NULL;
 						bp.pszDisplayName = NULL;
-						bp.lpszTitle = "Select destination directory";
+						STRA(ID_DLG_STR23, tmp_str);
+						bp.lpszTitle = tmp_str;
 						bp.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_USENEWUI;
 						bp.lpfn = BrowseCallbackProc;
 
@@ -359,7 +361,7 @@ BOOL CALLBACK ViewFSNitroProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 									u32 start = fs->getStartAddrById(currentFileID);
 									u32 end = fs->getEndAddrById(currentFileID);
 									u32 size = (end - start);
-									sprintf(buf, "[%08X-%08X] size %u", start, end, size);
+									sprintf(buf, STRA(ID_DLG_STR19).c_str(), start, end, size);
 									SetWindowText(GetDlgItem(hWnd, IDC_FILE_INFO), buf);
 								}
 							}

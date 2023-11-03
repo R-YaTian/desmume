@@ -201,7 +201,7 @@ void memWrite32(MemRegionType regionType, HWAddressType address, u32 value)
 //////////////////////////////////////////////////////////////////////////////
 
 CMemView::CMemView(MemRegionType memRegion, u32 start_address)
-	: CToolWindow(IDD_MEM_VIEW, MemView_DlgProc, "Memory viewer")
+	: CToolWindow(IDD_MEM_VIEW, MemView_DlgProc, (char *) STRA(ID_DLG_STR18).c_str())
 	, viewMode(0)
 	, sel(FALSE)
 	, selPart(0)

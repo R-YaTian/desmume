@@ -1193,6 +1193,28 @@ BEGIN
     ID_DLG_STR14            "DeSmuME 即时存档 (仅 *.dst)|*.dst|"
     ID_DLG_STR15            "二进制文件 (*.bin)|*.bin|ROM 文件 (*.rom)|*.rom|"
     ID_DLG_STR16            "8位 PCM 单声道 WAV 文件 (*.wav)|*.wav|"
+    ID_DLG_STR17            "I/O 寄存器"
+    ID_DLG_STR18            "内存查看器"
+    ID_DLG_STR19            "[%08X-%08X] 大小: %u"
+    ID_DLG_STR20            "请稍候..."
+    ID_DLG_STR21            "解压中..."
+    ID_DLG_STR22            "请选择一个目录"
+    ID_DLG_STR23            "请选择解压路径"
+END
+
+STRINGTABLE
+BEGIN
+    ID_DLG_STR24            "重新执行"
+    ID_DLG_STR25            "执行"
+    ID_DLG_STR26            "查看"
+    ID_DLG_STR27            "编辑"
+    ID_DLG_STR28            "创建"
+    ID_DLG_STR29            "打开"
+    ID_DLG_STR30            "加载 Lua 脚本"
+    ID_DLG_STR31            "Lua 脚本|*.lua*|所有文件|*.*|"
+    ID_DLG_STR32            "选择一个目录用于创建 FAT 镜像"
+    ID_DLG_STR33            "选择存放有游戏文件的目录"
+    ID_DLG_STR34            "选择一个目录用于构建 R4 FAT 镜像"
 END
 
 #endif    // 中文(简体，中国) resources

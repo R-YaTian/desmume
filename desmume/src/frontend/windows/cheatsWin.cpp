@@ -1541,13 +1541,25 @@ INT_PTR CALLBACK CheatsExportProc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lpa
 	{
 		case WM_INITDIALOG:
 		{
-			SetWindowText(GetDlgItem(dialog, IDC_CDATE), (LPCSTR)cheatsExport->getDescription());
-			if ( strlen(cheatsExport->getGameTitle()) > 0 )
+			if (cheatsExport->isUTF8())
+			{
+				char ansi_buf[512] = {0};
+				UTF8ToANSI(cheatsExport->getDescription(), ansi_buf);
+				SetWindowText(GetDlgItem(dialog, IDC_CDATE), ansi_buf);
+			} else
+				SetWindowText(GetDlgItem(dialog, IDC_CDATE), (LPCSTR)cheatsExport->getDescription());
+			if (strlen(cheatsExport->getGameTitle()) > 0)
 			{
 				char buf[512] = {0};
 				GetWindowText(dialog, &buf[0], sizeof(buf));
 				strcat(buf, ": ");
-				strcat(buf, cheatsExport->getGameTitle());
+				if (cheatsExport->isUTF8())
+				{
+					char ansi_buf[512] = {0};
+					UTF8ToANSI(cheatsExport->getGameTitle(), ansi_buf);
+					strcat(buf, ansi_buf);
+				} else
+					strcat(buf, cheatsExport->getGameTitle());
 				SetWindowText(dialog, (LPCSTR)buf);
 			}
 			LV_COLUMN lvColumn;
@@ -1572,6 +1584,8 @@ INT_PTR CALLBACK CheatsExportProc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lpa
 			for (u32 i = 0; i < cheatsExport->getCheatsNum(); i++)
 			{
 				CHEATS_LIST *tmp = (CHEATS_LIST*)cheatsExport->getCheats();
+				if (cheatsExport->isUTF8())
+					UTF8ToANSI(tmp[i].description, tmp[i].description);
 				lvi.pszText= tmp[i].description;
 				SendMessage(exportListView, LVM_INSERTITEM, 0, (LPARAM)&lvi);
 			}

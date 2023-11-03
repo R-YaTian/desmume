@@ -90,6 +90,7 @@ struct RDIR *retro_opendir(const char *name)
 
 #if defined(_WIN32)
    snprintf(path_buf, sizeof(path_buf), "%s\\*", name);
+   C_UTF8ToANSI(path_buf, path_buf);
    rdir->directory = FindFirstFile(path_buf, &rdir->entry);
 #elif defined(VITA) || defined(PSP)
    rdir->directory = sceIoDopen(name);

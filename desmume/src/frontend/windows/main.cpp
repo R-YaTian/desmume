@@ -2023,8 +2023,8 @@ int _main()
 	WndY = GetPrivateProfileInt("Video","WindowPosY", CW_USEDEFAULT, IniName);
 	if(WndX < -10000) WndX = CW_USEDEFAULT; // fix for missing window problem
 	if(WndY < -10000) WndY = CW_USEDEFAULT; // (happens if you close desmume while it's minimized)
-  video.width = GPU_FRAMEBUFFER_NATIVE_WIDTH;
-  video.height = GPU_FRAMEBUFFER_NATIVE_HEIGHT * 2;
+	video.width = GPU_FRAMEBUFFER_NATIVE_WIDTH;
+	video.height = GPU_FRAMEBUFFER_NATIVE_HEIGHT * 2;
 	//video.width = GetPrivateProfileInt("Video", "Width", GPU_FRAMEBUFFER_NATIVE_WIDTH, IniName);
 	//video.height = GetPrivateProfileInt("Video", "Height", GPU_FRAMEBUFFER_NATIVE_HEIGHT * 2, IniName);
 	video.layout_old = video.layout = GetPrivateProfileInt("Video", "LCDsLayout", 0, IniName);
@@ -2082,6 +2082,8 @@ int _main()
 		char str[256];
 		sprintf(str, "Recent Lua Script %d", i+1);
 		GetPrivateProfileString("Scripting", str, "", &Recent_Scripts[i][0], 1024, IniName);
+		UTF8ToANSI(Recent_Scripts[i], Recent_Scripts[i]);
+		if (!Recent_Scripts[i][0]) break;
 	}
 
 #ifdef HAVE_JIT
@@ -3972,8 +3974,10 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
 				for(int i = 0; i < MAX_RECENT_SCRIPTS; i++)
 				{
 					char str[256];
+					char path[1024];
 					sprintf(str, "Recent Lua Script %d", i+1);
-					WritePrivateProfileString("Scripting", str, &Recent_Scripts[i][0], IniName);
+					ANSIToUTF8(&Recent_Scripts[i][0], path);
+					WritePrivateProfileString("Scripting", str, path, IniName);
 				}
 
 				WritePrivateProfileInt("Sound", "Volume", sndvolume, IniName);
@@ -4895,50 +4899,6 @@ DOKEYDOWN:
 				if (!exportSave(hwnd, hAppInst))
 					MessageBox(hwnd, STRA(ID_BOX_MSG77).c_str(), STRA(ID_BOX_MSG05).c_str(), MB_OK);
 				NDS_UnPause();
-				return 0;
-			}
-		case IDM_FILE_IMPORT_DB:
-			{
-			/*
-				OPENFILENAME ofn;
-				NDS_Pause();
-				ZeroMemory(&ofn, sizeof(ofn));
-				ofn.lStructSize = sizeof(ofn);
-				ofn.hwndOwner = hwnd;
-				ofn.lpstrFilter = "ADVANsCEne database (XML)\0*.xml;\0";
-				ofn.nFilterIndex = 1;
-				ofn.lpstrFile =  ImportSavName;
-				ofn.nMaxFile = MAX_PATH;
-				ofn.lpstrDefExt = "xml";
-				ofn.Flags = OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
-
-				char buffer[MAX_PATH];
-				ZeroMemory(buffer, sizeof(buffer));
-				strcpy(buffer, path.pathToModule);
-				ofn.lpstrInitialDir = buffer;
-				strcat(buffer, "desmume.ddb");
-				advsc.setDatabase(buffer);
-
-				if(!GetOpenFileName(&ofn))
-				{
-					NDS_UnPause();
-					return 0;
-				}
-
-				EMUFILE_FILE outf(advsc.getDatabase(),"wb");
-				u32 count = advsc.convertDB(ImportSavName,outf);
-				if (count > 0)
-				{
-					sprintf(buffer, STRA(ID_BOX_MSG78).c_str(), count);
-					MessageBox(hwnd,buffer,"DeSmuME",MB_OK|MB_ICONINFORMATION);
-				}
-				else
-				{
-					MessageBox(hwnd,STRA(ID_BOX_MSG79).c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
-					if(advsc.lastImportErrorMessage != "") MessageBox(hwnd,STRA(ID_BOX_MSG80).c_str(),"DeSmuME",MB_OK|MB_ICONERROR);
-				}
-				NDS_UnPause();
-			*/
 				return 0;
 			}
 		case IDM_CONFIG:

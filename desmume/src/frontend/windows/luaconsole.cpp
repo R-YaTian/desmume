@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2098-2016 DeSmuME team
+	Copyright (C) 2008-2016 DeSmuME team
+	Copyright (C) 2023 R-YaTian
 
 	This file is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,6 +26,8 @@
 #include <windows.h>
 #include <Commdlg.h>
 #include <Shellapi.h>
+
+#include "path.h"
 #include "driver.h"
 #include "lua-engine.h"
 
@@ -35,12 +38,12 @@
 #define MAX_RECENT_SCRIPTS 15
 char Recent_Scripts[MAX_RECENT_SCRIPTS][1024] = {0};
 
-static char Str_Tmp [1024];
+static char Str_Tmp[1024];
 
 struct ControlLayoutInfo
 {
 	int controlID;
-	
+
 	enum LayoutType // what to do when the containing window resizes
 	{
 		NONE, // leave the control where it was
@@ -50,6 +53,7 @@ struct ControlLayoutInfo
 	LayoutType horizontalLayout;
 	LayoutType verticalLayout;
 };
+
 struct ControlLayoutState
 {
 	int x,y,width,height;
@@ -65,7 +69,6 @@ static ControlLayoutInfo controlLayoutInfos [] = {
 };
 static const int numControlLayoutInfos = sizeof(controlLayoutInfos)/sizeof(*controlLayoutInfos);
 
-
 extern std::vector<HWND> LuaScriptHWnds;
 struct LuaPerWindowInfo {
 	std::string filename;
@@ -77,17 +80,18 @@ struct LuaPerWindowInfo {
 	ControlLayoutState layoutState [numControlLayoutInfos];
 	LuaPerWindowInfo() : fileWatcherThread(NULL), started(false), closeOnStop(false), subservient(false), width(405), height(244) {}
 };
-std::map<HWND, LuaPerWindowInfo> LuaWindowInfo;
-static char Lua_Dir[1024]="";
 
-int WINAPI FileSysWatcher (LPVOID arg)
+std::map<HWND, LuaPerWindowInfo> LuaWindowInfo;
+static char Lua_Dir[1024] = "";
+
+int WINAPI FileSysWatcher(LPVOID arg)
 {
 	HWND hDlg = (HWND)arg;
 	LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
 
 	while(true)
 	{
-		char filename [1024], directory [1024];
+		char filename[1024], directory[1024];
 
 		strncpy(filename, info.filename.c_str(), 1024);
 		filename[1023] = 0;
@@ -101,7 +105,7 @@ int WINAPI FileSysWatcher (LPVOID arg)
 		if(bar) *bar = '\0';
 
 		WIN32_FILE_ATTRIBUTE_DATA origData;
-		GetFileAttributesEx (filename,  GetFileExInfoStandard,  (LPVOID)&origData);
+		GetFileAttributesEx(filename, GetFileExInfoStandard, (LPVOID)&origData);
 
 		HANDLE hNotify = FindFirstChangeNotification(directory, FALSE, FILE_NOTIFY_CHANGE_LAST_WRITE);
 
@@ -115,7 +119,7 @@ int WINAPI FileSysWatcher (LPVOID arg)
 					return dwWaitResult;
 
 				WIN32_FILE_ATTRIBUTE_DATA data;
-				GetFileAttributesEx (filename,  GetFileExInfoStandard,  (LPVOID)&data);
+				GetFileAttributesEx(filename, GetFileExInfoStandard, (LPVOID)&data);
 
 				// at this point it could be any file in the directory that changed
 				// so check to make sure it was the file we care about
@@ -126,19 +130,15 @@ int WINAPI FileSysWatcher (LPVOID arg)
 				}
 			}
 
-			//FindNextChangeNotification(hNotify); // let's not try to reuse it...
+			// FindNextChangeNotification(hNotify); // let's not try to reuse it...
 			FindCloseChangeNotification(hNotify); // but let's at least make sure to release it!
-		}
-		else
-		{
+		} else
 			Sleep(500);
-		}
 	}
-
 	return 0;
 }
 
-void RegisterWatcherThread (HWND hDlg)
+void RegisterWatcherThread(HWND hDlg)
 {
 	HANDLE thread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE) FileSysWatcher, (LPVOID) hDlg, CREATE_SUSPENDED, NULL);
 //	SetThreadPriority(thread, THREAD_PRIORITY_LOWEST); // disabled because it can make us miss updates in single-core mode and the thread spends all its time sleeping anyway
@@ -148,22 +148,22 @@ void RegisterWatcherThread (HWND hDlg)
 
 	ResumeThread(thread);
 }
-void KillWatcherThread (HWND hDlg)
+
+void KillWatcherThread(HWND hDlg)
 {
 	LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
 	TerminateThread(info.fileWatcherThread, 0);
 	info.fileWatcherThread = NULL;
 }
 
-
 // some extensions that might commonly be near lua files that almost certainly aren't lua files.
-static const char* s_nonLuaExtensions [] = {"txt", "nfo", "htm", "html", "jpg", "jpeg", "png", "bmp", "gif", "mp3", "wav", "lnk", "exe", "bat", "luasav", "sav", "srm", "brm", "cfg", "wch", "ds*",  "nds","bin","raw"};
-
+static const char* s_nonLuaExtensions [] = {"txt", "nfo", "htm", "html", "jpg", "jpeg", "png", "bmp", "gif", "mp3", "wav", "lnk", "exe", "bat", "luasav", "sav", "srm", "brm", "cfg", "wch", "ds*", "nds", "bin", "raw"};
 
 void Update_Recent_Script(const char* Path, bool dontPutAtTop)
 {
-	char LogicalName[1024], PhysicalName[1024];
-	bool exists = ObtainFile(Path, LogicalName, PhysicalName, "luacheck", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
+	char LogicalName[1024], PhysicalName[1024], utf8_path[1024];
+	ANSIToUTF8(Path, utf8_path); // ObtainFile func need UTF8 strings
+	bool exists = ObtainFile(utf8_path, LogicalName, PhysicalName, "luacheck", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
 	ReleaseTempFileCategory("luacheck"); // delete the temporary (physical) file if any
 
 	if(!exists)
@@ -184,17 +184,15 @@ void Update_Recent_Script(const char* Path, bool dontPutAtTop)
 			for(j = i; j > 0; j--)
 				strcpy(Recent_Scripts[j], Recent_Scripts[j-1]);
 			strcpy(Recent_Scripts[0], temp);
-//			MustUpdateMenu = 1;
 			return;
 		}
 	}
-	
+
 	if(!dontPutAtTop)
 	{
 		// add to start of recent list
 		for(i = MAX_RECENT_SCRIPTS-1; i > 0; i--)
 			strcpy(Recent_Scripts[i], Recent_Scripts[i - 1]);
-
 		strcpy(Recent_Scripts[0], Path);
 	}
 	else
@@ -209,10 +207,9 @@ void Update_Recent_Script(const char* Path, bool dontPutAtTop)
 			}
 		}
 	}
-
-//	MustUpdateMenu = 1;
 }
 
+// For main.cpp to detect which lua script is running, and update the lua submenu
 HWND IsScriptFileOpen(const char* Path)
 {
 	for(std::map<HWND, LuaPerWindowInfo>::iterator iter = LuaWindowInfo.begin(); iter != LuaWindowInfo.end(); ++iter)
@@ -248,7 +245,6 @@ HWND IsScriptFileOpen(const char* Path)
 	return NULL;
 }
 
-
 void PrintToWindowConsole(int hDlgAsInt, const char* str)
 {
 	HWND hDlg = (HWND)hDlgAsInt;
@@ -277,7 +273,6 @@ void PrintToWindowConsole(int hDlgAsInt, const char* str)
 	}
 }
 
-extern int Show_Genesis_Screen(HWND hWnd);
 void OnStart(int hDlgAsInt)
 {
 	HWND hDlg = (HWND)hDlgAsInt;
@@ -285,9 +280,8 @@ void OnStart(int hDlgAsInt)
 	info.started = true;
 	EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUABROWSE), false); // disable browse while running because it misbehaves if clicked in a frameadvance loop
 	EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUASTOP), true);
-	SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUARUN), "Restart");
+	SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUARUN), STRA(ID_DLG_STR24).c_str());
 	SetWindowText(GetDlgItem(hDlg, IDC_LUACONSOLE), ""); // clear the console
-//	Show_Genesis_Screen(HWnd); // otherwise we might never show the first thing the script draws
 }
 
 void OnStop(int hDlgAsInt, bool statusOK)
@@ -304,9 +298,8 @@ void OnStop(int hDlgAsInt, bool statusOK)
 	info.started = false;
 	EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUABROWSE), true);
 	EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUASTOP), false);
-	SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUARUN), "Run");
-//	if(statusOK)
-//		Show_Genesis_Screen(MainWindow->getHWnd()); // otherwise we might never show the last thing the script draws
+	SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUARUN), STRA(ID_DLG_STR25).c_str());
+
 	if(info.closeOnStop)
 		PostMessage(hDlg, WM_CLOSE, 0, 0);
 }
@@ -315,12 +308,14 @@ const char* MakeScriptPathAbsolute(const char* filename, const char* extraDirToC
 
 void UpdateFileEntered(HWND hDlg)
 {
-	char local_str_tmp [1024];
+	char local_str_tmp[1024] = {0};
 	SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_GETTEXT,(WPARAM)512,(LPARAM)local_str_tmp);
 
 	// if it exists, make sure we're using an absolute path to it
 	const char* filename = local_str_tmp;
-	FILE* file = fopen(filename, "rb");
+	char utf8_fname[1024] = {0};
+	ANSIToUTF8(local_str_tmp, utf8_fname);
+	FILE* file = fopen(utf8_fname, "rb"); // My custom fopen func need UTF8 string
 	if(file)
 	{
 		fclose(file);
@@ -336,7 +331,9 @@ void UpdateFileEntered(HWND hDlg)
 
 	// use ObtainFile to support opening files within archives
 	char LogicalName[1024], PhysicalName[1024];
-	bool exists = ObtainFile(filename, LogicalName, PhysicalName, "luacheck", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
+	bool exists = ObtainFile(utf8_fname, LogicalName, PhysicalName, "luacheck", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
+	UTF8ToANSI(LogicalName, LogicalName); // GetFileAttributesA need ANSI string, so conv them
+	UTF8ToANSI(PhysicalName, PhysicalName);
 	bool readonly = exists ? ((GetFileAttributes(PhysicalName) & FILE_ATTRIBUTE_READONLY) != 0) : (strchr(LogicalName, '|') != NULL || strchr(filename, '|') != NULL);
 	ReleaseTempFileCategory("luacheck"); // delete the temporary (physical) file if any
 
@@ -352,8 +349,6 @@ void UpdateFileEntered(HWND hDlg)
 		else
 			slash = LogicalName;
 		SetWindowText(hDlg, slash);
-//		Build_Main_Menu();
-
 		PostMessage(hDlg, WM_COMMAND, IDC_BUTTON_LUARUN, 0);
 	}
 
@@ -361,23 +356,19 @@ void UpdateFileEntered(HWND hDlg)
 	bool isLuaFile = ext && !_stricmp(ext, ".lua");
 	if(exists)
 	{
-		SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), isLuaFile ? (readonly ? "View" : "Edit") : "Open");
+		SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), isLuaFile ? (readonly ? STRA(ID_DLG_STR26).c_str() : STRA(ID_DLG_STR27).c_str()) : STRA(ID_DLG_STR29).c_str());
 		EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), true);
 	}
 	else
 	{
-		SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), "Create");
+		SetWindowText(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), STRA(ID_DLG_STR28).c_str());
 		EnableWindow(GetDlgItem(hDlg, IDC_BUTTON_LUAEDIT), isLuaFile && !readonly);
 	}
 }
 
-//extern "C" int Clear_Sound_Buffer(void);
-
-static int Change_File_L(char *Dest, char *Dir, char *Titre, char *Filter, char *Ext, HWND hwnd)
+static int Change_File_L(char *Dest, char *Dir, char *Title, char *Filter, char *Ext, HWND hwnd)
 {
 	OPENFILENAME ofn;
-
-//	SetCurrentDirectory(Desmume_Path);
 
 	if (!strcmp(Dest, ""))
 	{
@@ -395,7 +386,7 @@ static int Change_File_L(char *Dest, char *Dir, char *Titre, char *Filter, char 
 	ofn.lpstrFilter = Filter;
 	ofn.nFilterIndex = 1;
 	ofn.lpstrInitialDir = Dir;
-	ofn.lpstrTitle = Titre;
+	ofn.lpstrTitle = Title;
 	ofn.lpstrDefExt = Ext;
 	ofn.Flags = OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 
@@ -414,18 +405,7 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 	{
 		case WM_INITDIALOG: {
 			if(std::find(LuaScriptHWnds.begin(), LuaScriptHWnds.end(), hDlg) == LuaScriptHWnds.end())
-			{
 				LuaScriptHWnds.push_back(hDlg);
-//				Build_Main_Menu();
-			}
-//			if (Full_Screen)
-//			{
-//				while (ShowCursor(false) >= 0);
-//				while (ShowCursor(true) < 0);
-//			}
-
-//			HANDLE hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_LUA));
-//			SendMessage(hDlg, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
 
 			// remove the 30000 character limit from the console control
 			SendMessage(GetDlgItem(hDlg, IDC_LUACONSOLE),EM_LIMITTEXT,0,0);
@@ -480,7 +460,6 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 
 		case WM_MENUSELECT:
  		case WM_ENTERSIZEMOVE:
-//			Clear_Sound_Buffer();
 			break;
 
 		case WM_SIZING:
@@ -580,40 +559,46 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 				case IDC_BUTTON_LUABROWSE:
 				{
 					LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
-					char Str_Tmp [1024]; // shadow added because the global one is unreliable
-					strcpy(Str_Tmp,info.filename.c_str());
+					char Str_Tmp[1024]; // shadow added because the global one is unreliable
+					strcpy(Str_Tmp, info.filename.c_str());
 					SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_GETTEXT,(WPARAM)512,(LPARAM)Str_Tmp);
 					char* bar = strchr(Str_Tmp, '|');
-					if(bar) *bar = '\0';
-//					DialogsOpen++;
-//					Clear_Sound_Buffer();
-					if(Change_File_L(Str_Tmp, Lua_Dir, "Load Lua Script", "Lua Script\0*.lua*\0All Files\0*.*\0\0", "lua", hDlg))
+					if (bar) *bar = '\0';
+					if (Lua_Dir[0] == '\0')
 					{
-						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)Str_Tmp);
+						std::string dir = path.getpath(path.LUA);
+						UTF8ToANSI(dir.c_str(), Lua_Dir);
 					}
-//					DialogsOpen--;
-
+					std::string strFilter = STRA(ID_DLG_STR31);
+					std::replace(strFilter.begin(), strFilter.end(), '|', '\0');
+					if(Change_File_L(Str_Tmp, Lua_Dir, (char *) STRA(ID_DLG_STR30).c_str(), (char *) strFilter.c_str(), "lua", hDlg))
+						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)Str_Tmp);
 				}	break;
+
 				case IDC_BUTTON_LUAEDIT:
 				{
 					LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
-					char Str_Tmp [1024]; // shadow added because the global one is unreliable
-					strcpy(Str_Tmp,info.filename.c_str());
+					char Str_Tmp[1024]; // shadow added because the global one is unreliable
+					char utf8_buf[1024] = {0};
+					strcpy(Str_Tmp, info.filename.c_str());
 					SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_GETTEXT,(WPARAM)512,(LPARAM)Str_Tmp);
+					ANSIToUTF8(Str_Tmp, utf8_buf);
 					char LogicalName[1024], PhysicalName[1024];
-					bool exists = ObtainFile(Str_Tmp, LogicalName, PhysicalName, "luaview", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
+					bool exists = ObtainFile(utf8_buf, LogicalName, PhysicalName, "luaview", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
+					UTF8ToANSI(LogicalName, LogicalName);
+					UTF8ToANSI(PhysicalName, PhysicalName);
 					bool created = false;
 					if(!exists)
 					{
-						FILE* file = fopen(Str_Tmp, "r");
+						FILE* file = fopen(utf8_buf, "r");
 						if(!file)
 						{
-							file = fopen(Str_Tmp, "w");
+							file = fopen(utf8_buf, "w");
 							if(file)
 							{
 								created = true;
 								exists = true;
-								strcpy(PhysicalName, Str_Tmp);
+								UTF8ToANSI(utf8_buf, PhysicalName);
 							}
 						}
 						if(file)
@@ -628,10 +613,9 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 								ShellExecute(NULL, NULL, "notepad", PhysicalName, NULL, SW_SHOWNORMAL);
 					}
 					if(created)
-					{
 						UpdateFileEntered(hDlg);
-					}
 				}	break;
+
 				case IDC_EDIT_LUAPATH:
 				{
 					switch(HIWORD(wParam))
@@ -642,6 +626,7 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 						}	break;
 					}
 				}	break;
+
 				case IDC_BUTTON_LUARUN:
 				{
 					HWND focus = GetFocus();
@@ -650,46 +635,42 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 						SetActiveWindow(MainWindow->getHWnd());
 
 					LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
-					strcpy(Str_Tmp,info.filename.c_str());
+					ANSIToUTF8(info.filename.c_str(), Str_Tmp);
 					char LogicalName[1024], PhysicalName[1024];
 					bool exists = ObtainFile(Str_Tmp, LogicalName, PhysicalName, "luarun", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
-					Update_Recent_Script(LogicalName, info.subservient);
-					if(DemandLua())
-						RunLuaScriptFile((int)hDlg, PhysicalName);
+					UTF8ToANSI(LogicalName, LogicalName);
+					UTF8ToANSI(PhysicalName, PhysicalName);
+					Update_Recent_Script(LogicalName, info.subservient); // Send ANSI LogicalName to RecentScript list
+					if(DemandLua()) RunLuaScriptFile((int)hDlg, PhysicalName);
 				}	break;
+
 				case IDC_BUTTON_LUASTOP:
 				{
 					PrintToWindowConsole((int)hDlg, "user clicked stop button\r\n");
 					SetActiveWindow(MainWindow->getHWnd());
 					if(DemandLua()) StopLuaScript((int)hDlg);
 				}	break;
+
 				case IDC_NOTIFY_SUBSERVIENT:
 				{
 					LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
 					info.subservient = lParam ? true : false;
 				}	break;
-				//case IDOK:
+
 				case IDCANCEL:
-				{	LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
+				{
+					LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
 					if(info.filename.empty())
 					{
-//						if (Full_Screen)
-//						{
-//							while (ShowCursor(true) < 0);
-//							while (ShowCursor(false) >= 0);
-//						}
-//						DialogsOpen--;
 						DragAcceptFiles(hDlg, FALSE);
 						KillWatcherThread(hDlg);
 						LuaScriptHWnds.erase(remove(LuaScriptHWnds.begin(), LuaScriptHWnds.end(), hDlg), LuaScriptHWnds.end());
 						LuaWindowInfo.erase(hDlg);
 						CloseLuaContext((int)hDlg);
-//						Build_Main_Menu();
 						EndDialog(hDlg, true);
 					}
 				}	return true;
 			}
-
 			return false;
 		}	break;
 
@@ -697,7 +678,7 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 		{
 			LuaPerWindowInfo& info = LuaWindowInfo[hDlg];
 
-			PrintToWindowConsole((int)hDlg, "user closed script window\r\n");
+			printf("Closed a lua script window by user\r\n");
 			StopLuaScript((int)hDlg);
 			if(info.started)
 			{
@@ -706,18 +687,11 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 				return false;
 			}
 
-//			if (Full_Screen)
-//			{
-//				while (ShowCursor(true) < 0);
-//				while (ShowCursor(false) >= 0);
-//			}
-//			DialogsOpen--;
 			DragAcceptFiles(hDlg, FALSE);
 			KillWatcherThread(hDlg);
 			LuaScriptHWnds.erase(remove(LuaScriptHWnds.begin(), LuaScriptHWnds.end(), hDlg), LuaScriptHWnds.end());
 			LuaWindowInfo.erase(hDlg);
 			CloseLuaContext((int)hDlg);
-//			Build_Main_Menu();
 			EndDialog(hDlg, true);
 		}	return true;
 
@@ -726,12 +700,9 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 			HDROP hDrop = (HDROP)wParam;
 			DragQueryFile(hDrop, 0, Str_Tmp, 1024);
 			DragFinish(hDrop);
-			SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)Str_Tmp );
-			UpdateFileEntered(hDlg);
+			SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)Str_Tmp);
+			// UpdateFileEntered(hDlg);
 		}	return true;
-
 	}
-
 	return false;
 }
-

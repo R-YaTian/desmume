@@ -35,6 +35,9 @@
 #include "vfat.h"
 #include "libfat/libfat_public_api.h"
 
+#ifdef WIN32
+#include "winutil.h"
+#endif
 
 enum EListCallbackArg {
 	EListCallbackArg_Item, EListCallbackArg_Pop
@@ -65,7 +68,10 @@ static void list_files(const char *filepath, ListCallback list_callback)
 		if(!retro_readdir(rdir))
 			break;
 
-		const char* fname = retro_dirent_get_name(rdir);
+		char* fname = (char *) retro_dirent_get_name(rdir);
+#ifdef WIN32
+		ANSIToUTF8(fname, fname);
+#endif
 		list_callback(rdir,EListCallbackArg_Item);
 		printf("cflash added %s\n",fname);
 
@@ -151,10 +157,10 @@ static void DirectoryListCallback(RDIR* rdir, EListCallbackArg arg)
 				fread(buf,1,len,inf);
 				fclose(inf);
 
-				std::string path = currVirtPath + "/" + fname;
-				printf("FAT + (%10.2f KB) %s \n",len/1024.f,path.c_str());
-				bool ok = LIBFAT::WriteFile(path.c_str(),buf,len);
-				if(!ok) 
+				std::string path_new = currVirtPath + "/" + fname;
+				printf("FAT + (%10.2f KB) %s \n",len/1024.f,path_new.c_str());
+				bool ok = LIBFAT::WriteFile(path_new.c_str(),buf,len);
+				if(!ok)
 					printf("ERROR adding file to fat\n");
 				delete[] buf;
 			} else printf("ERROR opening file for fat\n");
@@ -201,6 +207,8 @@ bool VFAT::build(const char* path, int extra_MB)
 	{
 		printf("error allocating memory for fat (%llu KBytes)\n",(dataSectors*512)/1024);
 		printf("total fat sizes > 2GB are never going to work\n");
+		delete file;
+		return false;
 	}
 	
 	delete file;
@@ -215,9 +223,6 @@ bool VFAT::build(const char* path, int extra_MB)
 		return false;
 	}
 
-	//debug..
-	//file = new EMUFILE_FILE("c:\\temp.ima","rb+");
-	
 	//format the disk
 	{
 		EmuFat fat(file);

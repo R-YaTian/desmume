@@ -84,7 +84,7 @@ BOOL CALLBACK ImportSizeSelect_Proc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 			{
 				SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_ADDSTRING, 0, (LPARAM)save_types[i].descr);
 			}
-			SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_SETCURSEL, fileInfo.type - 1, 0);
+			SendDlgItemMessage(hDlg, IDC_IMP_MANUAL_SIZE, CB_SETCURSEL, fileInfo.type ? fileInfo.type  - 1 : 0, 0);
 
 			fileSaveSize = MMU_new.backupDevice.importDataSize(SavFName);
 

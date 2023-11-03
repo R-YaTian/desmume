@@ -25,6 +25,7 @@
 #include "registers.h"
 #include "armcpu.h"
 
+#include "winutil.h"
 #include "resource.h"
 #include "main.h"
 
@@ -299,7 +300,7 @@ void RefreshAllIORegViews()
 /*--------------------------------------------------------------------------*/
 
 CIORegView::CIORegView()
-	: CToolWindow("DeSmuME_IORegView", IORegView_Proc, "I/O registers", 400, 400)
+	: CToolWindow("DeSmuME_IORegView", IORegView_Proc, (char *) STRA(ID_DLG_STR17).c_str(), 400, 400)
 	, CPU(ARMCPU_ARM9)
 	, Reg(0)
 	, yoff(0)

@@ -146,17 +146,19 @@ INT_PTR CALLBACK GbaSlotCFlash(HWND dialog, UINT msg,WPARAM wparam,LPARAM lparam
 
 				case IDC_BBROWSE2:
 				{
+					char tmp_str[64] = {0};
 					BROWSEINFO bp={0};
 
 					bp.hwndOwner=dialog;
 					bp.pidlRoot=NULL;
 					bp.pszDisplayName=NULL;
-					bp.lpszTitle="Select directory for FAT image building";
+					STRA(ID_DLG_STR32, tmp_str);
+					bp.lpszTitle = tmp_str;
 					bp.ulFlags=BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_USENEWUI;
 					bp.lpfn=NULL;
-	
+
 					LPITEMIDLIST tmp = SHBrowseForFolder((LPBROWSEINFO)&bp);
-					if (tmp!=NULL) 
+					if (tmp != NULL) 
 					{
 						memset(tmp_cflash_path, 0, sizeof(tmp_cflash_path));
 						SHGetPathFromIDList(tmp, tmp_cflash_path);
@@ -617,9 +619,12 @@ void GBAslotDialog(HWND hwnd)
 {
 	temp_type = (u8)slot2_GetCurrentType();
 	last_type = temp_type;
-	strcpy(tmp_cflash_filename, win32_CFlash_cfgFileName.c_str());
-	strcpy(tmp_cflash_path, win32_CFlash_cfgDirectory.c_str());
-	strcpy(tmp_gbagame_filename, win32_GBA_cfgRomPath.c_str());
+	// strcpy(tmp_cflash_filename, win32_CFlash_cfgFileName.c_str());
+	// strcpy(tmp_cflash_path, win32_CFlash_cfgDirectory.c_str());
+	// strcpy(tmp_gbagame_filename, win32_GBA_cfgRomPath.c_str());
+	UTF8ToANSI(win32_CFlash_cfgFileName.c_str(), tmp_cflash_filename);
+	UTF8ToANSI(win32_CFlash_cfgDirectory.c_str(), tmp_cflash_path);
+	UTF8ToANSI(win32_GBA_cfgRomPath.c_str(), tmp_gbagame_filename);
 	strcpy(tmp_hcv1000_barcode, slot2_HCV1000_barcode.c_str());
 	memcpy(&tmp_Guitar, &Guitar, sizeof(Guitar));
 	memcpy(&tmp_Piano, &Piano, sizeof(Piano));
@@ -641,13 +646,16 @@ void GBAslotDialog(HWND hwnd)
 
 			case NDS_SLOT2_CFLASH:
 				//save current values for win32 configuration
+				char utf8_cflash_path[1024];
+				char utf8_cflash_filename[1024];
+				ANSIToUTF8(tmp_cflash_path, utf8_cflash_path);
+				ANSIToUTF8(tmp_cflash_filename, utf8_cflash_filename);
 				win32_CFlash_cfgMode = tmp_CFlashMode;
-				win32_CFlash_cfgDirectory = tmp_cflash_path;
-				win32_CFlash_cfgFileName = tmp_cflash_filename;
+				win32_CFlash_cfgDirectory = utf8_cflash_path;
+				win32_CFlash_cfgFileName = utf8_cflash_filename;
 				WritePrivateProfileInt("Slot2.CFlash","fileMode",tmp_CFlashMode,IniName);
-				WritePrivateProfileString("Slot2.CFlash","path",tmp_cflash_path,IniName);
-				WritePrivateProfileString("Slot2.CFlash","filename",tmp_cflash_filename,IniName);
-
+				WritePrivateProfileString("Slot2.CFlash","path",utf8_cflash_path,IniName);
+				WritePrivateProfileString("Slot2.CFlash","filename",utf8_cflash_filename,IniName);
 				WIN_InstallCFlash();
 				break;
 			case NDS_SLOT2_RUMBLEPAK:
@@ -658,8 +666,10 @@ void GBAslotDialog(HWND hwnd)
 				WritePrivateProfileInt("Slot2.Paddle","INC",Paddle.INC,IniName);
 				break;
 			case NDS_SLOT2_GBACART:
-				win32_GBA_cfgRomPath = tmp_gbagame_filename;
-				WritePrivateProfileString("Slot2.GBAgame", "filename", tmp_gbagame_filename, IniName);
+				char utf8_gbagame_filename[1024];
+				ANSIToUTF8(tmp_gbagame_filename, utf8_gbagame_filename);
+				win32_GBA_cfgRomPath = utf8_gbagame_filename;
+				WritePrivateProfileString("Slot2.GBAgame", "filename", utf8_gbagame_filename, IniName);
 				WIN_InstallGBACartridge();
 				break;
 			case NDS_SLOT2_GUITARGRIP:

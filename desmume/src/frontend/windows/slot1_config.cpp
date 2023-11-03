@@ -99,16 +99,18 @@ INT_PTR CALLBACK Slot1Debug(HWND dialog, UINT msg,WPARAM wparam,LPARAM lparam)
 			{
 				case IDC_BROWSE:
 				{
+					char tmp_str[64] = {0};
 					BROWSEINFO bp={0};
 
 					bp.hwndOwner=dialog;
 					bp.pidlRoot=NULL;
 					bp.pszDisplayName=NULL;
-					bp.lpszTitle="Select directory for game files";
+					STRA(ID_DLG_STR33, tmp_str);
+					bp.lpszTitle = tmp_str;
 					bp.ulFlags=BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_USENEWUI;
 					bp.lParam = SLOT1_DEBUG_ID;
 					bp.lpfn=Slot1_BrowseCallbackProc;
-	
+
 					LPITEMIDLIST tmp = SHBrowseForFolder((LPBROWSEINFO)&bp);
 					if (tmp!=NULL) 
 					{
@@ -160,16 +162,18 @@ INT_PTR CALLBACK Slot1R4(HWND dialog, UINT msg,WPARAM wparam,LPARAM lparam)
 			{
 				case IDC_BROWSE:
 				{
+					char tmp_str[64] = {0};
 					BROWSEINFO bp={0};
 
 					bp.hwndOwner=dialog;
 					bp.pidlRoot=NULL;
 					bp.pszDisplayName=NULL;
-					bp.lpszTitle="Select directory for FAT image building";
+					STRA(ID_DLG_STR34, tmp_str);
+					bp.lpszTitle = tmp_str;
 					bp.ulFlags=BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE | BIF_USENEWUI;
 					bp.lParam = SLOT1_R4_ID;
 					bp.lpfn=Slot1_BrowseCallbackProc;
-	
+
 					LPITEMIDLIST tmp = SHBrowseForFolder((LPBROWSEINFO)&bp);
 					if (tmp!=NULL) 
 					{
@@ -307,8 +311,10 @@ BOOL CALLBACK Slot1Box_Proc(HWND dialog, UINT msg,WPARAM wparam,LPARAM lparam)
 
 void slot1Dialog(HWND hwnd)
 {
-	strcpy(tmp_fat_path, slot1_GetFatDir().c_str());
-	strcpy(tmp_fs_path, path.getpath(path.SLOT1D).c_str());
+	//strcpy(tmp_fat_path, slot1_GetFatDir().c_str());
+	UTF8ToANSI(slot1_GetFatDir().c_str(), tmp_fat_path);
+	//strcpy(tmp_fs_path, path.getpath(path.SLOT1D).c_str());
+	UTF8ToANSI(path.getpath(path.SLOT1D).c_str(), tmp_fs_path);
 	temp_type_slot1 = slot1_GetCurrentType();
 	last_type_slot1 = temp_type_slot1;
 	tmp_fat_path_type = slot1_R4_path_type;
@@ -337,8 +343,10 @@ void slot1Dialog(HWND hwnd)
 				}
 				else
 				{
-					slot1_SetFatDir(tmp_fat_path, false);
-					WritePrivateProfileString("Slot1","FAT_path",tmp_fat_path,IniName);
+					char utf8_fat_path[1024];
+					ANSIToUTF8(tmp_fat_path, utf8_fat_path);
+					slot1_SetFatDir(utf8_fat_path, false);
+					WritePrivateProfileString("Slot1","FAT_path",utf8_fat_path,IniName);
 				}
 				break;
 			case NDS_SLOT1_RETAIL_NAND:
@@ -346,7 +354,9 @@ void slot1Dialog(HWND hwnd)
 			case NDS_SLOT1_RETAIL_DEBUG:
 				if (strlen(tmp_fs_path))
 				{
-					path.setpath(path.SLOT1D, tmp_fs_path);
+					char utf8_fs_path[1024];
+					ANSIToUTF8(tmp_fs_path, utf8_fs_path);
+					path.setpath(path.SLOT1D, utf8_fs_path);
 					WritePrivateProfileStringW(LSECTION, SLOT1DKEY, mbstowcs((std::string)path.pathToSlot1D).c_str(), IniNameW);
 				}
 				break;
