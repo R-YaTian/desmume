@@ -280,7 +280,7 @@ void PathInfo::ReadPathSettings()
 	ReadKeyW(pathToLua, LUAKEY);
 	ReadKeyW(pathToSlot1D, SLOT1DKEY);
 #ifdef HOST_WINDOWS
-	GetPrivateProfileString(SECTION, FORMATKEY, "%f_%s_%r", screenshotFormat, MAX_FORMAT, IniName);
+	GetPrivateProfileString(SECTION, FORMATKEY, "%f_%t_%r", screenshotFormat, MAX_FORMAT * 3, IniName);
 	savelastromvisit = GetPrivateProfileBool(SECTION, LASTVISITKEY, true, IniName);
 	currentimageformat = (ImageFormat)GetPrivateProfileInt(SECTION, DEFAULTFORMATKEY, PNG, IniName);
 	r4Format = (R4Format)GetPrivateProfileInt(SECTION, R4FORMATKEY, R4_CHEAT_DAT, IniName);
@@ -431,7 +431,7 @@ void PathInfo::formatname(char *output)
 	tm *time_struct = localtime(&now);
 
 	for (char*  p = screenshotFormat,
-		*end = p + sizeof(screenshotFormat); p < end; p++)
+		*end = p + strlen(screenshotFormat); p < end; p++)
 	{
 		if (*p != '%')
 		{

@@ -125,9 +125,6 @@ void WritePathSettings()
 	WritePrivateProfileInt(SECTION, LASTVISITKEY, path.savelastromvisit, IniName);
 	WritePrivateProfileInt(SECTION, ASSOCIATEKEY, associate, IniName);
 	WritePrivateProfileBool("Scripting", "AutoLoad", autoLoadLua, IniName);
-
-//	WritePrivateProfileInt(SECTION, DEFAULTFORMATKEY, defaultFormat, IniName);
-//	WritePrivateProfileInt(SECTION, NEEDSSAVINGKEY, needsSaving, IniName);
 }
 
 BOOL PathSettings_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
@@ -156,7 +153,9 @@ BOOL PathSettings_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	CheckRadioButton(hDlg, IDC_R4TYPE1, IDC_R4TYPE2, r4TypeMap[(int)path.r4Format]);
 
 // IDC_FORMATEDIT setup
-	SetDlgItemText(hDlg, IDC_FORMATEDIT, path.screenshotFormat);
+	char format_buffer[MAX_FORMAT * 3];
+	UTF8ToANSI(path.screenshotFormat, format_buffer);
+	SetDlgItemText(hDlg, IDC_FORMATEDIT, format_buffer);
 
 	hwnd = GetDlgItem(hDlg, IDC_FORMATEDIT);
 	Edit_LimitText(hwnd, MAX_FORMAT);
@@ -327,7 +326,7 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 				CheckDlgButton(hDlg, IDC_USELASTVISIT, BST_CHECKED);
 				CheckDlgButton(hDlg, IDC_ASSOCIATE, BST_UNCHECKED);
 				CheckRadioButton(hDlg, IDC_PNG, IDC_BMP, IDC_PNG);
-				SetDlgItemText(hDlg, IDC_FORMATEDIT, "%f_%s_%r");
+				SetDlgItemText(hDlg, IDC_FORMATEDIT, "%f_%t_%r");
 				CheckRadioButton(hDlg, IDC_R4TYPE1, IDC_R4TYPE2, IDC_R4TYPE2);
 				CheckDlgButton(hDlg, IDC_AUTOLOADLUA, BST_UNCHECKED);
 				associate = false;
@@ -361,9 +360,10 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 			{
 				if(codeNotify == EN_KILLFOCUS)
 				{
-					char buffer[MAX_FORMAT];
-					GetDlgItemText(hDlg, IDC_FORMATEDIT, buffer, MAX_FORMAT);
-					strncpy(path.screenshotFormat, buffer, MAX_FORMAT);
+					char buffer[MAX_FORMAT * 3];
+					GetDlgItemText(hDlg, IDC_FORMATEDIT, buffer, MAX_FORMAT * 3);
+					strncpy(path.screenshotFormat, buffer, MAX_FORMAT * 3);
+					ANSIToUTF8(path.screenshotFormat, path.screenshotFormat);
 				}
 			}
 			break;

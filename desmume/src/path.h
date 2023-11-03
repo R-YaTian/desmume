@@ -88,7 +88,7 @@ public:
 	#define LASTVISITKEY	"lastVisit"
 	#define LUAKEY			L"Lua"
 	#define SLOT1DKEY		L"Slot1D"
-	char screenshotFormat[MAX_FORMAT];
+	char screenshotFormat[MAX_FORMAT * 3];
 	bool savelastromvisit;
 
 	enum KnownPath

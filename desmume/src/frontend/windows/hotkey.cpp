@@ -212,6 +212,7 @@ void HK_QuickScreenShot(int param, bool justPressed)
 	ZeroMemory(file, sizeof(file));
 	path.formatname(file);
 
+	UTF8ToANSI(file, file);
 	strcat(fname, file);
 	if( strlen(fname) > (MAX_PATH - 4))
 		fname[MAX_PATH - 4] = '\0';
