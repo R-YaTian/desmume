@@ -2772,8 +2772,9 @@ void NDS_Reset()
 		// Partially clobber the loaded firmware with user settings from the .dfc file.
 		std::string extFWUserSettingsString = CFIRMWARE::GetUserSettingsFilePath(CommonSettings.ExtFirmwarePath);
 		strncpy(CommonSettings.ExtFirmwareUserSettingsPath, extFWUserSettingsString.c_str(), MAX_PATH);
-		
+
 		extFirmwareObj->loadSettings(CommonSettings.ExtFirmwareUserSettingsPath);
+		NDS_CheckFirmwareWifiInfoWithAutoFix(&MMU.fw.data);
 	}
 	else
 	{

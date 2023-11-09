@@ -1,5 +1,6 @@
 /*
-	Copyright (C) 2009-2017 DeSmuME team
+	Copyright (C) 2009-2022 DeSmuME team
+	Copyright (C) 2023 R-YaTian
 
 	This file is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -35,7 +36,7 @@
 #include "utils/xstring.h"
 #include "winutil.h"
 
-static char Str_Tmp[1024];
+static wchar_t Str_Tmp[1024];
 
 LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static int s_archiveFileChooserResult = -1;
@@ -121,13 +122,11 @@ tryagain:
 		std::sort(files.begin(), files.end(), FileInfo::Sort);
 	}
 
-//protected:
-
 	struct FileInfo
 	{
 		std::string name;
 		int itemIndex;
-		
+
 		static bool Sort(const FileInfo& elem1, const FileInfo& elem2)
 		{
 			int comp = elem1.name.compare(elem2.name);
@@ -151,9 +150,7 @@ int ChooseItemFromArchive(ArchiveFile& archive, bool autoChooseIfOnly1, const ch
 	// check if there's nothing
 	if(info.files.size() < 1)
 	{
-//		DialogsOpen++;
 		MessageBox(GetArchiveParentHWND(), STRA(ID_BOX_MSG18).c_str(), STRA(ID_BOX_MSG19).c_str(), MB_OK | MB_ICONWARNING);
-//		DialogsOpen--;
 		return -1;
 	}
 
@@ -165,9 +162,6 @@ int ChooseItemFromArchive(ArchiveFile& archive, bool autoChooseIfOnly1, const ch
 	DialogBoxParam(hAppInst, MAKEINTRESOURCE(IDD_ARCHIVEFILECHOOSER), GetArchiveParentHWND(), (DLGPROC) ArchiveFileChooser,(LPARAM) &info);
 	return s_archiveFileChooserResult;
 }
-
-
-
 
 #define DEFAULT_EXTENSION ".tmp"
 #define DEFAULT_CATEGORY "desmume"
@@ -182,23 +176,23 @@ static struct TempFiles
 			if(!cat || !*cat) cat = DEFAULT_CATEGORY;
 			category = cat;
 
-			char tempPath [1024];
-			GetTempPath(1024, tempPath);
+			wchar_t tempPath[1024];
+			GetTempPathW(1024, tempPath);
 			//GetTempFileName(tempPath, cat, 0, filename, ext); // alas
 
-			char*const fname = tempPath + strlen(tempPath);
+			wchar_t* const fname = tempPath + wcslen(tempPath);
 			unsigned short start = (unsigned short)(timeGetTime() & 0xFFFF);
 			unsigned short n = start + 1;
 			while(n != start)
 			{
-				_snprintf(fname, 1024 - (fname - tempPath), "%s%04X%s", cat, n, ext);
-				FILE* file = fopen(tempPath, "wb");
+				_snwprintf(fname, 1024 - (fname - tempPath), L"%hs%04X%hs", cat, n, ext);
+				FILE* file = _wfopen(tempPath, L"wb");
 				if(file)
 				{
 					// mark the temporary file as read-only and (whatever this does) temporary
-					DWORD attributes = GetFileAttributes(tempPath);
+					DWORD attributes = GetFileAttributesW(tempPath);
 					attributes |= FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_TEMPORARY;
-					SetFileAttributes(tempPath, attributes);
+					SetFileAttributesW(tempPath, attributes);
 
 					fclose(file);
 
@@ -209,7 +203,7 @@ static struct TempFiles
 				}
 				n++;
 			}
-			strcpy(filename, tempPath);
+			strcpy(filename, wcstombs((std::wstring)tempPath).c_str());
 		}
 		TemporaryFile(const TemporaryFile& copy)
 		{
@@ -226,16 +220,21 @@ static struct TempFiles
 			if(!*filename)
 				return true; // guess it already didn't exist
 
+			wchar_t unicode_fname[1024];
+			UTF8ToUTF16(filename, unicode_fname);
+
 			// remove read-only attribute so Windows will let us delete it
 			// (our temporary files are read-only to discourage other apps from tampering)
-			DWORD attributes = GetFileAttributes(filename);
+			DWORD attributes = GetFileAttributesW(unicode_fname);
 			if(attributes & FILE_ATTRIBUTE_READONLY)
-				SetFileAttributes(filename, attributes & ~FILE_ATTRIBUTE_READONLY);
+				SetFileAttributesW(unicode_fname, attributes & ~FILE_ATTRIBUTE_READONLY);
 
-			if(_unlink(filename) == 0 || errno != EACCES)
+			char ansi_buf[1024];
+			UTF8ToANSI(filename, ansi_buf); // I think _unlink func only support ANSI?
+			if(_unlink(ansi_buf) == 0 || errno != EACCES)
 			{
 				// remove it from our registry of files that need to be deleted, to reduce accumulation
-				bool removed = TempFiles::RemoveEntryFromGarbageRegistry(filename);
+				bool removed = TempFiles::RemoveEntryFromGarbageRegistry(unicode_fname);
 
 				*filename = '\0';
 				return removed || !returnFalseOnRegistryRemovalFailure; // successfully deleted or already didn't exist, return true unless registry removal failure notification was requested and that failed
@@ -243,11 +242,11 @@ static struct TempFiles
 
 			// restore read-only if we couldn't delete it (not sure if this ever succeeds or matters though)
 			if(attributes & FILE_ATTRIBUTE_READONLY)
-				SetFileAttributes(filename, attributes);
+				SetFileAttributesW(unicode_fname, attributes);
 
 			return false; // failed to delete read-only or in-use file
 		}
-		char filename [MAX_PATH];
+		char filename[1024];
 		std::string category;
 	};
 
@@ -303,38 +302,38 @@ static struct TempFiles
 		TempFiles::CleanOutGarbageRegistry();
 	}
 
-	static void AddEntryToGarbageRegistry(const char* filename)
+	static void AddEntryToGarbageRegistry(const wchar_t* filename)
 	{
-		char gbgFile[1024];
-		GetTempPath(1024, gbgFile);
-		strcat(gbgFile, "DesmumeTempFileRecords");
-		char key[64];
+		wchar_t gbgFile[1024];
+		GetTempPathW(1024, gbgFile);
+		wcscat(gbgFile, L"DesmumeTempFileRecords");
+		wchar_t key[64];
 		int i = 0;
 		while(true)
 		{
-			sprintf(key, "File%d", i);
-			GetPrivateProfileString("Files", key, "", Str_Tmp, 1024, gbgFile);
+			swprintf(key, L"File%d", i);
+			GetPrivateProfileStringW(L"Files", key, L"", Str_Tmp, 1024, gbgFile);
 			if(!*Str_Tmp)
 				break;
 			i++;
 		}
-		WritePrivateProfileString("Files", key, filename, gbgFile);
+		WritePrivateProfileStringW(L"Files", key, filename, gbgFile);
 	}
-	static bool RemoveEntryFromGarbageRegistry(const char* filename)
+	static bool RemoveEntryFromGarbageRegistry(const wchar_t* filename)
 	{
-		char gbgFile[1024];
-		GetTempPath(1024, gbgFile);
-		strcat(gbgFile, "DesmumeTempFileRecords");
-		char key[64];
+		wchar_t gbgFile[1024];
+		GetTempPathW(1024, gbgFile);
+		wcscat(gbgFile, L"DesmumeTempFileRecords");
+		wchar_t key[64];
 		int i = 0;
 		int deleteSlot = -1;
 		while(true)
 		{
-			sprintf(key, "File%d", i);
-			GetPrivateProfileString("Files", key, "", Str_Tmp, 1024, gbgFile);
+			swprintf(key, L"File%d", i);
+			GetPrivateProfileStringW(L"Files", key, L"", Str_Tmp, 1024, gbgFile);
 			if(!*Str_Tmp)
 				break;
-			if(!strcmp(Str_Tmp, filename))
+			if(!wcscmp(Str_Tmp, filename))
 				deleteSlot = i;
 			i++;
 		}
@@ -343,37 +342,42 @@ static struct TempFiles
 		{
 			if(i != deleteSlot)
 			{
-				sprintf(key, "File%d", i);
-				GetPrivateProfileString("Files", key, "", Str_Tmp, 1024, gbgFile);
-				sprintf(key, "File%d", deleteSlot);
-				WritePrivateProfileString("Files", key, Str_Tmp, gbgFile);
+				swprintf(key, L"File%d", i);
+				GetPrivateProfileStringW(L"Files", key, L"", Str_Tmp, 1024, gbgFile);
+				swprintf(key, L"File%d", deleteSlot);
+				WritePrivateProfileStringW(L"Files", key, Str_Tmp, gbgFile);
 			}
-			sprintf(key, "File%d", i);
-			if(0 == WritePrivateProfileString("Files", key, NULL, gbgFile))
+			swprintf(key, L"File%d", i);
+			if(0 == WritePrivateProfileStringW(L"Files", key, NULL, gbgFile))
 				return false;
 		}
-		if(i <= 0 && deleteSlot == 0)
-			_unlink(gbgFile);
+		if (i <= 0 && deleteSlot == 0)
+		{
+			char ansi_buf[1024];
+			int nRetLen = WideCharToMultiByte(CP_ACP, 0, gbgFile, -1, NULL, 0, NULL, NULL);
+			WideCharToMultiByte(CP_ACP, 0, gbgFile, -1, ansi_buf, nRetLen, NULL, NULL);
+			_unlink(ansi_buf);
+		}
 		return true;
 	}
 
 private:
 	static void CleanOutGarbageRegistry()
 	{
-		char gbgFile[1024 + 48];
-		GetTempPath(1024, gbgFile);
-		strcat(gbgFile, "DesmumeTempFileRecords");
+		wchar_t gbgFile[1024 + 64];
+		GetTempPathW(1024, gbgFile);
+		wcscat(gbgFile, L"DesmumeTempFileRecords");
 
-		char key[64];
+		wchar_t key[64];
 		int i = 0;
 		while(true)
 		{
-			sprintf(key, "File%d", i);
-			GetPrivateProfileString("Files", key, "", Str_Tmp, 1024, gbgFile);
+			swprintf(key, L"File%d", i);
+			GetPrivateProfileStringW(L"Files", key, L"", Str_Tmp, 1024, gbgFile);
 			if(!*Str_Tmp)
 				break;
 			TemporaryFile temp;
-			strcpy(temp.filename, Str_Tmp);
+			strcpy(temp.filename, wcstombs((std::wstring) Str_Tmp).c_str());
 			if(!temp.Delete(true))
 				i++;
 		}
@@ -395,7 +399,6 @@ void ReleaseTempFileCategory(const char* cat, const char* exceptionFilename)
 	if(!cat || !*cat) cat = DEFAULT_CATEGORY;
 	s_tempFiles.ReleaseCategory(cat, exceptionFilename);
 }
-
 
 
 // example input Name:          "C:\games.zip"
@@ -485,7 +488,6 @@ bool ObtainFile(const char* Name, char *const & LogicalName, char *const & Physi
 }
 
 
-
 struct ControlLayoutInfo
 {
 	int controlID;
@@ -499,6 +501,7 @@ struct ControlLayoutInfo
 	LayoutType horizontalLayout;
 	LayoutType verticalLayout;
 };
+
 struct ControlLayoutState
 {
 	int x,y,width,height;
@@ -511,11 +514,10 @@ static ControlLayoutInfo controlLayoutInfos [] = {
 	{IDOK,      ControlLayoutInfo::MOVE_START, ControlLayoutInfo::MOVE_START},
 	{IDCANCEL, ControlLayoutInfo::MOVE_START, ControlLayoutInfo::MOVE_START},
 };
-static const int numControlLayoutInfos = sizeof(controlLayoutInfos)/sizeof(*controlLayoutInfos);
 
+static const int numControlLayoutInfos = sizeof(controlLayoutInfos)/sizeof(*controlLayoutInfos);
 static ControlLayoutState s_layoutState [numControlLayoutInfos];
 static int s_windowWidth = 182, s_windowHeight = 113;
-
 
 LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -527,15 +529,6 @@ LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
 	{
 		case WM_INITDIALOG:
 		{
-//			DialogsOpen++;
-//			Clear_Sound_Buffer();
-			
-//			if(Full_Screen)
-//			{
-//				while (ShowCursor(false) >= 0);
-//				while (ShowCursor(true) < 0);
-//			}
-
 			GetWindowRect(MainWindow->getHWnd(), &r);
 			dx1 = (r.right - r.left) / 2;
 			dy1 = (r.bottom - r.top) / 2;
@@ -547,13 +540,13 @@ LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
 			//SetWindowPos(hDlg, NULL, max(0, r.left + (dx1 - dx2)), max(0, r.top + (dy1 - dy2)), NULL, NULL, SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW);
 			SetWindowPos(hDlg, NULL, r.left, r.top, NULL, NULL, SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW);
 
-			ArchiveFileChooserInfo& info = *(ArchiveFileChooserInfo*)lParam;
+			ArchiveFileChooserInfo& info = *(ArchiveFileChooserInfo*) lParam;
 			std::vector<ArchiveFileChooserInfo::FileInfo>& files = info.files;
 			ArchiveFile& archive = info.archive;
 
-			std::string title = "Choose File in ";
+			std::string title = STRA(ID_DLG_STR35);
 			title += archive.GetArchiveTypeName();
-			title += " Archive";
+			title += STRA(ID_DLG_STR36);
 			SetWindowText(hDlg, title.c_str());
 
 			// populate list
@@ -677,24 +670,12 @@ LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
 					int listIndex = SendDlgItemMessage(hDlg, IDC_LIST1, LB_GETCURSEL, (WPARAM) 0, (LPARAM) 0);
 					s_archiveFileChooserResult = s_listToItemsMap[listIndex];
 					s_listToItemsMap.clear();
-//					if(Full_Screen)
-//					{
-//						while (ShowCursor(true) < 0);
-//						while (ShowCursor(false) >= 0);
-//					}
-//					DialogsOpen--;
 					EndDialog(hDlg, false);
 				}	return TRUE;
 
 				case IDCANCEL:
 					s_archiveFileChooserResult = -1;
 					s_listToItemsMap.clear();
-//					if(Full_Screen)
-//					{
-//						while (ShowCursor(true) < 0);
-//						while (ShowCursor(false) >= 0);
-//					}
-//					DialogsOpen--;
 					EndDialog(hDlg, false);
 					return TRUE;
 			}
@@ -702,12 +683,6 @@ LRESULT CALLBACK ArchiveFileChooser(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM 
 		case WM_CLOSE:
 			s_archiveFileChooserResult = -1;
 			s_listToItemsMap.clear();
-//			if(Full_Screen)
-//			{
-//				while (ShowCursor(true) < 0);
-//				while (ShowCursor(false) >= 0);
-//			}
-//			DialogsOpen--;
 			EndDialog(hDlg, false);
 			return TRUE;
 	}

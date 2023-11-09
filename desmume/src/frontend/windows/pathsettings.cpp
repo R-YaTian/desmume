@@ -153,12 +153,12 @@ BOOL PathSettings_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	CheckRadioButton(hDlg, IDC_R4TYPE1, IDC_R4TYPE2, r4TypeMap[(int)path.r4Format]);
 
 // IDC_FORMATEDIT setup
-	char format_buffer[MAX_FORMAT];
-	UTF8ToANSI(path.screenshotFormat, format_buffer);
-	SetDlgItemText(hDlg, IDC_FORMATEDIT, format_buffer);
+	wchar_t format_buffer[MAX_FORMAT];
+	UTF8ToUTF16(path.screenshotFormat, format_buffer);
+	SetDlgItemTextW(hDlg, IDC_FORMATEDIT, format_buffer);
 
 	hwnd = GetDlgItem(hDlg, IDC_FORMATEDIT);
-	Edit_LimitText(hwnd, 20);
+	Edit_LimitText(hwnd, MAX_FORMAT - 1);
 
 	HWND toolTip = CreateWindowExW(NULL, 
 		TOOLTIPS_CLASSW, NULL, 
@@ -326,7 +326,7 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 				CheckDlgButton(hDlg, IDC_USELASTVISIT, BST_CHECKED);
 				CheckDlgButton(hDlg, IDC_ASSOCIATE, BST_UNCHECKED);
 				CheckRadioButton(hDlg, IDC_PNG, IDC_BMP, IDC_PNG);
-				SetDlgItemText(hDlg, IDC_FORMATEDIT, "%f_%t_%r");
+				SetDlgItemTextW(hDlg, IDC_FORMATEDIT, L"%f_%t_%r");
 				CheckRadioButton(hDlg, IDC_R4TYPE1, IDC_R4TYPE2, IDC_R4TYPE2);
 				CheckDlgButton(hDlg, IDC_AUTOLOADLUA, BST_UNCHECKED);
 				associate = false;
@@ -360,10 +360,9 @@ void PathSettings_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify)
 			{
 				if(codeNotify == EN_KILLFOCUS)
 				{
-					char buffer[MAX_FORMAT];
-					GetDlgItemText(hDlg, IDC_FORMATEDIT, buffer, MAX_FORMAT);
-					strncpy(path.screenshotFormat, buffer, MAX_FORMAT);
-					ANSIToUTF8(path.screenshotFormat, path.screenshotFormat);
+					wchar_t buffer[MAX_FORMAT];
+					GetDlgItemTextW(hDlg, IDC_FORMATEDIT, buffer, MAX_FORMAT);
+					UTF16ToUTF8(buffer, path.screenshotFormat);
 				}
 			}
 			break;

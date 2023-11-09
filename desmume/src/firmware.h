@@ -1,5 +1,6 @@
 /*
 	Copyright (C) 2009-2022 DeSmuME Team
+	Copyright (C) 2023 R-YaTian
 
 	This file is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -380,20 +381,20 @@ typedef struct
 
 typedef union
 {
-	u8 _raw[262144];
-	
+	u8 _raw[NDS_FW_SIZE_V2];
+
 	struct
 	{
 		FWHeader header;
 		FWWifiInfo wifiInfo;
-		
+
 		union
 		{
 			struct
 			{
 				u8 codeAndData[260096];
 			} nds;
-			
+
 			struct
 			{
 				u8 zeroBuffer[255];
@@ -406,17 +407,36 @@ typedef union
 				u8 UNKNOWN1[131072];
 			} dsi;
 		};
-		
-		FWAccessPointSettings wifiAP1;
-		FWAccessPointSettings wifiAP2;
-		FWAccessPointSettings wifiAP3;
-		
-		u8 unused[256];
-		
-		FWUserSettings userSettings0;
-		FWUserSettings userSettings1;
+
+		union
+		{
+			struct
+			{
+				FWAccessPointSettings wifiAP1;
+				FWAccessPointSettings wifiAP2;
+				FWAccessPointSettings wifiAP3;
+
+				u8 unused[256];
+
+				FWUserSettings userSettings0;
+				FWUserSettings userSettings1;
+			} fw256;
+
+			struct
+			{
+				u8 extraFontData[262144];
+
+				FWAccessPointSettings wifiAP1;
+				FWAccessPointSettings wifiAP2;
+				FWAccessPointSettings wifiAP3;
+
+				u8 unused[256];
+
+				FWUserSettings userSettings0;
+				FWUserSettings userSettings1;
+			} fw512;
+		};
 	};
-	
 } NDSFirmwareData;
 #include "PACKED_END.h"
 
@@ -464,6 +484,8 @@ bool NDS_ApplyFirmwareSettingsWithFile(NDSFirmwareData *outFirmware, const char 
 void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const FirmwareConfig &inConfig);
 void NDS_InitDefaultFirmware(NDSFirmwareData *outFirmware);
 bool NDS_ReadFirmwareDataFromFile(const char *fileName, NDSFirmwareData *outFirmware, size_t *outFileSize, int *outConsoleType, u8 *outMACAddr);
+void NDS_CheckFirmwareWifiInfoWithAutoFix(NDSFirmwareData* outFirmware);
+void NDS_RubuildWifiInfoWithInitValue(FWWifiInfo* wifiInfo);
 
 struct fw_memory_chip
 {
@@ -473,13 +495,13 @@ struct fw_memory_chip
 	u8 addr_size;    //size of addr when writing/reading
 
 	BOOL write_enable;	//is write enabled ?
-	
+
 	NDSFirmwareData data;
-	
+
 	u32 size;       //memory size
 	BOOL writeable_buffer;	//is "data" writeable ?
 	int type; //type of Memory
-	
+
 	// needs only for firmware
 	bool isFirmware;
 };
@@ -489,8 +511,8 @@ void fw_reset_com(fw_memory_chip *mc);
 u8 fw_transfer(fw_memory_chip *mc, u8 data);
 void mc_init(fw_memory_chip *mc, int type);    /* reset and init values for memory struct */
 u8 *mc_alloc(fw_memory_chip *mc, u32 size);  /* alloc mc memory */
-void mc_realloc(fw_memory_chip *mc, int type, u32 size);      /* realloc mc memory */
-void mc_load_file(fw_memory_chip *mc, const char* filename); /* load save file and setup fp */
+//void mc_realloc(fw_memory_chip *mc, int type, u32 size);      /* realloc mc memory */
+//void mc_load_file(fw_memory_chip *mc, const char* filename); /* load save file and setup fp */
 void mc_free(fw_memory_chip *mc);    /* delete mc memory */
 
 #endif

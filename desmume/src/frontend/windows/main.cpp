@@ -2482,24 +2482,24 @@ int _main()
 		* Read in the nickname and message.
 		* Convert the strings into Unicode UTF-16 characters.
 		*/
-		char temp_str[27];
+		char temp_str[79];
+		wchar_t unicode_str[27];
 		int char_index;
-		GetPrivateProfileString("Firmware","nickName", "yopyop", temp_str, 11, IniName);
-		CommonSettings.fwConfig.nicknameLength = strlen( temp_str);
-
-		if (CommonSettings.fwConfig.nicknameLength == 0) {
-			strcpy( temp_str, "yopyop");
-			CommonSettings.fwConfig.nicknameLength = strlen( temp_str);
+		GetPrivateProfileString("Firmware", "nickName", "yopyop", temp_str, 31, IniName);
+		if (strlen(temp_str) == 0) {
+			strcpy(temp_str, "yopyop");
+		}
+		UTF8ToUTF16(temp_str, unicode_str);
+		CommonSettings.fwConfig.nicknameLength = wcslen(unicode_str);
+		for (char_index = 0; char_index < CommonSettings.fwConfig.nicknameLength; char_index++) {
+			CommonSettings.fwConfig.nickname[char_index] = unicode_str[char_index];
 		}
 
-		for ( char_index = 0; char_index < CommonSettings.fwConfig.nicknameLength; char_index++) {
-			CommonSettings.fwConfig.nickname[char_index] = temp_str[char_index];
-		}
-
-		GetPrivateProfileString("Firmware","Message", defaultMessage, temp_str, 27, IniName);
-		CommonSettings.fwConfig.messageLength = strlen( temp_str);
-		for ( char_index = 0; char_index < CommonSettings.fwConfig.messageLength; char_index++) {
-			CommonSettings.fwConfig.message[char_index] = temp_str[char_index];
+		GetPrivateProfileString("Firmware", "Message", defaultMessage, temp_str, 79, IniName);
+		UTF8ToUTF16(temp_str, unicode_str);
+		CommonSettings.fwConfig.messageLength = wcslen(unicode_str);
+		for (char_index = 0; char_index < CommonSettings.fwConfig.messageLength; char_index++) {
+			CommonSettings.fwConfig.message[char_index] = unicode_str[char_index];
 		}
 
 		GetPrivateProfileString("Firmware", "macAddress", defaultMacAddressStr, temp_str, 13, IniName);

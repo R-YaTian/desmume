@@ -1215,6 +1215,8 @@ BEGIN
     ID_DLG_STR32            "选择一个目录用于创建 FAT 镜像"
     ID_DLG_STR33            "选择存放有游戏文件的目录"
     ID_DLG_STR34            "选择一个目录用于构建 R4 FAT 镜像"
+    ID_DLG_STR35            "选择位于 "
+    ID_DLG_STR36            " 压缩包中的文件"
 END
 
 #endif    // 中文(简体，中国) resources

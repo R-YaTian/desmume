@@ -5091,7 +5091,7 @@ size_t WifiHandler::ConvertDataFrame80211To8023(const u8* inIEEE80211Frame, cons
 	// Ensure that the incoming 802.11 frame is a STA-to-DS data frame with a LLC/SNAP header.
 	if((fc.Type != WifiFrameType_Data) ||
 		(fc.FromToState != WifiFCFromToState_STA2DS) ||
-		!WIFI_IsLLCSNAPHeader(inIEEE80211Frame + sizeof(WifiDataFrameHeaderSTA2DS)))
+		!WIFI_IsLLCSNAPHeader(inIEEE80211Frame + sizeof(WifiDataFrameHeaderSTA2DS)) || outIEEE8023Frame == NULL)
 	{
 		return sendPacketSize;
 	}
