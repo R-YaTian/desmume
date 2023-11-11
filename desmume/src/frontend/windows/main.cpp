@@ -6383,11 +6383,10 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 			}
 			else
 			{
-				ComboBox_AddString(deviceMenu, "Error: Could not load WinPcap.");
+				ComboBox_AddString(deviceMenu, "Error: Could not load nPcap.");
 			}
 			ComboBox_SetCurSel(deviceMenu, curSel);
 			EnableWindow(deviceMenu, enableWin);
-			
 		}
 		return TRUE;
 
