@@ -170,8 +170,7 @@ int NDS_Init()
 	if (SPU_Init(SNDCORE_DUMMY, 740) != 0)
 		return -1;
 	
-	delete wifiHandler;
-	wifiHandler = new WifiHandler;
+	WIFI_Init();
 
 	cheats = new CHEATS();
 	cheatSearch = new CHEATSEARCH();
@@ -189,8 +188,7 @@ void NDS_DeInit(void)
 	
 	MMU_DeInit();
 	
-	delete wifiHandler;
-	wifiHandler = NULL;
+	WIFI_DeInit();
 	
 	delete cheats;
 	cheats = NULL;
@@ -572,9 +570,9 @@ bool GameInfo::loadROM(std::string fname, u32 type)
 
 void GameInfo::closeROM()
 {
-	if (wifiHandler != NULL)
-		wifiHandler->CommStop();
-	
+	//if (wifiHandler != NULL)
+		//wifiHandler->CommStop();
+
 	if (GPU != NULL)
 		GPU->ForceFrameStop();
 	
@@ -1359,16 +1357,13 @@ void Sequencer::init()
 	dma_1_1.controller = &MMU_new.dma[1][1];
 	dma_1_2.controller = &MMU_new.dma[1][2];
 	dma_1_3.controller = &MMU_new.dma[1][3];
-	
-	if (wifiHandler->GetCurrentEmulationLevel() != WifiEmulationLevel_Off)
-	{
-		wifi.enabled = true;
-		wifi.timestamp = kWifiCycles;
-	}
-	else
-	{
-		wifi.enabled = false;
-	}
+
+#ifdef EXPERIMENTAL_WIFI_COMM
+	wifi.enabled = true;
+	wifi.timestamp = kWifiCycles;
+#else
+	wifi.enabled = false;
+#endif
 }
 
 static void execHardware_hblank()
@@ -1739,15 +1734,14 @@ void Sequencer::execHardware()
 		}
 	}
 
-	if (wifiHandler->GetCurrentEmulationLevel() != WifiEmulationLevel_Off)
+#ifdef EXPERIMENTAL_WIFI_COMM
+	if (wifi.isTriggered())
 	{
-		if (wifi.isTriggered())
-		{
-			wifiHandler->CommTrigger();
-			wifi.timestamp += kWifiCycles;
-		}
+		WIFI_usTrigger();
+		wifi.timestamp += kWifiCycles;
 	}
-	
+#endif
+
 	if(divider.isTriggered()) divider.exec();
 	if(sqrtunit.isTriggered()) sqrtunit.exec();
 	if(gxfifo.isTriggered()) gxfifo.exec();
@@ -2797,8 +2791,8 @@ void NDS_Reset()
 
 	GPU->Reset();
 
-	wifiHandler->Reset();
-	wifiHandler->CommStart();
+	WIFI_Reset();
+	memcpy(FW_Mac, MMU.fw.data._raw + 0x36, 6);
 
 	SPU_DeInit();
 	SPU_ReInit(!willBootFromFirmware && bootResult);
@@ -3203,8 +3197,8 @@ void emu_halt(EmuHaltReasonCode reasonCode, NDSErrorTag errorTag)
 	}
 	
 	NDS_CurrentCPUInfoToNDSError(_lastNDSError);
-	
-	wifiHandler->CommStop();
+
+	//wifiHandler->CommStop();
 	GPU->ForceFrameStop();
 	execute = false;
 	

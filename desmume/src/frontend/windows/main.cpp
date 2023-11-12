@@ -474,55 +474,6 @@ public:
 	}
 };
 
-class WinPCapInterface : public ClientPCapInterface
-{
-public:
-	virtual int findalldevs(void **alldevs, char *errbuf)
-	{
-		return _pcap_findalldevs((pcap_if_t **)alldevs, errbuf);
-	}
-
-	virtual void freealldevs(void *alldevs)
-	{
-		_pcap_freealldevs((pcap_if_t *)alldevs);
-	}
-
-	virtual void* open(const char *source, int snaplen, int flags, int readtimeout, char *errbuf)
-	{
-		return _pcap_open_live(source, snaplen, flags, readtimeout, errbuf);
-	}
-
-	virtual void close(void *dev)
-	{
-		_pcap_close((pcap_t *)dev);
-	}
-
-	virtual int setnonblock(void *dev, int nonblock, char *errbuf)
-	{
-		return _pcap_setnonblock((pcap_t *)dev, nonblock, errbuf);
-	}
-
-	virtual int sendpacket(void *dev, const void *data, int len)
-	{
-		return _pcap_sendpacket((pcap_t *)dev, (u_char *)data, len);
-	}
-
-	virtual int dispatch(void *dev, int num, void *callback, void *userdata)
-	{
-		if (callback == NULL)
-		{
-			return -1;
-		}
-
-		return _pcap_dispatch((pcap_t *)dev, num, (pcap_handler)callback, (u_char *)userdata);
-	}
-	
-	virtual void breakloop(void *dev)
-	{
-		_pcap_breakloop((pcap_t *)dev);
-	}
-};
-
 GPUEventHandlerWindows *WinGPUEvent = NULL;
 
 LRESULT CALLBACK HUDFontSettingsDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp);
@@ -1737,6 +1688,34 @@ static void ExitRunLoop()
 
 class WinDriver : public BaseDriver
 {
+	virtual int PCAP_findalldevs(pcap_if_t** alldevs, char* errbuf) {
+		return _pcap_findalldevs(alldevs, errbuf);
+	}
+
+	virtual void PCAP_freealldevs(pcap_if_t* alldevs) {
+		_pcap_freealldevs(alldevs);
+	}
+
+	virtual pcap_t* PCAP_open(const char* source, int snaplen, int flags, int readtimeout, char* errbuf) {
+		return _pcap_open_live(source, snaplen, flags, readtimeout, errbuf);
+	}
+
+	virtual void PCAP_close(pcap_t* dev) {
+		_pcap_close(dev);
+	}
+
+	virtual int PCAP_setnonblock(pcap_t* dev, int nonblock, char* errbuf) {
+		return _pcap_setnonblock(dev, nonblock, errbuf);
+	}
+
+	virtual int PCAP_sendpacket(pcap_t* dev, const u_char* data, int len) {
+		return _pcap_sendpacket(dev, data, len);
+	}
+
+	virtual int PCAP_dispatch(pcap_t* dev, int num, pcap_handler callback, u_char* userdata) {
+		return _pcap_dispatch(dev, num, callback, userdata);
+	}
+
 	virtual bool AVI_IsRecording()
 	{
 		return ::AVI_IsRecording();
@@ -2304,20 +2283,20 @@ int _main()
 
 	GPU->SetEventHandler(WinGPUEvent);
 
-	WinPCapInterface *winpcapInterface = (isPCapSupported) ? new WinPCapInterface : NULL;
-	wifiHandler->SetPCapInterface(winpcapInterface);
-	wifiHandler->SetSocketsSupported(isSocketsSupported);
-	wifiHandler->SetBridgeDeviceIndex(CommonSettings.WifiBridgeDeviceID);
+	//WinPCapInterface *winpcapInterface = (isPCapSupported) ? new WinPCapInterface : NULL;
+	//wifiHandler->SetPCapInterface(winpcapInterface);
+	//wifiHandler->SetSocketsSupported(isSocketsSupported);
+	//wifiHandler->SetBridgeDeviceIndex(CommonSettings.WifiBridgeDeviceID);
 
 	if (GetPrivateProfileBool("Wifi", "Enabled", false, IniName))
 	{
-		if (GetPrivateProfileBool("Wifi", "Compatibility Mode", false, IniName))
-			wifiHandler->SetEmulationLevel(WifiEmulationLevel_Compatibility);
-		else
-			wifiHandler->SetEmulationLevel(WifiEmulationLevel_Normal);
+		//if (GetPrivateProfileBool("Wifi", "Compatibility Mode", false, IniName))
+			//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Compatibility);
+		//else
+			//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Normal);
 	}
-	else
-		wifiHandler->SetEmulationLevel(WifiEmulationLevel_Off);
+	//else
+		//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Off);
 	
 	CommonSettings.GFX3D_Renderer_TextureScalingFactor = (cmdline.texture_upscale != -1) ? cmdline.texture_upscale : GetValid3DIntSetting("TextureScalingFactor", 1, possibleTexScale, 3);
 	int newPrescaleHD = (cmdline.gpu_resolution_multiplier != -1) ? cmdline.gpu_resolution_multiplier : GetPrivateProfileInt("3D", "PrescaleHD", 1, IniName);
@@ -2560,7 +2539,7 @@ int _main()
     gdbstub_mutex_destroy();
 #endif
 	
-	if (wifiHandler->IsSocketsSupported())
+	//if (wifiHandler->IsSocketsSupported())
 	{
 		WSACleanup();
 	}
@@ -6323,23 +6302,23 @@ LRESULT CALLBACK MicrophoneSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, 
 
 LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	const bool isPCapSupported = wifiHandler->IsPCapSupported();
-	const WifiEmulationLevel emulationLevel = wifiHandler->GetSelectedEmulationLevel();
+	//const bool isPCapSupported = wifiHandler->IsPCapSupported();
+	//const WifiEmulationLevel emulationLevel = wifiHandler->GetSelectedEmulationLevel();
 
 	switch(uMsg)
 	{
 	case WM_INITDIALOG:
 		{
 #ifdef EXPERIMENTAL_WIFI_COMM
-			if (emulationLevel != WifiEmulationLevel_Off)
+			//if (emulationLevel != WifiEmulationLevel_Off)
 			{
 				CheckDlgItem(hDlg, IDC_WIFI_ENABLED, TRUE);
-				CheckDlgItem(hDlg, IDC_WIFI_COMPAT, (emulationLevel == WifiEmulationLevel_Compatibility));
+				CheckDlgItem(hDlg, IDC_WIFI_COMPAT, 1);
 			}
-			else
+			//else
 			{
-				CheckDlgItem(hDlg, IDC_WIFI_ENABLED, FALSE);
-				CheckDlgItem(hDlg, IDC_WIFI_COMPAT, GetPrivateProfileBool("Wifi", "Compatibility Mode", FALSE, IniName));
+				//CheckDlgItem(hDlg, IDC_WIFI_ENABLED, FALSE);
+				//CheckDlgItem(hDlg, IDC_WIFI_COMPAT, GetPrivateProfileBool("Wifi", "Compatibility Mode", FALSE, IniName));
 			}
 #else
 			CheckDlgItem(hDlg, IDC_WIFI_ENABLED, FALSE);
@@ -6347,7 +6326,9 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 			EnableWindow(GetDlgItem(hDlg, IDC_WIFI_ENABLED), FALSE);
 			EnableWindow(GetDlgItem(hDlg, IDC_WIFI_COMPAT), FALSE);
 #endif
-
+			char errbuf[PCAP_ERRBUF_SIZE];
+			pcap_if_t* alldevs;
+			pcap_if_t* d;
 			HWND deviceMenu = GetDlgItem(hDlg, IDC_BRIDGEADAPTER);
 			int menuItemCount = ComboBox_GetCount(deviceMenu);
 			std::vector<std::string> deviceStringList;
@@ -6359,31 +6340,35 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 				ComboBox_DeleteString(deviceMenu, 0);
 			}
 
-			if (isPCapSupported)
+			//if (isPCapSupported)
 			{
-				int deviceCount = wifiHandler->GetBridgeDeviceList(&deviceStringList);
+				int deviceCount = driver->PCAP_findalldevs(&alldevs, errbuf);
 
 				if (deviceCount < 0)
 				{
 					ComboBox_AddString(deviceMenu, "Error: Searching for a device failed.");
 				}
-				else if (deviceCount == 0)
-				{
-					ComboBox_AddString(deviceMenu, "No devices were found.");
-				}
 				else
 				{
-					for (size_t i = 0; i < deviceCount; i++)
+					int i;
+					for (i = 0, d = alldevs; d != NULL; i++, d = d->next)
 					{
-						ComboBox_AddString(deviceMenu, deviceStringList[i].c_str());
+						char buf[256] = { 0 };
+						// on x64 description is empty
+						if (d->description[0] == 0)
+							strcpy(buf, d->name);
+						else
+							strcpy(buf, d->description);
+
+						ComboBox_AddString(deviceMenu, buf);
 					}
 					curSel = CommonSettings.WifiBridgeDeviceID;
 					enableWin = TRUE;
 				}
 			}
-			else
+			//else
 			{
-				ComboBox_AddString(deviceMenu, "Error: Could not load nPcap.");
+				//ComboBox_AddString(deviceMenu, "Error: Could not load nPcap.");
 			}
 			ComboBox_SetCurSel(deviceMenu, curSel);
 			EnableWindow(deviceMenu, enableWin);
@@ -6405,13 +6390,13 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 #ifdef EXPERIMENTAL_WIFI_COMM
 					if (IsDlgCheckboxChecked(hDlg, IDC_WIFI_ENABLED))
 					{
-						if (IsDlgCheckboxChecked(hDlg, IDC_WIFI_COMPAT))
-							wifiHandler->SetEmulationLevel(WifiEmulationLevel_Compatibility);
-						else
-							wifiHandler->SetEmulationLevel(WifiEmulationLevel_Normal);
+						//if (IsDlgCheckboxChecked(hDlg, IDC_WIFI_COMPAT))
+							//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Compatibility);
+						//else
+							//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Normal);
 					}
-					else
-						wifiHandler->SetEmulationLevel(WifiEmulationLevel_Off);
+					//else
+						//wifiHandler->SetEmulationLevel(WifiEmulationLevel_Off);
 
 					WritePrivateProfileBool("Wifi", "Enabled", IsDlgCheckboxChecked(hDlg, IDC_WIFI_ENABLED), IniName);
 					WritePrivateProfileBool("Wifi", "Compatibility Mode", IsDlgCheckboxChecked(hDlg, IDC_WIFI_COMPAT), IniName);
@@ -6421,7 +6406,7 @@ LRESULT CALLBACK WifiSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 
 					cur = GetDlgItem(hDlg, IDC_BRIDGEADAPTER);
 					CommonSettings.WifiBridgeDeviceID = ComboBox_GetCurSel(cur);
-					wifiHandler->SetBridgeDeviceIndex(CommonSettings.WifiBridgeDeviceID);
+					//wifiHandler->SetBridgeDeviceIndex(CommonSettings.WifiBridgeDeviceID);
 					WritePrivateProfileInt("Wifi", "BridgeAdapter", CommonSettings.WifiBridgeDeviceID, IniName);
 
 					if(val == IDYES)
