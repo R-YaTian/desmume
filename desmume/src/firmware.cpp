@@ -1012,6 +1012,7 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 		return;
 
 	bool extFWValid = CommonSettings.UseExtFirmware && extFirmwareObj != NULL && extFirmwareObj->isLoaded();
+	bool isBadDump = false;
 
 	FW_HEADER_KEY headerKey = outFirmware->header.key;
 	FWWifiInfo wifiInfo = outFirmware->wifiInfo;
@@ -1109,6 +1110,7 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 	{
 		printf("Ext. Firmware: (Warning) Invalid wifiInfo found, now try to rebuild it, may have issues...\n");
 		NDS_RubuildWifiInfoWithInitValue(&wifiInfo);
+		isBadDump = true;
 	}
 
 	// MAC address
@@ -1140,7 +1142,7 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 	// WiFi profiles
 	if ( ((*(u32 *)inConfig.ipv4Address_AP1 != 0) && (*(u32 *)inConfig.ipv4Gateway_AP1 != 0) && (inConfig.subnetMask_AP1 != 0)) ||
 		  (*(u32 *)inConfig.ipv4PrimaryDNS_AP1 != 0) ||
-		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP1 != 0) )
+		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP1 != 0) || isBadDump)
 	{
 		wifiAP1.SSID[0] = 'S';
 		wifiAP1.SSID[1] = 'o';
@@ -1148,6 +1150,8 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 		wifiAP1.SSID[3] = 't';
 		wifiAP1.SSID[4] = 'A';
 		wifiAP1.SSID[5] = 'P';
+		wifiAP1.SSID[6] = '\0';
+		wifiAP1.wepMode = 0;
 		wifiAP1.ipv4Address[0] = inConfig.ipv4Address_AP1[0];
 		wifiAP1.ipv4Address[1] = inConfig.ipv4Address_AP1[1];
 		wifiAP1.ipv4Address[2] = inConfig.ipv4Address_AP1[2];
@@ -1171,7 +1175,7 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 
 	if ( ((*(u32 *)inConfig.ipv4Address_AP2 != 0) && (*(u32 *)inConfig.ipv4Gateway_AP2 != 0) && (inConfig.subnetMask_AP2 != 0)) ||
 		  (*(u32 *)inConfig.ipv4PrimaryDNS_AP2 != 0) ||
-		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP2 != 0) )
+		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP2 != 0) || isBadDump)
 	{
 		wifiAP2.SSID[0] = 'S';
 		wifiAP2.SSID[1] = 'o';
@@ -1179,6 +1183,8 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 		wifiAP2.SSID[3] = 't';
 		wifiAP2.SSID[4] = 'A';
 		wifiAP2.SSID[5] = 'P';
+		wifiAP2.SSID[6] = '\0';
+		wifiAP2.wepMode = 0;
 		wifiAP2.ipv4Address[0] = inConfig.ipv4Address_AP2[0];
 		wifiAP2.ipv4Address[1] = inConfig.ipv4Address_AP2[1];
 		wifiAP2.ipv4Address[2] = inConfig.ipv4Address_AP2[2];
@@ -1202,7 +1208,7 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 
 	if ( ((*(u32 *)inConfig.ipv4Address_AP3 != 0) && (*(u32 *)inConfig.ipv4Gateway_AP3 != 0) && (inConfig.subnetMask_AP3 != 0)) ||
 		  (*(u32 *)inConfig.ipv4PrimaryDNS_AP3 != 0) ||
-		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP3 != 0) )
+		  (*(u32 *)inConfig.ipv4SecondaryDNS_AP3 != 0) || isBadDump)
 	{
 		wifiAP3.SSID[0] = 'S';
 		wifiAP3.SSID[1] = 'o';
@@ -1210,6 +1216,8 @@ void NDS_ApplyFirmwareSettingsWithConfig(NDSFirmwareData *outFirmware, const Fir
 		wifiAP3.SSID[3] = 't';
 		wifiAP3.SSID[4] = 'A';
 		wifiAP3.SSID[5] = 'P';
+		wifiAP3.SSID[6] = '\0';
+		wifiAP3.wepMode = 0;
 		wifiAP3.ipv4Address[0] = inConfig.ipv4Address_AP3[0];
 		wifiAP3.ipv4Address[1] = inConfig.ipv4Address_AP3[1];
 		wifiAP3.ipv4Address[2] = inConfig.ipv4Address_AP3[2];

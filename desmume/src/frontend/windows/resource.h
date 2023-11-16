@@ -1193,6 +1193,9 @@
 #define ID_DLG_STR34                    44874
 #define ID_DLG_STR35                    44875
 #define ID_DLG_STR36                    44876
+#define ID_DLG_STR37                    44877
+#define ID_DLG_STR38                    44878
+#define ID_DLG_STR39                    44879
 #define IDC_LABEL_UP                    50000
 #define IDC_LABEL_RIGHT                 50001
 #define IDC_LABEL_LEFT                  50002

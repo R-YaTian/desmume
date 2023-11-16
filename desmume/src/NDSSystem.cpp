@@ -158,19 +158,20 @@ int NDS_Init()
 	armcpu_SetBaseMemoryInterface(&NDS_ARM9, &arm9_base_memory_iface);
 	armcpu_SetBaseMemoryInterfaceData(&NDS_ARM9, NULL);
 	armcpu_ResetMemoryInterfaceToBase(&NDS_ARM9);
-	
+
 	armcpu_new(&NDS_ARM7,1);
 	armcpu_SetBaseMemoryInterface(&NDS_ARM7, &arm7_base_memory_iface);
 	armcpu_SetBaseMemoryInterfaceData(&NDS_ARM7, NULL);
 	armcpu_ResetMemoryInterfaceToBase(&NDS_ARM7);
-	
+
 	delete GPU;
 	GPU = new GPUSubsystem;
-	
+
 	if (SPU_Init(SNDCORE_DUMMY, 740) != 0)
 		return -1;
-	
-	WIFI_Init();
+
+	// I think we just need to init wifi after loading ROM
+	// WIFI_Init();
 
 	cheats = new CHEATS();
 	cheatSearch = new CHEATSEARCH();
@@ -570,9 +571,6 @@ bool GameInfo::loadROM(std::string fname, u32 type)
 
 void GameInfo::closeROM()
 {
-	//if (wifiHandler != NULL)
-		//wifiHandler->CommStop();
-
 	if (GPU != NULL)
 		GPU->ForceFrameStop();
 	
@@ -1358,12 +1356,15 @@ void Sequencer::init()
 	dma_1_2.controller = &MMU_new.dma[1][2];
 	dma_1_3.controller = &MMU_new.dma[1][3];
 
-#ifdef EXPERIMENTAL_WIFI_COMM
-	wifi.enabled = true;
-	wifi.timestamp = kWifiCycles;
-#else
-	wifi.enabled = false;
-#endif
+	if (GetWifiEmulationLevel() != WifiEmulationLevel_Off)
+	{
+		wifi.enabled = true;
+		wifi.timestamp = kWifiCycles;
+	}
+	else
+	{
+		wifi.enabled = false;
+	}
 }
 
 static void execHardware_hblank()
@@ -1678,7 +1679,7 @@ u64 Sequencer::findNext()
 	if(sqrtunit.isEnabled()) next = _fast_min(next,sqrtunit.next());
 	if(gxfifo.enabled) next = _fast_min(next,gxfifo.next());
 	if(readslot1.isEnabled()) next = _fast_min(next,readslot1.next());
-	if (wifi.enabled) next = _fast_min(next,wifi.next());
+	if(wifi.enabled) next = _fast_min(next,wifi.next());
 
 #define test(X,Y) if(dma_##X##_##Y .isEnabled()) next = _fast_min(next,dma_##X##_##Y .next());
 	test(0,0); test(0,1); test(0,2); test(0,3);
@@ -1734,13 +1735,14 @@ void Sequencer::execHardware()
 		}
 	}
 
-#ifdef EXPERIMENTAL_WIFI_COMM
-	if (wifi.isTriggered())
+	if (GetWifiEmulationLevel() != WifiEmulationLevel_Off)
 	{
-		WIFI_usTrigger();
-		wifi.timestamp += kWifiCycles;
+		if (wifi.isTriggered())
+		{
+			WIFI_usTrigger();
+			wifi.timestamp += kWifiCycles;
+		}
 	}
-#endif
 
 	if(divider.isTriggered()) divider.exec();
 	if(sqrtunit.isTriggered()) sqrtunit.exec();
@@ -2792,7 +2794,7 @@ void NDS_Reset()
 	GPU->Reset();
 
 	WIFI_Reset();
-	memcpy(FW_Mac, MMU.fw.data._raw + 0x36, 6);
+	WIFI_Init();
 
 	SPU_DeInit();
 	SPU_ReInit(!willBootFromFirmware && bootResult);
@@ -3195,15 +3197,14 @@ void emu_halt(EmuHaltReasonCode reasonCode, NDSErrorTag errorTag)
 			_lastNDSError.tag = errorTag;
 			break;
 	}
-	
+
 	NDS_CurrentCPUInfoToNDSError(_lastNDSError);
 
-	//wifiHandler->CommStop();
 	GPU->ForceFrameStop();
 	execute = false;
-	
+
 	//printf("halting emu: ARM9 PC=%08X/%08X, ARM7 PC=%08X/%08X\n", NDS_ARM9.R[15], NDS_ARM9.instruct_adr, NDS_ARM7.R[15], NDS_ARM7.instruct_adr);
-	
+
 #ifdef LOG_ARM9
 	if (fp_dis9)
 	{

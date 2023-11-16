@@ -1132,11 +1132,6 @@ bool savestate_save (const char *file_name)
 	return true;
 }
 
-static void wifi_savestate(EMUFILE &os)
-{
-	//wifiHandler->SaveState(os);
-}
-
 static void writechunks(EMUFILE &os)
 {
 
@@ -1224,9 +1219,9 @@ static bool ReadStateChunks(EMUFILE &is, s32 totalsize)
 			case 81: if(!mic_loadstate(is,size)) ret=false; break;
 			case 90: if(!ReadStateChunk(is,SF_GFX3D,size)) ret=false; break;
 			case 91: if(!gfx3d_loadstate(is,size)) ret=false; break;
-			case 100: if(!ReadStateChunk(is,SF_MOVIE, size)) ret=false; break;
+			case 100: if(!ReadStateChunk(is,SF_MOVIE,size)) ret=false; break;
 			case 101: if(!mov_loadstate(is, size)) ret=false; break;
-			case 111: if (!ReadStateChunk(is, SF_WIFI, size)) ret = false; break;
+			case 111: if(!ReadStateChunk(is,SF_WIFI,size)) ret=false; break;
 			case 120: if(!ReadStateChunk(is,SF_RTC,size)) ret=false; break;
 			case 130: if(!ReadStateChunk(is,SF_INFO,size)) ret=false; else haveInfo=true; break;
 			case 140: if(!s_slot1_loadstate(is, size)) ret=false; break;

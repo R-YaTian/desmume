@@ -806,6 +806,20 @@ BEGIN
     GROUPBOX        "数据大小",IDC_STATIC,94,37,73,44,0,WS_EX_TRANSPARENT
 END
 
+IDD_WIFISETTINGS DIALOGEX 0, 0, 331, 114
+STYLE DS_SETFONT | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "Wifi 设置"
+FONT 8, "Ms Shell Dlg", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,220,93,50,14
+    PUSHBUTTON      "取消",IDCANCEL,275,93,50,14
+    GROUPBOX        "基础设施配置",IDC_STATIC,6,33,319,55
+    LTEXT           "桥接网络适配器:",IDC_STATIC,12,52,306,8
+    COMBOBOX        IDC_BRIDGEADAPTER,12,68,306,45,CBS_DROPDOWNLIST | CBS_HASSTRINGS
+    CONTROL         "启用 Wifi 模拟",IDC_WIFI_ENABLED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,13,84,10
+    CONTROL         "同时启用点对点模拟",IDC_WIFI_COMPAT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,127,13,89,10
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -885,6 +899,11 @@ BEGIN
     IDD_EDITWATCH, DIALOG
     BEGIN
         BOTTOMMARGIN, 95
+    END
+
+    IDD_WIFISETTINGS, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 112
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1217,6 +1236,9 @@ BEGIN
     ID_DLG_STR34            "选择一个目录用于构建 R4 FAT 镜像"
     ID_DLG_STR35            "选择位于 "
     ID_DLG_STR36            " 压缩包中的文件"
+    ID_DLG_STR37            "错误: 搜索适配器时发生错误"
+    ID_DLG_STR38            "没有找到可用的适配器"
+    ID_DLG_STR39            "错误: 无法加载 nPcap 库"
 END
 
 #endif    // 中文(简体，中国) resources
@@ -2149,20 +2171,6 @@ BEGIN
     LTEXT           "frames",IDC_STATIC,428,167,16,8
 END
 
-IDD_WIFISETTINGS DIALOGEX 0, 0, 331, 114
-STYLE DS_SETFONT | DS_CENTER | WS_CAPTION | WS_SYSMENU
-CAPTION "Wifi settings"
-FONT 8, "Ms Shell Dlg", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,220,93,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,275,93,50,14
-    GROUPBOX        "Infrastructure settings",IDC_STATIC,6,33,319,55
-    LTEXT           "Bridge network adapter:",IDC_STATIC,12,52,306,8
-    COMBOBOX        IDC_BRIDGEADAPTER,12,68,306,45,CBS_DROPDOWNLIST | CBS_HASSTRINGS
-    CONTROL         "Enable Wifi Emulation",IDC_WIFI_ENABLED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,13,84,10
-    CONTROL         "Compatibility Mode",IDC_WIFI_COMPAT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,127,13,84,10
-END
-
 IDD_INPUTCONFIG DIALOGEX 0, 0, 339, 148
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Control Config"
@@ -2453,11 +2461,6 @@ BEGIN
         LEFTMARGIN, 4
         RIGHTMARGIN, 559
         BOTTOMMARGIN, 255
-    END
-
-    IDD_WIFISETTINGS, DIALOG
-    BEGIN
-        BOTTOMMARGIN, 112
     END
 
     IDD_INPUTCONFIG, DIALOG
